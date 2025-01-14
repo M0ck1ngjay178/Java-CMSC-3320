@@ -1,7 +1,9 @@
 package Program1;
 public class Average{
 
-    double grade;
+    double grade, totalGrades;
+    int gradeCount;
+
 
 
     public Average(){
