@@ -18,7 +18,7 @@ public class Average{
         BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
         System.out.print("Enter A String");
         System.out.flush();
-        line = stdin.readLine();//error 
+        line = stdin.readLine();//
         System.out.println("You Enterend: " +line+"\n");
         
     }
