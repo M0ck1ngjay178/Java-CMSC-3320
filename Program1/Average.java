@@ -12,13 +12,13 @@ public class Average{
     //-------------END GLOBAL VARIABLES------------------
 
     
-    public Average(){
+    public Average()throws IOException{
         //program functioning 
         //BufferedReader stdin = new BufferedReader(is);
         BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
         System.out.print("Enter A String");
         System.out.flush();
-        //line = stdin.readLine() ;error 
+        line = stdin.readLine();//error 
         System.out.println("You Enterend: " +line+"\n");
         
     }
