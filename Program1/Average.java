@@ -1,4 +1,7 @@
-package Program1;
+package Program1; // for Vs Code
+import java.io.*;
+
+
 public class Average{
 
     //---------------GLOBAL VARIABLES------------------
@@ -9,6 +12,8 @@ public class Average{
     
     public Average(){
         //program functioning 
+       BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+        
     }
 
 
