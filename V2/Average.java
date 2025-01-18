@@ -18,6 +18,13 @@ public class Average{
 	
 	public static void main(String[] args) throws IOException
 	{
+		//---------------WELCOME BANNER------------------------------------
+		System.out.println("-----------------------------------------");
+		System.out.println("-WELCOME TO THE AVERAGE PROGRAM-");
+		System.out.println("-----------------------------------------");
+		//---------------END WELCOME BANNER---------------------------------
+
+
 		//set up input handler
 		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
 		
@@ -30,6 +37,7 @@ public class Average{
 		double avggrade = 0;
 		//------------END VARIABLES-------------------
 
+		//---------------MAIN PROCESSING LOOPS------------------------------
 		// loop the input for the grades until out of range
 		while(grade >= 0.0 && grade <= 100.0){
 			System.out.print("Enter A Grade: ");
@@ -45,6 +53,9 @@ public class Average{
 	
 
 		}//end while
+
+		//---------------END MAIN PROCESSING LOOPS------------------------------
+		
 
         // calculate average
 		avggrade = gradestotal / gradecount;
