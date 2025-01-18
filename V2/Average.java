@@ -11,7 +11,7 @@
 
 // Get the input/output libraries for java
 import java.io.*;
-
+/*=====================CLASS AVERAGE======================================*/
 // create the main class for the program
 public class Average{
 
@@ -25,7 +25,7 @@ public class Average{
 		//---------------END WELCOME BANNER---------------------------------
 
 
-		//set up input handler
+		//Initialize Input Handler
 		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
 		
 		//------------VARIABLES---------------------
@@ -33,6 +33,7 @@ public class Average{
 		String line;
 		double grade = 0;
 		int gradecount = 0;
+		int gradeIteration = 0;
 		double gradestotal = 0;
 		double avggrade = 0;
 		//------------END VARIABLES-------------------
@@ -40,7 +41,7 @@ public class Average{
 		//---------------MAIN PROCESSING LOOPS------------------------------
 		// loop the input for the grades until out of range
 		while(grade >= 0.0 && grade <= 100.0){
-			System.out.print("Enter A Grade: ");
+			System.out.print("Enter Grade " +(gradeIteration + 1)+ " : ");
 			System.out.flush();
 			line = stdin.readLine();
 			grade = Double.parseDouble(line);
@@ -49,16 +50,13 @@ public class Average{
 			if(grade >= 0.0 && grade <= 100.0){
 				gradestotal += grade;
 				gradecount++;
+				gradeIteration ++;
  			}//end if
-	
-
 		}//end while
-
 		//---------------END MAIN PROCESSING LOOPS------------------------------
 		
-
-        // calculate average
-		avggrade = gradestotal / gradecount;
+		//--------------------CALCULATIONS---------------------------------------
+		avggrade = gradestotal / gradecount;  // calculate average
 		
         // print all the data collected and calculated
 		System.out.println("\n---------FINAL CALCULATIONS--------------");
@@ -66,8 +64,10 @@ public class Average{
 		System.out.println("There were " + gradecount+ " Valid Grades");
 		System.out.println("Average Grade:  " + avggrade);
 		System.out.println("-----------------------------------------");
-	}
+		//--------------------END CALCULATIONS---------------------------------------
 
-
+	}//end main
 	
-}
+}//end class
+/*=====================END CLASS AVERAGE======================================*/
+
