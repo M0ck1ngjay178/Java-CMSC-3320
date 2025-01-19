@@ -32,13 +32,14 @@ public class Average{
 		
 		//------------VARIABLES---------------------
         //initialize and assign variables 
-		String line;
-		double grade = 0;
-		int gradecount = 0;
-		int gradeIteration = 0;
-		double gradestotal = 0;
-		double avggrade = 0;
-		double numResult = 0;
+		String line;			//variable for read input data
+		double grade = 0; 		//variable for parsed grade out of String line
+		int gradecount = 0;		//variable to track how many grades entered
+		int gradeIteration = 0;	//variable to track iteration number of grades entered, seperate from gradecount for division protection
+		double gradestotal = 0;	//variable to track total sum of grades entered
+		double avggrade = 0;	//varaible to store calculated average of total grades
+		double numResult = 0;	//varaible to store calculated average of total grades, seperately used for valid check
+		Double validTest;		//wrapper instance of the grade average
 		//------------END VARIABLES-------------------
 
 		//---------------MAIN PROCESSING LOOPS------------------------------
@@ -51,21 +52,23 @@ public class Average{
 			
 		// if within range, add to the total and grade count
 			if(grade >= 0.0 && grade <= 100.0){
-				gradestotal += grade;
-				gradecount++;
-				gradeIteration ++;
+				gradestotal += grade;	//sum grades
+				gradecount++;			//count grades
+				gradeIteration ++; 		//track iteration
  			}//end if
 		}//end while
 		//---------------END MAIN PROCESSING LOOPS------------------------------
 		
 		//--------------------CALCULATIONS---------------------------------------
-		numResult = gradestotal / gradecount;
-		Double validTest = Double.valueOf(numResult);
-
-		if(validTest.isNaN()){
-			System.out.println("INVALID: Result is Not a Number!!!");
-		}else if(validTest.isInfinite()){
-			System.out.println("INVALID: Result is Infinite!!!");
+		numResult = gradestotal / gradecount;   //store grade average in seperate variable so not corrupted
+		validTest = Double.valueOf(numResult); //use wrapper method to store instance of te average
+		
+		//-----------------VALID CHECK---------------------------------------------
+		if(validTest.isNaN()){ //check if the average is not a number
+			System.out.println("INVALID: Result is Not a Number!!!"); //print error msg for NaN
+		}else if(validTest.isInfinite()){//check if the average is infinite
+			System.out.println("INVALID: Result is Infinite!!!"); //print error msg for infinite
+		//-----------------VALID CHECK---------------------------------------------
 
 		}else{
 			avggrade = gradestotal / gradecount;  // calculate average
@@ -76,8 +79,7 @@ public class Average{
 			System.out.println("There were " + gradecount+ " Valid Grades");
 			System.out.println("Average Grade:  " + avggrade);
 			System.out.println("-----------------------------------------");
-
-			}
+			}//end else
 		//--------------------END CALCULATIONS---------------------------------------
 
 	}//end main
