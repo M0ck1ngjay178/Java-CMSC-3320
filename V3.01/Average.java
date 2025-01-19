@@ -38,6 +38,7 @@ public class Average{
 		int gradeIteration = 0;
 		double gradestotal = 0;
 		double avggrade = 0;
+		double numResult = 0;
 		//------------END VARIABLES-------------------
 
 		//---------------MAIN PROCESSING LOOPS------------------------------
@@ -58,14 +59,25 @@ public class Average{
 		//---------------END MAIN PROCESSING LOOPS------------------------------
 		
 		//--------------------CALCULATIONS---------------------------------------
-		avggrade = gradestotal / gradecount;  // calculate average
+		numResult = gradestotal / gradecount;
+		Double validTest = Double.valueOf(numResult);
+
+		if(validTest.isNaN()){
+			System.out.println("INVALID: Result is Not a Number!!!");
+		}else if(validTest.isInfinite()){
+			System.out.println("INVALID: Result is Infinite!!!");
+
+		}else{
+			avggrade = gradestotal / gradecount;  // calculate average
 		
-        // print all the data collected and calculated
-		System.out.println("\n---------FINAL CALCULATIONS--------------");
-		System.out.println("Total Sum of Grades:  " + gradestotal);
-		System.out.println("There were " + gradecount+ " Valid Grades");
-		System.out.println("Average Grade:  " + avggrade);
-		System.out.println("-----------------------------------------");
+			// print all the data collected and calculated
+			System.out.println("\n---------FINAL CALCULATIONS--------------");
+			System.out.println("Total Sum of Grades:  " + gradestotal);
+			System.out.println("There were " + gradecount+ " Valid Grades");
+			System.out.println("Average Grade:  " + avggrade);
+			System.out.println("-----------------------------------------");
+
+			}
 		//--------------------END CALCULATIONS---------------------------------------
 
 	}//end main
