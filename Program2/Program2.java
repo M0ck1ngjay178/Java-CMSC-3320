@@ -8,6 +8,9 @@
 /*     -Ethan Janovich,   jan60248@pennwest.edu			*/
 /*     -Nikolaus Roebuck, roe01807@pennwest.edu  		*/
 /*******************END HEADER***************************/
+//stopped lecture4 @ 15:38, initialized method parameters
+
+//TODO: write function bodies for word class, main body from lecture pseudocode, finish GETNAMES function
 
 /*--------LIBRARIES------------*/
 import java.io.*;
@@ -176,7 +179,7 @@ class IOfile{
 }//end class IO
 
 
-
+//stopped lecture @ 15:38, initialized method parameters, TODO: write function bodies for word class
 class Word{
 
     Word(String word){}
