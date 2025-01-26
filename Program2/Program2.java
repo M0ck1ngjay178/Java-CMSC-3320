@@ -1,6 +1,6 @@
 /*******************HEADER*******************************/
 /*  CMSC-3320 Technical Computing Using Java		    */   
-/* 	Average Program										*/
+/* 	File Processing Program							    */
 /*	Group 1												*/
 /*	Group Names: 										*/
 /*     -Margo Bonal,      bon8330@pennwest.edu			*/
@@ -58,7 +58,34 @@ class Program2 {
 
 class IOfile{
     //-------------GETNAMES----------------------------------
-    boolean getnames(String[] args, String[] ioname){}
+    public static boolean getnames(String[] args, String[] ioname){
+
+
+        BufferedReader keysIn = new BufferedReader(new InputStreamReader(System.in));
+
+        try{
+            switch(args.length){
+                case 0:
+                    System.out.print("ENTER Input Filename: ");
+                    ioname[0] = keysIn.readLine();
+                    System.out.print("ENTER Output Filename: ");
+                    ioname[1] = keysIn.readLine();
+                    break;
+
+                case 1:
+                    break;
+                case 2:
+                    break;
+                default:
+                    break;
+                
+            }
+
+        }catch(IOException e){
+            System.err.println("ERROR reading user input");
+            return false;
+        }
+    }
     //-------------END GETNAMES------------------------------
 
     //-------------FILEEXIST----------------------------------
@@ -93,6 +120,7 @@ class IOfile{
         int start;
         start = name.lastIndexOf(".");
         extention = name.substring(start+1, name.length());
+        return extention;
     }
     //-------------END FILEEXTENTION-----------------------------
 
@@ -112,11 +140,30 @@ class IOfile{
     //-------------END FILEPATH---------------------------------
 
     //-------------OPENIN--------------------------------------
-    BufferedReader openin(String name){}
+    BufferedReader openin(String name){
+
+        BufferedReader in = null;
+        try {
+            in = new BufferedReader(new FileReader(name));
+            
+        }catch (IOException e){
+            System.err.println("ERROR opening/reading file!!!");
+        }
+        return in;
+    }
     //------------END OPENIN-----------------------------------
 
     //-------------OPENOUT-------------------------------------
-    PrintWriter openout(String name){}
+    PrintWriter openout(String name){
+        PrintWriter out = null;
+        try{
+            out = new PrintWriter(new FileWriter(name));
+            
+        }catch (IOException e) {
+            System.err.println("ERROR opening/writing file!!!");
+        }
+        return out;
+    }
     //-------------END OPENOUT---------------------------------
 
 }//end class IO
