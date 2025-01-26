@@ -51,10 +51,10 @@ class Program2 {
          */
     }
 
-    static Boolean IsInt(String s){}
+    static Boolean IsInt(String word){}
 
     
-}
+}//end class Program2
 
 class IOfile{
     //-------------GETNAMES----------------------------------
@@ -74,23 +74,35 @@ class IOfile{
 
     //-------------FILEBACKUP---------------------------------
     void FileBackup(String name, String ext){
-        String newname;
+        String file_part = FileName(name);
+        String newname = file_part + ext;
         File old = new File(name);
         File back = new File(newname);
 
         if(FileExist(newname)){
             back.delete();
-            old.renameTo(back);//does this go in an else? or in the if??
         }
+        old.renameTo(back);
+
     }
     //-------------END FILEBACKUP------------------------------
 
     //-------------FILEEXTENTION---------------------------------
-    String FileExtention(String name){}
+    String FileExtention(String name){
+        String extention;
+        int start;
+        start = name.lastIndexOf(".");
+        extention = name.substring(start+1, name.length());
+    }
     //-------------END FILEEXTENTION-----------------------------
 
     //-------------FILENAME-------------------------------------
-    String FileName(String name){}
+    String FileName(String name){
+        int startIndex, endIndex;
+        startIndex = name.lastIndexOf("\\");
+        endIndex = name.lastIndexOf(".");
+        return name.substring(startIndex+1, endIndex);
+    }
     //-------------END FILENAME---------------------------------
 
     //-------------FILEPATH-------------------------------------
@@ -105,7 +117,7 @@ class IOfile{
     PrintWriter openout(String name){}
     //-------------END OPENOUT---------------------------------
 
-}
+}//end class IO
 
 
 
