@@ -9,10 +9,10 @@
 /*     -Nikolaus Roebuck, roe01807@pennwest.edu  		*/
 /*******************END HEADER***************************/
 
-// Get the input/output libraries for java
+/*--------LIBRARIES------------*/
 import java.io.*;
-//added structure from Lecure 4 video - M.Bonal, 1/23/25
 import java.util.StringTokenizer;
+/*--------END LIBRARIES---------*/
 
 class Program2 {
 
@@ -50,18 +50,28 @@ class Program2 {
          * closes the input and output files
          */
     }
+    //-------------ISINT----------------------------------
+    static Boolean IsInt(String word){                                          //Function Purpose: method to check if string is an integer
+        try {                                                                   //try_catch to process error handling
+            Integer.parseInt(word);                                             //convert String word into an Integer
+            return true;                                                        //Conversion successful, true
 
-    static Boolean IsInt(String word){}
+        } catch (NumberFormatException e) {     
+            System.err.println("STRING TO INTEGER CONVERSION = FAILED!!!");   //display error msg
+            return false;                                                       //Conversion failed, false
+        }
+    }
+    //-------------END ISINT-------------------------------
 
     
 }//end class Program2
 
 class IOfile{
     //-------------GETNAMES----------------------------------
-    public static boolean getnames(String[] args, String[] ioname){
+    public static boolean getnames(String[] args, String[] ioname){ //NOTE: I AM CONFUSUSED ON THIS PROCESS, STOPPED 1/26/25- 12:34PM
 
 
-        BufferedReader keysIn = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader keysIn = new BufferedReader(new InputStreamReader(System.in));// open keyboard to read
 
         try{
             switch(args.length){
@@ -89,86 +99,81 @@ class IOfile{
     //-------------END GETNAMES------------------------------
 
     //-------------FILEEXIST----------------------------------
-    boolean FileExist(String name){
-        boolean exist;
-        //if(name){
-            File dummy = new File(name);
-            exist = dummy.exists();
-            return exist;
-       // }
+    boolean FileExist(String name){         //Function Purpose: to Return true/ false if exists
+        boolean exist;                      //bool value to store if file exists
+        File dummy = new File(name);        //store incoming file name in temp varaible
+        exist = dummy.exists();             // use method .exists() to check if valid, store in variable exist
+        return exist;                       //return the existing string of file name
     }
     //-------------END FILEEXIST------------------------------
 
     //-------------FILEBACKUP---------------------------------
-    void FileBackup(String name, String ext){
-        String file_part = FileName(name);
-        String newname = file_part + ext;
-        File old = new File(name);
-        File back = new File(newname);
+    void FileBackup(String name, String ext){       //Function Purpose: renames specified file to same name and specified extention
+        String file_part = FileName(name);          //store incoming file name
+        String newname = file_part + ext;           //concatenate filename and extention
+        File old = new File(name);                  //place name in temp location old                  
+        File back = new File(newname);              //create backup file
 
-        if(FileExist(newname)){
-            back.delete();
+        if(FileExist(newname)){                     //check if file exits
+            back.delete();                          //if it does, delete it
         }
-        old.renameTo(back);
-
+        old.renameTo(back);                         //rename old file to the back file                                                          
     }
     //-------------END FILEBACKUP------------------------------
 
     //-------------FILEEXTENTION---------------------------------
-    String FileExtention(String name){
-        String extention;
-        int start;
-        start = name.lastIndexOf(".");
-        extention = name.substring(start+1, name.length());
-        return extention;
+    String FileExtention(String name){                          //Function Purpose: extract the extention from name and returns the String extention
+        String extention;                                       //varible to hold extention
+        int start;                                              //varible to hold begining of parsed string
+        start = name.lastIndexOf(".");                      //find  last index of the dot by using lastIndex method
+        extention = name.substring(start+1, name.length());     //extract the substring from the position to the end 
+        return extention;                                       // return the extention part of the string
     }
     //-------------END FILEEXTENTION-----------------------------
 
     //-------------FILENAME-------------------------------------
-    String FileName(String name){
-        int startIndex, endIndex;
-        startIndex = name.lastIndexOf("\\");
-        endIndex = name.lastIndexOf(".");
-        return name.substring(startIndex+1, endIndex);
-    }
+    String FileName(String name){                       //Function Purpose: extract file name from name and return the string file name
+        int startIndex, endIndex;                       //variables to hold positioning
+        startIndex = name.lastIndexOf("\\");        //find filename between \ and last dot of path, store in startIndex
+        endIndex = name.lastIndexOf(".");           //find filename between \ and last dot of path, store in endIndex
+        return name.substring(startIndex+1, endIndex);  //return the found subtring part of the filename
+    }   
     //-------------END FILENAME---------------------------------
 
     //-------------FILEPATH-------------------------------------
-    String FilePath(String name){
-        return name.substring(0, name.lastIndexOf("\\"));
-    }
+    String FilePath(String name){                                           //Function Purpose: extract path name from name and return the string path
+        return name.substring(0, name.lastIndexOf("\\"));    //return the found subtring path found between : and last\
+    }                                                                         
     //-------------END FILEPATH---------------------------------
 
     //-------------OPENIN--------------------------------------
-    BufferedReader openin(String name){
+    BufferedReader openin(String name){                                     //Function Purpose: opens a file for reading specified by string name and returns bufferedreader              
 
-        BufferedReader in = null;
-        try {
-            in = new BufferedReader(new FileReader(name));
+        BufferedReader in = null;                                           //initialize buffered reader, set to null
+        try {                                                               //try_catch to process opening errors
+            in = new BufferedReader(new FileReader(name));                  //try to open buffered reader
             
-        }catch (IOException e){
-            System.err.println("ERROR opening/reading file!!!");
+        }catch (IOException e){                                             //catch IO errors,i.e: file opening errors
+            System.err.println("ERROR opening/reading file!!!");          //display error message
         }
-        return in;
+        return in;                                                          //return BufferedReader in
     }
     //------------END OPENIN-----------------------------------
 
     //-------------OPENOUT-------------------------------------
-    PrintWriter openout(String name){
-        PrintWriter out = null;
-        try{
-            out = new PrintWriter(new FileWriter(name));
+    PrintWriter openout(String name){                                       //Function Purpose: opens a file for writing specified by string name and returns printwriter              
+        PrintWriter out = null;                                             //initialize PrintWriter, set to null
+        try{                                                                //try_catch to process opening errors
+            out = new PrintWriter(new FileWriter(name));                    //try to open PrintWriter, out
             
-        }catch (IOException e) {
-            System.err.println("ERROR opening/writing file!!!");
+        }catch (IOException e) {                                            //catch IO errors,i.e: file opening errors
+            System.err.println("ERROR opening/writing file!!!");          //display error message
         }
-        return out;
-    }
+        return out;                                                         //return PrintWriter, out
+    }                                                       
     //-------------END OPENOUT---------------------------------
 
 }//end class IO
-
-
 
 
 
