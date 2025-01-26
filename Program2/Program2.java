@@ -57,29 +57,59 @@ class Program2 {
 }
 
 class IOfile{
-
+    //-------------GETNAMES----------------------------------
     boolean getnames(String[] args, String[] ioname){}
+    //-------------END GETNAMES------------------------------
+
+    //-------------FILEEXIST----------------------------------
     boolean FileExist(String name){
-        if(name){
+        boolean exist;
+        //if(name){
             File dummy = new File(name);
-            exists = dummy.exists();
-        }
+            exist = dummy.exists();
+            return exist;
+       // }
     }
+    //-------------END FILEEXIST------------------------------
+
+    //-------------FILEBACKUP---------------------------------
     void FileBackup(String name, String ext){
+        String newname;
         File old = new File(name);
         File back = new File(newname);
 
-        if(newname.FileExist()){
+        if(FileExist(newname)){
             back.delete();
-            old.renaleTo(back);//does this go in an else? or in the if??
+            old.renameTo(back);//does this go in an else? or in the if??
         }
     }
+    //-------------END FILEBACKUP------------------------------
+
+    //-------------FILEEXTENTION---------------------------------
     String FileExtention(String name){}
+    //-------------END FILEEXTENTION-----------------------------
+
+    //-------------FILENAME-------------------------------------
     String FileName(String name){}
+    //-------------END FILENAME---------------------------------
+
+    //-------------FILEPATH-------------------------------------
     String FilePath(String name){}
+    //-------------END FILEPATH---------------------------------
+
+    //-------------OPENIN--------------------------------------
     BufferedReader openin(String name){}
+    //------------END OPENIN-----------------------------------
+
+    //-------------OPENOUT-------------------------------------
     PrintWriter openout(String name){}
+    //-------------END OPENOUT---------------------------------
+
 }
+
+
+
+
 
 class Word{
 
