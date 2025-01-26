@@ -106,7 +106,9 @@ class IOfile{
     //-------------END FILENAME---------------------------------
 
     //-------------FILEPATH-------------------------------------
-    String FilePath(String name){}
+    String FilePath(String name){
+        return name.substring(0, name.lastIndexOf("\\"));
+    }
     //-------------END FILEPATH---------------------------------
 
     //-------------OPENIN--------------------------------------
@@ -134,5 +136,4 @@ class Word{
     void print(PrintWriter out){}
     int FindWord(Word[] list, String word, int n){}
 
-    
 }
