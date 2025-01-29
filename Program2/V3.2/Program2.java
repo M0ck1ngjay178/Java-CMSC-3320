@@ -9,9 +9,6 @@
 /*     -Nikolaus Roebuck, roe01807@pennwest.edu  		*/
 /*******************END HEADER***************************/
 
-
-
-
 /*--------LIBRARIES------------*/
 import java.io.*;
 import java.util.StringTokenizer;
@@ -33,7 +30,7 @@ class Program2 {
         StringTokenizer inline;                 //StringTokenizer of current line
         BufferedReader infile;                  //input file handle
         PrintWriter outfile;                    //output file handle
-
+        boolean check;
         //------------END VARIABLES-------------------
 
         //-------GET FILE NAMES--------
@@ -54,19 +51,19 @@ class Program2 {
                 
                 // If the token begins with an alpha character
                 if (Character.isLetter(word.charAt(0))) {
-                    boolean found = false;
+                    check = false;
                     for (i = 0; i < count; i++) {
                         if (words[i].isWord(word)) {
                             words[i].addOne();
-                            found = true;
+                            check = true;
                             break;
                         }
                     }
-                    if (!found){
+                    if(!check){
                         words[count] = new Word(word);
                         count++;
                     }
-                } else if (IsInt(word)) { // If it's a number
+                } else if (IsInt(word)) { // If number
                     sum += Integer.parseInt(word);
                 }
             }
@@ -78,7 +75,7 @@ class Program2 {
         }
         
         //-------PRINT TO FILE--------------------
-        outfile.println("wORDS: " + count);
+        outfile.println("WORDS: " + count);
         outfile.println("SUM: " + sum);
         //------------------------------------------
 

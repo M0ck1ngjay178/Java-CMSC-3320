@@ -1,0 +1,9 @@
+hello	1
+world	1
+this	1
+is	1
+impossible	1
+WORDS: 5
+SUM: 0
+
+
