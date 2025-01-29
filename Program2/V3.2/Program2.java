@@ -139,6 +139,11 @@ class IOfile{
                     break; 
             }
                 //Validate files here....
+                /**if(FileExist(ioname[0]) == false){
+                    System.err.println("ERROR!!! Input file doesnt exist");
+                    return false;
+                }
+                */
 
         }catch(IOException e){
             System.err.println("ERROR reading user input");
