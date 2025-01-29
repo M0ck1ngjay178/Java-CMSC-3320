@@ -115,7 +115,7 @@ class IOfile{
         BufferedReader keysIn = new BufferedReader(new InputStreamReader(System.in));// open keyboard to read
 
         try{
-            switch(args.length){    //should this be ioname.length? M.B.B no i dont think so this check the string argument list
+            switch(args.length){    //should this be ioname.length? M.B.B-> NO! i dont think so, this check the string argument list to pull the file names
                 case 0:
                     System.out.print("ENTER Input Filename: ");
                     ioname[0] = keysIn.readLine();
@@ -135,9 +135,9 @@ class IOfile{
                     break;     // if length is 2 we have both file names already
 
                 default:
-                    break;
-                
+                    break; 
             }
+
 
         }catch(IOException e){
             System.err.println("ERROR reading user input");
@@ -283,4 +283,11 @@ class Word{
          * print the word and counts
          * print the number of words and the sum of the integers
          * closes the input and output files
+         * 
+         * 
+         * 
+         * //if(!FileExists()){
+                    //  System.err.println("ERROR!!! Both files need to exist");
+                    //  return false;
+                    //}
          */
