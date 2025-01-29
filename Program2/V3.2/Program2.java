@@ -8,9 +8,9 @@
 /*     -Ethan Janovich,   jan60248@pennwest.edu			*/
 /*     -Nikolaus Roebuck, roe01807@pennwest.edu  		*/
 /*******************END HEADER***************************/
-//stopped lecture4 @ 15:38, initialized method parameters
 
-//TODO: write function bodies for word class, main body from lecture pseudocode, finish GETNAMES function
+
+
 
 /*--------LIBRARIES------------*/
 import java.io.*;
@@ -36,22 +36,59 @@ class Program2 {
 
         //------------END VARIABLES-------------------
 
-        //psuedocode from lecture:
-        /**
-         * Uses getnames for the file names in ionnames 
-         * opens the input file and output file
-         * reads a line from the input file
-         * while there is a line:
-         *          convert the line into tokens using stringtokenizer
-         *          if the token begins with an alpha:
-         *                      checks if the word already exists:
-         *                                      increment count
-         *                      else creates the word object and add to the array
-         *          else convert the number and accumulate it
-         * print the word and counts
-         * print the number of words and the sum of the integers
-         * closes the input and output files
-         */
+        //-------GET FILE NAMES--------
+        IOfile.getnames(arg, ionames);
+        //----------------------------
+
+        //----------OPEN INPUT AND OUTPUT-------------------
+        infile = new BufferedReader(new FileReader(ionames[0]));
+        outfile = new PrintWriter(new FileWriter(ionames[1]));
+        //-----------------------------------------------------
+
+        // Read a line from the input file
+        while ((inbuffer = infile.readLine()) != null){
+            inline = new StringTokenizer(inbuffer);
+            
+            while (inline.hasMoreTokens()) {
+                word = inline.nextToken();
+                
+                // If the token begins with an alpha character
+                if (Character.isLetter(word.charAt(0))) {
+                    boolean found = false;
+                    for (i = 0; i < count; i++) {
+                        if (words[i].isWord(word)) {
+                            words[i].addOne();
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found){
+                        words[count] = new Word(word);
+                        count++;
+                    }
+                } else if (IsInt(word)) { // If it's a number
+                    sum += Integer.parseInt(word);
+                }
+            }
+        }
+        
+        // Print words and their counts
+        for (i = 0; i < count; i++) {
+            words[i].print(outfile);
+        }
+        
+        //-------PRINT TO FILE--------------------
+        outfile.println("wORDS: " + count);
+        outfile.println("SUM: " + sum);
+        //------------------------------------------
+
+        //------CLOSE FILES-----
+        infile.close();
+        outfile.close();
+        //----------------------
+
+
+
     }
     //-------------ISINT----------------------------------
     static Boolean IsInt(String word){                                          //Function Purpose: method to check if string is an integer
@@ -86,7 +123,7 @@ class IOfile{
                     break;
 
                 case 1:
-		    System.out.print("ENTER Output Filename: ");  //if length is one, we have the input file name, need output file
+		            System.out.print("ENTER Output Filename: ");  //if length is one, we have the input file name, need output file
                     ioname[1] = keysIn.readLine();
                     break;
                 case 2:
@@ -182,7 +219,6 @@ class IOfile{
 }//end class IO
 
 
-//stopped lecture @ 15:38, initialized method parameters, TODO: write function bodies for word class
 class Word{
 	
 	private String word;
@@ -223,3 +259,21 @@ class Word{
 	    }
 
 }
+
+
+ //psuedocode from lecture:
+        /**
+         * Uses getnames for the file names in ionnames 
+         * opens the input file and output file
+         * reads a line from the input file
+         * while there is a line:
+         *          convert the line into tokens using stringtokenizer
+         *          if the token begins with an alpha:
+         *                      checks if the word already exists:
+         *                                      increment count
+         *                      else creates the word object and add to the array
+         *          else convert the number and accumulate it
+         * print the word and counts
+         * print the number of words and the sum of the integers
+         * closes the input and output files
+         */
