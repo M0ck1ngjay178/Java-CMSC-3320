@@ -42,7 +42,7 @@ class Program2 {
         outfile = new PrintWriter(new FileWriter(ionames[1]));
         //-----------------------------------------------------
 
-        // Read a line from the input file
+        //------------WHILE: READ LINE FROM INPUT------------------------
         while ((inbuffer = infile.readLine()) != null){
             inline = new StringTokenizer(inbuffer);
             
@@ -68,6 +68,7 @@ class Program2 {
                 }
             }
         }
+        //-------------------END WHILE-------------------------------------
         
         outfile.println("---------OUTPUT FILE HEADER-----------------");
         // Print words and their counts
@@ -137,7 +138,7 @@ class IOfile{
                 default:
                     break; 
             }
-
+                //Validate files here....
 
         }catch(IOException e){
             System.err.println("ERROR reading user input");
