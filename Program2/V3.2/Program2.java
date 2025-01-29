@@ -69,14 +69,18 @@ class Program2 {
             }
         }
         
+        outfile.println("---------OUTPUT FILE HEADER-----------------");
         // Print words and their counts
         for (i = 0; i < count; i++) {
             words[i].print(outfile);
         }
+        outfile.println("--------------------------------------------");
         
         //-------PRINT TO FILE--------------------
+        outfile.println("------RESULTS------");
         outfile.println("WORDS: " + count);
         outfile.println("SUM: " + sum);
+        outfile.println("--------------------");
         //------------------------------------------
 
         //------CLOSE FILES-----
@@ -252,8 +256,9 @@ class Word{
 	    }
 	    
     void print(PrintWriter out){
-	    out.println(word+"\t"+quant); 								//prints this object word and quantity to the PrintWriter
-	    }
+        //out.println(word+"\t\t\t"+quant); 								//prints this object word and quantity to the PrintWriter
+	    out.println(String.format("%-20s %5d", word, quant));
+    }
 	    
     int FindWord(Word[] list, String word, int n){
 	    
