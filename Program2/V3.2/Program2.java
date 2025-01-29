@@ -23,7 +23,7 @@ class Program2 {
         int count =0;                           //number of Word objects in word array
         int sum = 0;                            //sum of integers
         String word = null;                     //token
-        String num = null;                      //String of number
+        //String num = null;                      //String of number, WHAT IS THIS FOR??? I DIDNT USE IT??
         String inbuffer;                        //input file buffer
         String[] ionames = new String[2];       //array for input and output file names
         Word[] words = new Word[100];           //Array of Word objects
@@ -111,7 +111,7 @@ class IOfile{
         BufferedReader keysIn = new BufferedReader(new InputStreamReader(System.in));// open keyboard to read
 
         try{
-            switch(args.length){    //should this be ioname.length?
+            switch(args.length){    //should this be ioname.length? M.B.B no i dont think so this check the string argument list
                 case 0:
                     System.out.print("ENTER Input Filename: ");
                     ioname[0] = keysIn.readLine();
@@ -123,8 +123,13 @@ class IOfile{
 		            System.out.print("ENTER Output Filename: ");  //if length is one, we have the input file name, need output file
                     ioname[1] = keysIn.readLine();
                     break;
+                    
                 case 2:
+                    ioname[0] = args[0];
+                    ioname[1] = args[1];
+                    System.out.println("Input and Output Files Recived From Command Line");
                     break;     // if length is 2 we have both file names already
+
                 default:
                     break;
                 
