@@ -63,8 +63,36 @@ class Program2 {
                         words[count] = new Word(word);
                         count++;
                     }
+                } else if(IsPart(word)){    // if word is part int and part string, we need to seperate them
+                    for( i=1; i<word.length(); i++){    // ran this loop just to get the index of the first letter/special character. (COULD GET INDEX FROM ISPART??)
+                        if (Character.isLetter(word.charAt(i))){    //keeps i at the position of the first letter.
+                            break;
+                         }else if(!Character.isLetterOrDigit(word.charAt(i))){
+                            break;
+                         }
+                    }
+                    String word1=null;        // variable to get the number portion
+                        String word2=null;    // variable to get the string portion
+                        word1=word.substring(0, i);  //puts the number portion into word1
+                        word2=word.substring(i, word.length()); //puts the string portion into word2
+                        sum+= Integer.parseInt(word1);        // converts word1 into an int and adds it onto the sum.
+                       
+                        check = false;
+                    for (i = 0; i < count; i++) {
+                        if (words[i].isWord(word2)) {   //if word2 = any word in words
+                            words[i].addOne();         //add one to that word count
+                            check = true;
+                            break;
+                        }
+                    }
+                    if(!check){                  // if word2 is unique, create a new word in words
+                        words[count] = new Word(word2);
+                        count++;
+                    }
+                    
                 }else if (IsInt(word)) { // If number
                     sum += Integer.parseInt(word);
+		
                 }
             }
         }
@@ -98,14 +126,28 @@ class Program2 {
             Integer.parseInt(word);                                             //convert String word into an Integer
             return true;                                                        //Conversion successful, true
 
-        } catch (NumberFormatException e){     
+        } catch (NumberFormatException e) {   
             System.err.println("STRING TO INTEGER CONVERSION = FAILED!!!");   //display error msg
             return false;                                                       //Conversion failed, false
         }
     }
     //-------------END ISINT-------------------------------
+   
+    // ISPART----------------------------
+    static Boolean IsPart(String word){       //function purpose: method to check if string is part int and part string
+        for(int i=1; i<word.length(); i++){    // this function is used after isLetter so know index 0 is not a letter, we can start at index 1, checking each char to see if it's a letter
+            if (Character.isLetter(word.charAt(i))){ //if it is a letter we can return true, the string is part int and part string
+                return true;
+             }
+             else if(!Character.isLetterOrDigit(word.charAt(i))){
+                return true;
+             }
+        }
+        return false;          // the function is not part int and part string.
+    }
+//------------------------END ISPART------------------
 
-    
+
 }//end class Program2
 
 class IOfile{
@@ -136,7 +178,8 @@ class IOfile{
                     
 		            ioname[1] = tempfile;
                     break;
-                
+                    
+
                 case 1:				//Case if only input is in command line
                 	 
                 	if(FileExist(args[0])== false) {
@@ -326,7 +369,6 @@ class Word{
 
 }
 
-//exception for percent?! print numbers in file??
 
  //psuedocode from lecture:
         /**
