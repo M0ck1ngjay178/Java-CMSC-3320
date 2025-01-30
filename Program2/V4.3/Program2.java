@@ -14,7 +14,7 @@ import java.io.*;
 import java.util.StringTokenizer;
 /*--------END LIBRARIES---------*/
 
-class Program2 {
+class Program2{
 
     public static void main(String[] arg) throws IOException{
         //------------VARIABLES---------------------
