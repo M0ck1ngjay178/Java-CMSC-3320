@@ -63,7 +63,7 @@ class Program2 {
                         words[count] = new Word(word);
                         count++;
                     }
-                } else if (IsInt(word)) { // If number
+                }else if (IsInt(word)) { // If number
                     sum += Integer.parseInt(word);
                 }
             }
