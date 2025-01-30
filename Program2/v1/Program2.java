@@ -93,6 +93,7 @@ class IOfile{
                     break;
                 
             }
+            return true;
 
         }catch(IOException e){
             System.err.println("ERROR reading user input");
@@ -180,7 +181,7 @@ class IOfile{
 
 
 //stopped lecture @ 15:38, initialized method parameters, TODO: write function bodies for word class
-class Word{
+/*class Word{
 
     Word(String word){}
     int getCount(){}
@@ -192,3 +193,4 @@ class Word{
     int FindWord(Word[] list, String word, int n){}
 
 }
+*/
