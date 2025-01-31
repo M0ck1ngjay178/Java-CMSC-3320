@@ -203,23 +203,26 @@ class IOfile{
                 case 2:							//Case if both arguments are in command line
                	 if(FileExist(args[0])== true) {
 	               	 ioname[0] = args[0];
-                	 }
-                	 
+                	}
                 	else{
-	                System.out.println("ERROR!!! Input file doesnt exist");
-	                return false;
+	                    System.out.println("ERROR!!! Input file doesnt exist, Reprompt: ");//reprompt?
+                        ioname[0] = keysIn.readLine();
+                        System.out.println("Input File Now Successful!");
+                    //return false;
 	                }
 	                
-                 if(FileExist(args[1])== false) {
+                 if(FileExist(args[1])== false){
 	               	 ioname[1] = args[1];			//if output file doesnt exist: ioname[1] = args[1]
                   	}
-                  	
                 	else{
 	                	tempfile = args[1];
 	                	while(FileExist(tempfile) == true){ //if output does already exist
 	                		System.out.print("ERROR: Output file already exists. "); 
 	                		System.out.println("Please enter a new output file name!!"); 
-	                		tempfile = keysIn.readLine();
+	                		/*if(!OptionPick(ioname, keysIn)){
+                                return false;
+                            }*///where to put this in main??idk 
+                            tempfile = keysIn.readLine();
                     	}
                     	
 		            ioname[1] = tempfile;
@@ -227,17 +230,13 @@ class IOfile{
 		             break;
 	                }
                     
-	                
-	            
-                    
                     System.out.println("Input and Output Files Recived From Command Line");
                     break;     // if length is 2 we have both file names already
 
-                default:
+                default://what goes in defualt??
                     break; 
             }
-               
-                
+                   
                 
 
         }catch(IOException e){
@@ -259,7 +258,7 @@ class IOfile{
     //-------------END FILEEXIST------------------------------
 
     //-------------FILEBACKUP---------------------------------
-    void FileBackup(String name, String ext){       //Function Purpose: renames specified file to same name and specified extention
+    static void FileBackup(String name, String ext){       //Function Purpose: renames specified file to same name and specified extention
         String file_part = FileName(name);          //store incoming file name
         String newname = file_part + ext;           //concatenate filename and extention
         File old = new File(name);                  //place name in temp location old                  
@@ -283,7 +282,7 @@ class IOfile{
     //-------------END FILEEXTENTION-----------------------------
 
     //-------------FILENAME-------------------------------------
-    String FileName(String name){                       //Function Purpose: extract file name from name and return the string file name
+    static String FileName(String name){                       //Function Purpose: extract file name from name and return the string file name
         int startIndex, endIndex;                       //variables to hold positioning
         startIndex = name.lastIndexOf("\\");        //find filename between \ and last dot of path, store in startIndex
         endIndex = name.lastIndexOf(".");           //find filename between \ and last dot of path, store in endIndex
@@ -323,6 +322,49 @@ class IOfile{
         return out;                                                         //return PrintWriter, out
     }                                                       
     //-------------END OPENOUT---------------------------------
+
+    //------------Case conditions: helper function for IO.getnames()----
+    public static boolean OptionPick(String[] ioname, BufferedReader keysIn)throws IOException{ //NOTE: i was gonna then call this in getnames, if there is an output file then options are available
+    //then if not dont show them, then check if null, terminate
+        boolean look = true;
+        String getChoice;
+        if(FileExist(ioname[1])){
+            System.out.println("------Pick Option-------");
+            System.out.println("--[B] Back Up File    --");
+            System.out.println("--[R] Rename File     --");
+            System.out.println("--[O] Overwrite File  --");
+            System.out.println("--[N] New Output File --");
+            System.out.println("--[Q] Quit            --");
+            System.out.println("------------------------");
+        }
+        while(look){
+            getChoice = keysIn.readLine();
+            switch (getChoice.toUpperCase()) {
+                
+                case "B":
+                    FileBackup(ioname[1], ".bak");
+                    return true;
+                case "R":
+                    System.out.print("Rename outputfile: ");
+                    ioname[1] = keysIn.readLine();
+                    if (ioname[1] == null || ioname[1].isEmpty()){
+                        ioname[0] = null; // Quit
+                        return false;
+                    }
+                case "O":
+                case "N":
+                case "Q":
+                    System.out.println("Quiting...");
+                    break;
+                default:
+                    System.err.println("ERROR IN CHOICE!");
+                    break;
+                }
+        }
+        return true;
+
+    }
+    //------------------------------------------------------------------
 
 }//end class IO
 
@@ -365,7 +407,7 @@ class Word{
     int FindWord(Word[] list, String word, int n){
 	    
 	    return 1; // ADDED FOR COMPILATION
-	    }
+	}
 
 }
 
