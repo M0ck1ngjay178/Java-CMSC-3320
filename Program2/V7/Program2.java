@@ -212,16 +212,16 @@ class IOfile{
                 	}
                         System.out.println("Input File Now Successful!");   //display that input file now sucessfull
                	
-		            System.out.print("ENTER Output Filename: ");  //if length is one, we have the input file name, need output file
+		            System.out.print("ENTER Output Filename: ");            //if length is one, we have the input file name, need output file
                    
-		           	ioname[1] = keysIn.readLine();
+		           	ioname[1] = keysIn.readLine();                            //read output file from keyboard, store in ioname[]
 		           	
-		           	if(ioname[1].equals("")){			            
+		           	if(ioname[1].equals("")){			              //check to make sure user didnt enter to quit  
 	                   return false;	            
                     }
                     
 		             if(FileExist(ioname[1])== false){
-			             System.out.println("Input and Output Files Recived");	
+			             System.out.println("Input and Output Files Recived");	//display that files were, properly recived and will then process
 	               		break;
                   	}
                 	else{
@@ -234,9 +234,8 @@ class IOfile{
 	                		}                			                		
                     	}						
 		            
-		             System.out.println("Input and Output Files Recived");		           
+		             System.out.println("Input and Output Files Recived");	//display that input and output were both recived	           
 	                }
-                
                     break;
                 //------------------END CASE1------------------------------------------------------
                 //INPUT FILE MUST EXIST OUTPUT MUST NOT EXIST
@@ -254,7 +253,7 @@ class IOfile{
 	                    return false;                   
                     }
                     
-                        System.out.println("Input File Now Successful!");                  
+                        System.out.println("Input File Now Successful!");                       //display success msg          
                  
 	                }
 	                
@@ -270,19 +269,19 @@ class IOfile{
 	                		if(!OptionPick(args, keysIn)){			// gives options incase output file already exists
 		                		return false;						//returns false to getnames method to end program 
 	                		}
-	                		ioname[1] = args[1];
+	                		ioname[1] = args[1];                    //pull filename from arguments, store in ioname
 	                		
                     	}
                     	else{
-	                    	ioname[1] = args[1];
+	                    	ioname[1] = args[1];                    //pull filename from arguments, store in ioname
 	                    	}
 		            
-		             System.out.println("Input and Output Files Recived");
+		             System.out.println("Input and Output Files Recived");      //display files recived
 		          
 		             break;
 	                }
                     
-                    System.out.println("Input and Output Files Recived From Command Line");
+                    System.out.println("Input and Output Files Recived From Command Line");     //dsplay recived from cmd
                     break;     // if length is 2 we have both file names already
 
                 default://what goes in defualt??
@@ -293,7 +292,7 @@ class IOfile{
 
             
         }catch(IOException e){
-            System.err.println("ERROR reading user input");
+            System.err.println("ERROR reading user input");     //catch all other errors in exception
             return false;
         }
         
@@ -465,7 +464,7 @@ class Word{
 	    
     void print(PrintWriter out){
         //prints this object word and quantity to the PrintWriter
-	    out.println(String.format("%-20s %5d", word, quant));
+	    out.println(String.format("%-20s %5d", word, quant));       //display data to output file aligned in columns
     }
 	    
     int FindWord(Word[] list, String word, int n){
