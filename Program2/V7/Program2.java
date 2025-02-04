@@ -158,13 +158,12 @@ class Program2{
 
 class IOfile{
     //-------------GETNAMES----------------------------------
-    public static boolean getnames(String[] args, String[] ioname){ //NOTE: I AM CONFUSUSED ON THIS PROCESS, STOPPED 1/26/25- 12:34PM
+    public static boolean getnames(String[] args, String[] ioname){ 
 
 		//String tempfile;
     
         BufferedReader keysIn = new BufferedReader(new InputStreamReader(System.in));// open keyboard to read
 		
-        
         try{
             switch(args.length){    //should this be ioname.length? M.B.B-> NO! i dont think so, this check the string argument list to pull the file names
                 case 0:				//Case if no arguments are in command line
@@ -202,9 +201,8 @@ class IOfile{
 	                }
                 
                     break;
-
-                case 1:				//Case if only input is in command line
-                	 
+                //------------------CASE1------------------------------------------------------
+                case 1:				//Case if only input is in command line 
                 ioname[0] = args[0];
                 	while(FileExist(ioname[0])==false) {
 	               	 System.out.println("ERROR: Input File Does Not Exist. Please Enter a Valid Input File");
@@ -243,8 +241,10 @@ class IOfile{
 	                }
                 
                     break;
-                    
-                    //INPUT FILE MUST EXIST OUTPUT MUST NOT EXIST
+                //------------------END CASE1------------------------------------------------------
+                //INPUT FILE MUST EXIST OUTPUT MUST NOT EXIST
+                
+                //------------------CASE2------------------------------------------------------
                 case 2:							//Case if both arguments are in command line
                	 if(FileExist(args[0])== true) {
 	               	 ioname[0] = args[0];
@@ -289,13 +289,12 @@ class IOfile{
                     break;     // if length is 2 we have both file names already
 
                 default://what goes in defualt??
-                System.out.println("default");
+                    System.out.println("default");
                     break; 
             }
-            
-            
-                     
+            //------------------END CASE2------------------------------------------------------
 
+            
         }catch(IOException e){
             System.err.println("ERROR reading user input");
             return false;
@@ -383,9 +382,10 @@ class IOfile{
     //------------Case conditions: helper function for IO.getnames()----
     public static Boolean OptionPick(String[] ioname, BufferedReader keysIn)throws IOException{ //NOTE: i was gonna then call this in getnames, if there is an output file then options are available
     //then if not dont show them, then check if null, terminate
-        boolean look = true;
+        boolean look = true;                //bool for while statement
         String getChoice;
         if(FileExist(ioname[1])){
+            //Banner for special options
             System.out.println("------Pick Option-------");
             System.out.println("--[B] Back Up File    --");
             System.out.println("--[O] Overwrite File  --");
@@ -467,7 +467,7 @@ class Word{
 	    }
 	    
     void print(PrintWriter out){
-        //out.println(word+"\t\t\t"+quant); 								//prints this object word and quantity to the PrintWriter
+        //prints this object word and quantity to the PrintWriter
 	    out.println(String.format("%-20s %5d", word, quant));
     }
 	    

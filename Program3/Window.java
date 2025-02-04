@@ -8,7 +8,7 @@ import java.io.*;
 
 public class Window extends Frame implements WindowListener{
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;// needs an id for threads
     Label MessageLabel = new Label("This is a window.    ");
 
 
