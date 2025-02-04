@@ -47,7 +47,7 @@ class Program2{
 
         //------------WHILE: READ LINE FROM INPUT------------------------
         while ((inbuffer = infile.readLine()) != null){
-            inline = new StringTokenizer(inbuffer, "%\t;\'&/|:@*,");
+            inline = new StringTokenizer(inbuffer);   //, "%"); //\t;\'&/|:@*,
             
             while (inline.hasMoreTokens()) {
                 word = inline.nextToken();
