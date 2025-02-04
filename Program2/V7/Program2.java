@@ -42,7 +42,7 @@ class Program2{
 
         //----------OPEN INPUT AND OUTPUT-------------------	        		
 	        infile = new BufferedReader(new FileReader(ionames[0]));	//opens input file
-        outfile = new PrintWriter(new FileWriter(ionames[1]));	//opens output file           
+            outfile = new PrintWriter(new FileWriter(ionames[1]));	//opens output file           
         //-----------------------------------------------------
 
         //------------WHILE: READ LINE FROM INPUT------------------------
@@ -116,14 +116,14 @@ class Program2{
         //------------------------------------------
 
         //------CLOSE FILES-----
-        infile.close();
-        outfile.close();
+        infile.close();  //close input file
+        outfile.close(); //close outputfile
         //----------------------
         
 
 	}
 	else{
-	System.err.println("Program Finished and Opened No Files");
+	    System.err.println("Program Finished and Opened No Files");
     }
 }
     //-------------ISINT----------------------------------
@@ -477,28 +477,3 @@ class Word{
 	}
 
 }
-
-
- //psuedocode from lecture:
-        /**
-         * Uses getnames for the file names in ionnames 
-         * opens the input file and output file
-         * reads a line from the input file
-         * while there is a line:
-         *          convert the line into tokens using stringtokenizer
-         *          if the token begins with an alpha:
-         *                      checks if the word already exists:
-         *                                      increment count
-         *                      else creates the word object and add to the array
-         *          else convert the number and accumulate it
-         * print the word and counts
-         * print the number of words and the sum of the integers
-         * closes the input and output files
-         * 
-         * 
-         * 
-         * //if(!FileExists()){
-                    //  System.err.println("ERROR!!! Both files need to exist");
-                    //  return false;
-                    //}
-         */
