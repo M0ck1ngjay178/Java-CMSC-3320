@@ -1,4 +1,4 @@
-package Program3.V2;
+package Program3.V3;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -38,7 +38,17 @@ public class Window extends Frame implements WindowListener, ActionListener{
 
         /*----------LIST----------*/
         List list= new List(25,false); //creates a list with 25 rows, no multiple selection
+        list.setSize(300,800);
+        c.gridwidth = 8;
+        c.gridheight = 13;
+        c.fill = GridBagConstraints.BOTH;
+        //place for list
+        c.gridx=0;
+        c.gridy=0;
+        displ.setConstraints(list,c);
+        this.add(list);
         list.add("..");     //dots to go back
+        //-------------------------------
 
         //set up window---------
         this.setBounds(20,20,800,500);
@@ -53,17 +63,13 @@ public class Window extends Frame implements WindowListener, ActionListener{
         c.anchor=GridBagConstraints.CENTER;
         c.weightx=1;
         c.weighty=1;
-        // c.gridwidth=7;
-        // c.gridheight=10;
+        
+
         c.gridwidth=1;
         c.gridheight=1;
         c.fill=GridBagConstraints.BOTH;
 
-        //place for list
-        c.gridx=0;
-        c.gridy=0;
-        displ.setConstraints(list,c);
-        this.add(list);
+        
          
 
         c.gridx=0;
