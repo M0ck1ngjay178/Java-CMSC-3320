@@ -2,6 +2,7 @@ package Program3.V3;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 
 public class Main extends Frame implements WindowListener, ActionListener {
 
@@ -14,8 +15,12 @@ public class Main extends Frame implements WindowListener, ActionListener {
     TextField FileText = new TextField("File text placeholder", 50);
     Label SelectTarget = new Label("Select Target Directory:");
     Label MessageLabel = new Label();
-
-    Main(){
+    String fileN;
+    File curDir = new File(fileN);
+    
+    Main(File dir){
+    
+         this.curDir = dir;
         //------------SET UP WINDOW, LAYOUT, LIST---------------
         GridBagConstraints c = new GridBagConstraints();
         GridBagLayout displ = new GridBagLayout();
@@ -78,10 +83,9 @@ public class Main extends Frame implements WindowListener, ActionListener {
         add(MessageLabel);
         //------------SET UP WINDOW, LAYOUT, LIST---------------
 
+        //this.setTitle(curDir.getAbsolutePath());
+        
     }
-
-
-
 
     //========================ACTION HANDLER==========================================
 
@@ -125,11 +129,38 @@ public class Main extends Frame implements WindowListener, ActionListener {
     public void windowDeiconified(WindowEvent e){}
     //========================END WINDOW LISTENER METHODS=================================
 
+   
+
 
    //+++++++++++++++++++MAIN+++++++++++++++++++++++
     public static void main(String[] args) {
-        new Main();
 
+        
+        String file_name;
+        File dir = new File(file_name);
+
+        try{
+            switch(args.length){                                   
+                case 0:
+                    new Main(new File(new File(System.getProperty("user.dir")).getAbsolutePath()));				                                
+                    break;
+                case 1:
+                    file_name = args[0];
+
+                    if(file_name.isDirectory()){ //is directory needs initialized
+                        new Main(new File(dir.getAbsolutePath()));				                               
+                        break;
+
+                    }else{
+                        System.out.println("Does not exist!!");
+                    }
+
+                    
+
+            }
+        }catch(Exception e){}
+        
+        
     }
     //+++++++++++++END MAIN++++++++++++++++++++++++
 
