@@ -16,6 +16,7 @@ public class Main extends Frame implements WindowListener, ActionListener {
     Label MessageLabel = new Label();
 
     Main(){
+        //------------SET UP WINDOW, LAYOUT, LIST---------------
         GridBagConstraints c = new GridBagConstraints();
         GridBagLayout displ = new GridBagLayout();
         setLayout(displ);
@@ -75,7 +76,14 @@ public class Main extends Frame implements WindowListener, ActionListener {
         c.gridy = 4;
         displ.setConstraints(MessageLabel, c);
         add(MessageLabel);
+        //------------SET UP WINDOW, LAYOUT, LIST---------------
+
     }
+
+
+
+
+    //========================ACTION HANDLER==========================================
 
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource(); //get current source
@@ -88,6 +96,9 @@ public class Main extends Frame implements WindowListener, ActionListener {
             MessageLabel.setText("");
         }
     }
+    //========================END ACTION HANDLER=======================================
+
+    //========================WINDOW LISTENER METHODS=================================
     
 
     //add all 6 Window Listener Methods
@@ -112,10 +123,14 @@ public class Main extends Frame implements WindowListener, ActionListener {
 
     public void windowIconified(WindowEvent e){}
     public void windowDeiconified(WindowEvent e){}
-   
+    //========================END WINDOW LISTENER METHODS=================================
+
+
+   //+++++++++++++++++++MAIN+++++++++++++++++++++++
     public static void main(String[] args) {
         new Main();
 
     }
+    //+++++++++++++END MAIN++++++++++++++++++++++++
 
 }
