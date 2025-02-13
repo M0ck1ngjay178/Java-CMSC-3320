@@ -1,8 +1,13 @@
-package Program3.V3;
+package Program3.V4;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
+import java.io.File;
+// import java.io.IOException;
+// import java.nio.file.Files;
+// import java.nio.file.Paths;
+// import java.util.stream.Stream;
+
 
 public class Main extends Frame implements WindowListener, ActionListener {
 
@@ -15,20 +20,21 @@ public class Main extends Frame implements WindowListener, ActionListener {
     TextField FileText = new TextField("File text placeholder", 50);
     Label SelectTarget = new Label("Select Target Directory:");
     Label MessageLabel = new Label();
-    String fileN;
-    File curDir = new File(fileN);
-    
-    Main(File dir){
-    
-         this.curDir = dir;
+ // Create the List component
+        List list = new List(25, false);
+        
+
+    Main(){
         //------------SET UP WINDOW, LAYOUT, LIST---------------
         GridBagConstraints c = new GridBagConstraints();
         GridBagLayout displ = new GridBagLayout();
         setLayout(displ);
 
-        // Create the List component
-        List list = new List(25, false);
-        list.add("...");
+        String currentDir= System.getProperty("user.dir");
+        this.setTitle(currentDir);
+        
+	// add to list
+       list.add("...");
 
         setBounds(20, 20, 800, 500);
         setVisible(true);
@@ -85,6 +91,34 @@ public class Main extends Frame implements WindowListener, ActionListener {
 
         //this.setTitle(curDir.getAbsolutePath());
         
+
+
+    }
+
+
+    public void updateList(){
+    
+        File directory = new File(getTitle());
+
+        if (directory.exists() && directory.isDirectory()) { //check if directory exists and is a directory
+            File[] files = directory.listFiles();
+            
+            if (files != null) {
+                for (File file : files) {
+                   // System.out.println(file.getName()); just for testing
+                   if (file.isDirectory()){
+                    list.add(file.getName()+ " +"); // + to show it is a directory
+                   }
+                   else{
+                    list.add(file.getName());  // adds full path of each file/directory to list
+                   }
+                      
+
+                }
+            }
+        } else {
+           MessageLabel.setText("The provided path is not a directory.");
+        }
     }
 
     //========================ACTION HANDLER==========================================
@@ -129,36 +163,14 @@ public class Main extends Frame implements WindowListener, ActionListener {
     public void windowDeiconified(WindowEvent e){}
     //========================END WINDOW LISTENER METHODS=================================
 
-   
-
 
    //+++++++++++++++++++MAIN+++++++++++++++++++++++
     public static void main(String[] args) {
-
-        
-        String file_name;
-        File dir = new File(file_name);
-
-        try{
-            switch(args.length){                                   
-                case 0:
-                    new Main(new File(new File(System.getProperty("user.dir")).getAbsolutePath()));				                                
-                    break;
-                case 1:
-                    file_name = args[0];
-
-                    if(file_name.isDirectory()){ //is directory needs initialized
-                        new Main(new File(dir.getAbsolutePath()));				                               
-                        break;
-
-                    }else{
-                        System.out.println("Does not exist!!");
-                    }     
-
-            }
-        }catch(Exception e){}
-        
-        
+        Main my=new Main();//new File(dir.getAbsolutePath()));
+       
+        my.updateList();
+         //my.FileText.setText(my.list.getSelectedItem()); sets the text field to the item name that is selected
+    
     }
     //+++++++++++++END MAIN++++++++++++++++++++++++
 

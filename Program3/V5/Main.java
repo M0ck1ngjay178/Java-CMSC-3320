@@ -1,11 +1,10 @@
-package Program3.V3;
+package Program3.V5;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 
 public class Main extends Frame implements WindowListener, ActionListener {
-
     private static final long serialVersionUID = 1L;
     Label SourceLabel = new Label("Source:");
     Label SourceText = new Label("source text");
@@ -15,75 +14,93 @@ public class Main extends Frame implements WindowListener, ActionListener {
     TextField FileText = new TextField("File text placeholder", 50);
     Label SelectTarget = new Label("Select Target Directory:");
     Label MessageLabel = new Label();
-    String fileN;
-    File curDir = new File(fileN);
+    List list = new List(25, false);
+    File curDir;
+    boolean sourceFlag = false, targetFlag = false, outfileFlag = false;
     
-    Main(File dir){
-    
-         this.curDir = dir;
-        //------------SET UP WINDOW, LAYOUT, LIST---------------
+    Main(File dir) {
+        this.curDir = dir;
+        sourceFlag = targetFlag = outfileFlag = false; // Initialize flags
+        setTitle(curDir.getAbsolutePath());
+        setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
-        GridBagLayout displ = new GridBagLayout();
-        setLayout(displ);
 
-        // Create the List component
-        List list = new List(25, false);
         list.add("...");
+        Target.setEnabled(false); // Disable target button
 
-        setBounds(20, 20, 800, 500);
-        setVisible(true);
+        // Add components to layout
+        c.fill = GridBagConstraints.BOTH;
+        c.weightx = 1;
+        c.weighty = 1;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.gridx = 0;
+        c.gridy = 0;
+        add(list, c);
+
+        c.gridwidth = 1;
+        c.gridy = 1;
+        add(SourceLabel, c);
+        c.gridx = 1;
+        add(SourceText, c);
+
+        c.gridx = 0;
+        c.gridy = 2;
+        add(Target, c);
+        c.gridx = 1;
+        add(SelectTarget, c);
+
+        c.gridx = 0;
+        c.gridy = 3;
+        add(FileName, c);
+        c.gridx = 1;
+        add(FileText, c);
+        c.gridx = 2;
+        add(Ok, c);
+
+        c.gridx = 1;
+        c.gridy = 4;
+        add(MessageLabel, c);
+
+        // Add listeners
         Ok.addActionListener(this);
         Target.addActionListener(this);
         addWindowListener(this);
 
-        c.fill = GridBagConstraints.BOTH;
-        c.weightx = 1;
-        c.weighty = 1;
-        c.gridwidth = GridBagConstraints.REMAINDER; // full width
-        c.gridx = 0;
-        c.gridy = 0;
-        displ.setConstraints(list, c);
-        add(list);
+        setBounds(0, 0, 300, 900); // Set frame size
+        pack(); // Adjust layout
+        setVisible(true); // Make visible
+    }
 
-        c.gridwidth = 1; // Reset width
-        c.gridx = 0;
-        c.gridy = 1;
-        displ.setConstraints(SourceLabel, c);
-        add(SourceLabel);
+    public void updateList() {
+        list.removeAll();
+        File[] files = curDir.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                list.add(file.isDirectory() ? file.getName() + " +" : file.getName());
+            }
+        } else {
+            MessageLabel.setText("The provided path is not a directory.");
+        }
+    }
+    public void displayFiles(String fileORdir){
+        
+        if(fileORdir == null){
+            updateList();
+        }else{
+            if("...".equals(fileORdir)){
+                curDir = new File(curDir.getParent());
+                updateList();
+            }else{
+                File file_file = new File(curDir, fileORdir);
 
-        c.gridx = 1;
-        displ.setConstraints(SourceText, c);
-        add(SourceText);
+                if(file_file.exists()){
+                    MessageLabel.setText("Selected: "+file_file.getAbsolutePath());
+                }else{
+                    MessageLabel.setText("ERROR!! Does Not Exist");
 
-        c.gridx = 0;
-        c.gridy = 2;
-        displ.setConstraints(Target, c);
-        add(Target);
-
-        c.gridx = 1;
-        displ.setConstraints(SelectTarget, c);
-        add(SelectTarget);
-
-        c.gridx = 0;
-        c.gridy = 3;
-        displ.setConstraints(FileName, c);
-        add(FileName);
-
-        c.gridx = 1;
-        displ.setConstraints(FileText, c);
-        add(FileText);
-
-        c.gridx = 2;
-        displ.setConstraints(Ok, c);
-        add(Ok);
-
-        c.gridx = 1;
-        c.gridy = 4;
-        displ.setConstraints(MessageLabel, c);
-        add(MessageLabel);
-        //------------SET UP WINDOW, LAYOUT, LIST---------------
-
-        //this.setTitle(curDir.getAbsolutePath());
+                }
+            }
+        }
         
     }
 
@@ -94,17 +111,18 @@ public class Main extends Frame implements WindowListener, ActionListener {
         if(source == Ok){
             MessageLabel.setText("Clicked Ok");
             SelectTarget.setText("");
-        }
-        if(source == Target){
+        }else if (source == Target){
             SelectTarget.setText("Clicked Target");
             MessageLabel.setText("");
+        }else{
+            String select = list.getSelectedItem();
+            displayFiles(select);
         }
     }
     //========================END ACTION HANDLER=======================================
 
     //========================WINDOW LISTENER METHODS=================================
     
-
     //add all 6 Window Listener Methods
     public void windowClosing(WindowEvent e){
         this.removeWindowListener(this);
@@ -124,42 +142,32 @@ public class Main extends Frame implements WindowListener, ActionListener {
         // MessageLabel.setText("A window deactivated");
     }
 
-
     public void windowIconified(WindowEvent e){}
     public void windowDeiconified(WindowEvent e){}
     //========================END WINDOW LISTENER METHODS=================================
 
-   
-
-
-   //+++++++++++++++++++MAIN+++++++++++++++++++++++
     public static void main(String[] args) {
-
-        
         String file_name;
-        File dir = new File(file_name);
 
-        try{
-            switch(args.length){                                   
+        try {
+            switch (args.length) {
                 case 0:
-                    new Main(new File(new File(System.getProperty("user.dir")).getAbsolutePath()));				                                
+                    new Main(new File(new File(System.getProperty("user.dir")).getAbsolutePath()));
                     break;
                 case 1:
                     file_name = args[0];
-
-                    if(file_name.isDirectory()){ //is directory needs initialized
-                        new Main(new File(dir.getAbsolutePath()));				                               
+                    File dir = new File(file_name);
+                    if (dir.isDirectory()) {
+                        new Main(new File(dir.getAbsolutePath()));
                         break;
-
-                    }else{
+                    } else {
                         System.out.println("Does not exist!!");
-                    }     
-
+                    }
             }
-        }catch(Exception e){}
-        
-        
+        } catch (Exception e) {
+            System.out.println("Exception error");
+        }
     }
-    //+++++++++++++END MAIN++++++++++++++++++++++++
 
+   
 }
