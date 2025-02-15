@@ -30,7 +30,7 @@ public class Main extends Frame implements WindowListener, ActionListener {
             setLayout(new GridBagLayout());
             GridBagConstraints c = new GridBagConstraints();
 
-            list.add("..."); 
+            list.add(".."); 
             Target.setEnabled(false); // Disable target button
 
              // Add components to layout
@@ -112,7 +112,7 @@ public class Main extends Frame implements WindowListener, ActionListener {
       //If the file is a directory this lower line removes the + so it can actually be accessed and not be seen as non existant
             File file_file = new File(curDir, fileORdir.replace("+", ""));
             
-            if("...".equals(fileORdir)) { //if filordir equals "..." then...
+            if("..".equals(fileORdir)) { //if filordir equals "..." then...
 
                 curDir = curDir.getParentFile();//navigates the list to the parent directory
                 updateList();// updates the list
@@ -142,6 +142,56 @@ public class Main extends Frame implements WindowListener, ActionListener {
             MessageLabel.setText("DISPLAYFILES ERROR");
         }
     }
+
+    //========================COPY FILE=======================================
+
+    private void copyFile(File source, File target) {
+
+        boolean found = false;
+        if (target.isDirectory()) {
+            target = new File(target, source.getName());
+        }
+
+        try{
+
+            BufferedReader read = new BufferedReader(new FileReader(source));
+            PrintWriter writer = new PrintWriter(new FileWriter(target));
+
+            int lines;
+
+            while ((lines = read.read()) != -1) {
+
+                writer.write(lines);
+                found = true;
+            }
+            MessageLabel.setText("File copied EUREKA!");
+
+            writer.flush(); // Ensure data is written to file
+            read.close();
+            writer.close(); // Explicitly close files (though try-with-resources does this)
+            //debugging check
+            if (found) {
+                MessageLabel.setText("File copied successfully!");
+            } else {
+                MessageLabel.setText("File copied, but it was empty!");
+            }
+            //reset
+            sourceFlag = false;
+            targetFlag = false;
+            outfileFlag = false;
+            SourceText.setText(""); // Reset source file display
+            FileText.setText("");   // Reset target file name
+            SelectTarget.setText("Select Target Directory:");
+            Target.setEnabled(false); // Disable Target button
+
+        } catch (IOException e){
+            e.printStackTrace();
+            MessageLabel.setText("An io errar occurred");
+        }
+    }
+   
+    //========================END COPY FILE=======================================
+
     
 
      //========================ACTION HANDLER==========================================
@@ -152,15 +202,19 @@ public class Main extends Frame implements WindowListener, ActionListener {
             Object source = e.getSource(); //get current source
             if (source == Ok) {
 
-                //makes files for source and target i think im thinking about target wrong
+
                 File sourceFile = new File(SourceText.getText());
-                File targetFile = new File(SelectTarget.getText() + "/" + FileText.getText());
+                String targetPath = SelectTarget.getText().replace("Target: ", "").trim();
+                File targetDir = new File(targetPath);
                 
+
                 if (!sourceFlag) { // if source is not specified
                     MessageLabel.setText("Source file is not specified");
                 } else if (!targetFlag) {// if the target is not specified
                     MessageLabel.setText("target directory is not specified");
                 } else {
+                    outfileFlag = true;
+                    File targetFile = new File(targetDir, FileText.getText());
                     copyFile(sourceFile, targetFile);// attempts to copy file
                 }
             } else if (source == Target) {// checks if target button has been pressed
@@ -169,6 +223,7 @@ public class Main extends Frame implements WindowListener, ActionListener {
                 SelectTarget.setText("Target: " + curDir.getAbsolutePath());
 
                 MessageLabel.setText("");
+
             }
         } catch (Exception ex) {
 
@@ -176,36 +231,9 @@ public class Main extends Frame implements WindowListener, ActionListener {
             MessageLabel.setText("ACTIONPERFORMED ERROR");
         }
     }
-    
  //========================END ACTION HANDLER=======================================
 
-  //========================COPY FILE=======================================
-
-
-    private void copyFile(File source, File target) {
-
-        File targetFile = new File(target, "CHILD.txt");
-
-        try (BufferedReader read = new BufferedReader(new FileReader(source));
-             PrintWriter writer = new PrintWriter(new FileWriter(targetFile))) {
-            
-            String lines;
-
-            while ((lines = read.readLine()) != null) {
-
-                writer.println(lines);
-            }
-            
-            MessageLabel.setText("File copied EUREKA!");
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-            MessageLabel.setText("An io errar occurred");
-        }
-    }
-
-    //========================END COPY FILE=======================================
+  
     
     
     //========================WINDOW LISTENER METHODS=================================
