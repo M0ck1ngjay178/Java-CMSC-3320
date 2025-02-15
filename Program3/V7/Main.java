@@ -88,7 +88,7 @@ public class Main extends Frame implements WindowListener, ActionListener {
             String[] fileNames = curDir.list();
             
             if (curDir.getParent() != null) { // if there is a parent directory
-                list.add("..."); //adds option to go to parent directory
+                list.add(".."); //adds option to go to parent directory
             }
             if (fileNames != null) {
                 for (String name : fileNames) { // for every name in file name
