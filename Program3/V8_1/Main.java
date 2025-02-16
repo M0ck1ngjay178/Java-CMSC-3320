@@ -1,14 +1,25 @@
+/*******************HEADER*******************************/
+/*  CMSC-3320 Technical Computing Using Java		    */   
+/* 	GUI FILE COPY						                */
+/*	Group 1												*/
+/*	Group Names: 										*/
+/*     -Margo Bonal,      bon8330@pennwest.edu			*/
+/*     -Luke Ruffing,     ruf96565@pennwest.edu 		*/
+/*     -Ethan Janovich,   jan60248@pennwest.edu			*/
+/*     -Nikolaus Roebuck, roe01807@pennwest.edu  		*/
+/*******************END HEADER***************************/
+package Program3.V8_1; //TODO: remeber to take out package for submisssion!!!! or will break
 
-package Program3.V8_1;
-
+//----------LIBRARIES-------------
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-// import java.nio.file.Files;
-// import java.nio.file.Paths;
-// import java.util.stream.Stream;
+//----------END LIBRARIES---------
 
+//----------------------------CLASS MAIN---------------------------------------------------------
 public class Main extends Frame implements WindowListener, ActionListener {
+    
+    //--------------GLOBAL VARIABLES-------------------------------------
     private static final long serialVersionUID = 1L;
     Label SourceLabel = new Label("Source:");
     Label SourceText = new Label("");
@@ -21,19 +32,23 @@ public class Main extends Frame implements WindowListener, ActionListener {
     List list = new List(25, false);
     File curDir;
     boolean sourceFlag = false, targetFlag = false, outfileFlag = false;
+    //--------------END GLOBAL VARIABLES------------------------------------
     
-    Main(File dir) {
+    //------------------MAIN CONSTRUCTOR------------------------------------
+    Main(File dir){
         
+            //------------CONSTRUCTOR VARIABLES----------------------------
             this.curDir = dir;
-            sourceFlag = targetFlag = outfileFlag = false; // Initialize flags
+            sourceFlag = targetFlag = outfileFlag = false; //init flags
             setTitle(curDir.getAbsolutePath());
             setLayout(new GridBagLayout());
             GridBagConstraints c = new GridBagConstraints();
 
             list.add(".."); 
             Target.setEnabled(false); // Disable target button
-
-             // Add components to layout
+            //------------END CONSTRUCTOR VARIABLES--------------------------
+            
+            //--------BUILD WINDOW LAYOUT: Add components-----------------
             c.fill = GridBagConstraints.BOTH;
             c.weightx = 1;
             c.weighty = 1;
@@ -65,58 +80,58 @@ public class Main extends Frame implements WindowListener, ActionListener {
             c.gridx = 1;
             c.gridy = 4;
             add(MessageLabel, c);
+            //--------END BUILD WINDOW LAYOUT: Add components-----------------
 
-            // Add listeners
+            //------------ADD LISTENERS--------------------------------------
             Ok.addActionListener(this);
             FileText.addActionListener(this); // adds listener for enter key
             Target.addActionListener(this);
             list.addItemListener(e -> displayFiles(list.getSelectedItem())); // ADDED
             addWindowListener(this);
+            //------------END ADD LISTENERS------------------------------------
 
+            //-----------PACK FRAME/UPDATE LIST-----------------------------
             setBounds(0, 0, 300, 900); // Set frame size
             pack();// Adjust layout
             setVisible(true); // Make visible
-            updateList();
-       
-    }
+            updateList(); //call helper function update list 
+            //-----------PACK FRAME/UPDATE LIST-----------------------------
 
+    }
+    //------------------END MAIN CONSTRUCTOR------------------------------------
+
+    //---------------------UPDATE LIST FUNCTION-----------------------------------
     //updates the file list in the current directory
     public void updateList() {
         try {
             list.removeAll(); //removes the whole list
-            //File[] files = curDir.listFiles();//just be .list()?
             setTitle(curDir.getAbsolutePath());
             String[] fileNames = curDir.list();
             
             if (curDir.getParent() != null) { // if there is a parent directory
                 list.add(".."); //adds option to go to parent directory
             }
-            /*if (fileNames != null) {
-                for (String name : fileNames) { // for every name in file name
-                    File f = new File(curDir, name);
-                    list.add(name + (f.isDirectory() ? "+" : "")); // adds a + to end of file name if its a directory
-                }
-            }*/
+           
             if (fileNames != null) {
                 for (String name : fileNames) {
                     File f = new File(curDir, name);
     
                     if (f.isDirectory()) {
-                        list.add(name + (lookforSubDir(f) ? "+" : ""));
+                        list.add(name + (lookforSubDir(f) ? "+" : "")); //call helper function to find directory in another direcoty, and place + coorespondingly
                     } else {
                         list.add(name);
                     }
                 }
             }
-
-
         } catch (Exception e) {
             e.printStackTrace();//prints the stack trace helps with debuging
             MessageLabel.setText("UPDATE LIST ERROR");
         }
     }
+    //---------------------END UPDATE LIST FUNCTION---------------------------------------
 
-    private boolean lookforSubDir(File dir) {
+    //----------------LOOKFORSUBDIR FUNCTION-------------------
+    private boolean lookforSubDir(File dir) { //function to return t or f is there is a dirctory in another directory
         File[] sub = dir.listFiles();
 
         if (sub != null) {
@@ -128,69 +143,63 @@ public class Main extends Frame implements WindowListener, ActionListener {
         }
         return false; //Not found
     }
+    //----------------END LOOKFORSUBDIR FUNCTION-------------------
 
 
-    
-    public void displayFiles(String fileORdir) {
-        
+    //----------------DISPLAY FILES FUNCTION------------------------------------
+    public void displayFiles(String fileORdir) {//helper function t display files in list viewer
+
         try {
 
-        if(fileORdir != null) {
+            if(fileORdir != null) {    
+            
+                //If the file is a directory this lower line removes the + so it can actually be accessed and not be seen as non existant
+            if(fileORdir.endsWith("+"))
+            {
+                    fileORdir = fileORdir.substring(0, fileORdir.length()-1);
+            }
 
-                
-           // File file_file = new File(curDir, fileORdir.replace("+", ""));
-           
-//If the file is a directory this lower line removes the + so it can actually be accessed and not be seen as non existant
-           if(fileORdir.endsWith("+"))
-           {
-            fileORdir = fileORdir.substring(0, fileORdir.length()-1);
-           }
+                File file_file = new File(curDir, fileORdir); 
 
-            File file_file = new File(curDir, fileORdir); 
+                if("..".equals(fileORdir)) { //if filordir equals "..." then...
 
-            if("..".equals(fileORdir)) { //if filordir equals "..." then...
+                    curDir = curDir.getParentFile();//navigates the list to the parent directory
+                    updateList();// updates the list
+                } 
+                else if(file_file.isDirectory()){ // if the file selected is a directory...
+                    curDir = file_file;// navigates to selected file
+                    updateList();//updates list
+                } 
+                else{
+                    if(!targetFlag) {
 
-                curDir = curDir.getParentFile();//navigates the list to the parent directory
-                updateList();// updates the list
-            } 
-            else if(file_file.isDirectory()) { // if the file selected is a directory...
-                //curDir=new File(curDir,fileORdir);
+                    SourceText.setText(file_file.getAbsolutePath()); // sets the source file path
+                        sourceFlag = true;
 
-                curDir = file_file;// navigates to selected file
-                 updateList();//updates list
+                        Target.setEnabled(true);
+                    } else{
+                        FileText.setText(fileORdir); // sets the ffiles name
+                    }
+
+                }
             } 
             else{
-                if(!targetFlag) {
-
-                 SourceText.setText(file_file.getAbsolutePath()); // sets the source file path
-                    sourceFlag = true;
-
-                    Target.setEnabled(true);
-                } else{
-                    FileText.setText(fileORdir); // sets the ffiles name
-                }
-
-            }
-        } 
-        else{
-           return; 
-        }  
+                return; 
+            }  
         } catch (Exception e) {
-
-                e.printStackTrace(); // prinst the stack trace helps with debuging
+            e.printStackTrace(); // prinst the stack trace helps with debuging
             MessageLabel.setText("DISPLAYFILES ERROR");
         }
     }
+    //----------------END DISPLAY FILES FUNCTION------------------------------------
 
-    //========================COPY FILE=======================================
-
+    //---------------------COPY FILE--------------------------------------
     private void copyFile(File source, File target) {
 
         boolean found = false;
         if (target.isDirectory()) {
             target = new File(target, source.getName());
         }
-
         try{
 
             BufferedReader read = new BufferedReader(new FileReader(source));
@@ -205,9 +214,9 @@ public class Main extends Frame implements WindowListener, ActionListener {
             }
             MessageLabel.setText("File copied EUREKA!");
 
-            writer.flush(); // Ensure data is written to file
-            read.close();
-            writer.close(); // Explicitly close files (though try-with-resources does this)
+            writer.flush(); //make sure data is written to file
+            read.close();//close fle for reading
+            writer.close();//close file for writing
             //debugging check
             if (found) {
                 MessageLabel.setText("File copied successfully!");
@@ -228,14 +237,9 @@ public class Main extends Frame implements WindowListener, ActionListener {
             MessageLabel.setText("An io errar occurred");
         }
     }
-   
-    //========================END COPY FILE=======================================
-
+    //---------------------END COPY FILE------------------------------------------
     
-
-     //========================ACTION HANDLER==========================================
-
-
+    //========================ACTION HANDLER==========================================
     public void actionPerformed(ActionEvent e) {
         try {
             Object source = e.getSource(); //get current source
@@ -261,7 +265,6 @@ public class Main extends Frame implements WindowListener, ActionListener {
                 MessageLabel.setText("");
                 SelectTarget.setText("Target: " + curDir.getAbsolutePath());
                 targetFlag = true;// sets the flag
-
             }
         } catch (Exception ex) {
 
@@ -269,13 +272,10 @@ public class Main extends Frame implements WindowListener, ActionListener {
             MessageLabel.setText("ACTIONPERFORMED ERROR");
         }
     }
- //========================END ACTION HANDLER=======================================
+    //========================END ACTION HANDLER=======================================
 
-  
-    
     
     //========================WINDOW LISTENER METHODS=================================
-
     //add all 6 Window Listener Methods
     public void windowClosing(WindowEvent e) {
         this.removeWindowListener(this);
@@ -288,19 +288,19 @@ public class Main extends Frame implements WindowListener, ActionListener {
     public void windowClosed(WindowEvent e) {}
     public void windowOpened(WindowEvent e) {}
 
-    public void windowActivated(WindowEvent e) {}
-                 // MessageLabel.setText("A window activated");
-
-
-    public void windowDeactivated(WindowEvent e) {}
-            // MessageLabel.setText("A window deactivated");
-
+    public void windowActivated(WindowEvent e) {
+        // MessageLabel.setText("A window activated");
+    }
+                
+    public void windowDeactivated(WindowEvent e) {
+        // MessageLabel.setText("A window deactivated");
+    }
 
     public void windowIconified(WindowEvent e) {}
     public void windowDeiconified(WindowEvent e) {}
     //========================END WINDOW LISTENER METHODS=================================
     
-    
+    //++++++++++++++++++++++++++++MAIN+++++++++++++++++++++++++++++++++++++++++++++++++++++++
         public static void main(String[] args) {
             String file_name;
     
@@ -322,7 +322,8 @@ public class Main extends Frame implements WindowListener, ActionListener {
             } catch (Exception e) {
                 System.out.println("Exception error");
             }
-           // displayFiles(file_name);
         }
+    //++++++++++++++++++++++++++++END MAIN+++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
 }
+//---------------------------- END CLASS MAIN---------------------------------------------------------
