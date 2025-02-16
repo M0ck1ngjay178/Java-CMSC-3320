@@ -91,17 +91,45 @@ public class Main extends Frame implements WindowListener, ActionListener {
             if (curDir.getParent() != null) { // if there is a parent directory
                 list.add(".."); //adds option to go to parent directory
             }
-            if (fileNames != null) {
+            /*if (fileNames != null) {
                 for (String name : fileNames) { // for every name in file name
                     File f = new File(curDir, name);
                     list.add(name + (f.isDirectory() ? "+" : "")); // adds a + to end of file name if its a directory
                 }
+            }*/
+            if (fileNames != null) {
+                for (String name : fileNames) {
+                    File f = new File(curDir, name);
+    
+                    if (f.isDirectory()) {
+                        list.add(name + (lookforSubDir(f) ? "+" : ""));
+                    } else {
+                        list.add(name);
+                    }
+                }
             }
+
+
         } catch (Exception e) {
             e.printStackTrace();//prints the stack trace helps with debuging
             MessageLabel.setText("UPDATE LIST ERROR");
         }
     }
+
+    private boolean lookforSubDir(File dir) {
+        File[] sub = dir.listFiles();
+
+        if (sub != null) {
+            for (File subFile : sub) {
+                if (subFile.isDirectory()) {
+                    return true; //found subdirectory
+                }
+            }
+        }
+        return false; //Not found
+    }
+
+
     
     public void displayFiles(String fileORdir) {
         
