@@ -1,0 +1,91 @@
+*> Practice Program-JDOODLE
+*> 8/31/24
+
+*>***************IDENTIFICATION**************************
+    IDENTIFICATION DIVISION.
+    PROGRAM-ID. PRACTICE.
+    AUTHOR.     MARGO B.
+*>***************END IDENTIFICATION**********************
+
+*>***************ENVIROMENT******************************
+    ENVIRONMENT DIVISION.
+    INPUT -OUTPUT SECTION.
+    FILE-CONTROL.
+        SELECT NAME-FILE    ASSIGN TO '/uploads/names.txt'
+            ORGANIZATION IS LINE SEQUENTIAL.
+        SELECT PRINT-FILE   ASSIGN TO '/myfiles/outNames.txt'
+             ORGANIZATION IS LINE SEQUENTIAL.
+*>***************END ENVIROMENT****************************
+             
+             
+*>***************DATA**************************
+    DATA DIVISION.
+    FILE SECTION.
+    
+    FD NAME-FILE
+        RECORD CONTAINS 50 CHARACTERS
+        DATA RECORD IS NAMES-IN.
+    01 NAMES-IN.
+        05  FNAME             PIC X(25).
+        05  LNAME             PIC X(25).
+        
+*>---------------WORKING SECTION----------------------
+    WORKING-STORAGE SECTION.
+    
+    FD PRINT-FILE
+        RECORD CONTAINS 80 CHARACTERS
+        DATA RECORD IS PRINT-LINE.
+    01 PRINT LINE              PIC X(80).
+    
+    01  DATA-REMAINS-SWITCH     PIC X(2)      VALUE SPACES.
+
+    01  HEADING-LINE.
+        05  FILLER              PIC X(10)     VALUE SPACES.
+        05  FILLER              PIC X(12)     VALUE 'NAME'.
+        05  FILLER              PIC X(58)     VALUE SPACES.
+
+    01  DETAIL-LINE.
+        05  FILLER              PIC X(8)      VALUE SPACES.
+        05  PRINT-NAME          PIC X(25).
+        05  FILLER              PIC X(47)     VALUE SPACES.
+*>---------------END WORKING SECTION-------------------
+
+*>***************END DATA**************************   
+
+
+*>***************PROCEDURE**************************
+    PROCEDURE DIVISION.
+    PREPARE-NAMES-REPORT. *> I BELIVE THIS IS LIKE THE MAIN LOOP?!
+        OPEN INPUT NAME-FILE.
+            OUTPUT PRINT-FILE.
+        READ NAME-FILE
+            AT END MOVE 'NO' TO DATA-REMAIND-SWITCH 
+        END-READ.
+        
+        PERFORM WRITE-HEADING-LINE.
+        PERFORM PROCESS-RECORDS
+            UNTIL DATA-REMAINS-SWITCH = 'NO'.
+        CLOSE STUDENT-FILE
+                PRINT-FILE.
+
+*>=====END PROGRAM======
+        STOP RUN.
+*>=====END PROGRAM======
+
+    WRITE-HEADING-LINE.
+        MOVE HEADING-LINE TO PRINT-LINE.
+        WRITE PRINT-LINE.
+    
+    PROCESS-RECORDS.
+        
+        IF FNAME = 'MARGO' AND LNAME = 'B'
+            MOVE FNAME TO PRINT-NAME
+            MOVE DETAIL-LINE TO PRINT-LINE
+            WRITE PRINT-LINE
+        END-IF.
+        
+        READ NAME-FILE
+            AT END MOVE 'NO' TO DATA-REMAINS-SWITCH
+        END-READ.
+
+*>***************END PROCEDURE**************************
