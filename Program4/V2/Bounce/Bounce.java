@@ -215,6 +215,7 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
             if(Start.getLabel()=="Pause"){
                 Start.setLabel("Run");
                 TimerPause = false;
+                
                 //thethread.interrupt();
             }
             else{
@@ -379,6 +380,7 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         private int x, y;
         private boolean rect=true;
         private boolean clear=false;
+        int offset = (SObj -1)/2;
         //constructor
         public Objc(int SB,int w, int h){
             ScreenWidth=w;
@@ -388,6 +390,9 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
             clear=false;
             //y=ScreenHeight/2;??? what do theses do??
             //x=ScreenWidth/2;
+            // x = Math.max(offset, Math.min(ScreenWidth - offset, x));
+            // y = Math.max(offset, Math.min(ScreenHeight - offset, y));
+
 
             boolean down = true;
             boolean right = true;
@@ -400,15 +405,15 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
 
         }
 
-        public void calcBounds() {
-            int offset = (SObj - 1) / 2;  // Calculate the offset
+        // public void calcBounds() {
+        //     int offset = (SObj - 1) / 2;  // Calculate the offset
     
-            // Calculate the min and max X and Y values for the object's display area
-            int minX = x - offset;
-            int maxX = x + offset;
-            int minY = y - offset;
-            int maxY = y + offset;
-        }
+        //     // Calculate the min and max X and Y values for the object's display area
+        //     int minX = x - offset;
+        //     int maxX = x + offset;
+        //     int minY = y - offset;
+        //     int maxY = y + offset;
+        // }
 
         
     
@@ -435,12 +440,15 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
             }
         
             // make sure doesn't move past the left/top edge
-            if (x - SObj / 2 < 0) {
-                x = SObj / 2;
-            }
-            if (y - SObj / 2 < 0) {
-                y = SObj / 2;
-            }
+            // if (x - SObj / 2 < 0) {
+            //     x = SObj / 2;
+            // }
+            // if (y - SObj / 2 < 0) {
+            //     y = SObj / 2;
+            // }
+            if (x < 0) x = 0;
+            if (y < 0) y = 0;
+
         }
         
 
@@ -508,6 +516,18 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         //     x += dx;
         //     y += dy;
         // }
+
+        private void move() {
+            if (y + SObj >= ScreenHeight || y <= 0) {
+                dy = -dy;
+            }
+            if (x + SObj >= ScreenWidth || x <= 0) {
+                dx = -dx;
+            }
+            x += dx;
+            y += dy;
+            repaint();
+        }
     }
 
    
@@ -542,6 +562,8 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
                 try {
                     Thread.sleep(1);
                 } catch (InterruptedException e) {}
+
+                Obj.move();
             }
 
     }
