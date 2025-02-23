@@ -78,7 +78,7 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
     public void initComponents()throws Exception, IOException{
          //initialize componenets
          //start timerPaused as true to pause animation
-         // TODO: idk how to calculate the delay rn?! 
+         // TODO: idk how to calculate the delay rn?! calculate offset, tail not mowrking, cant get it the top left corner 
          TimerPause = true;
          run = true;
          //buttons
@@ -262,19 +262,6 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
     }
 
 
-    /*public void adjustmentValueChanged(AdjustmentEvent e){
-        int TS;
-        Scrollbar sb=(Scrollbar)e.getSource();//get scroll bar that triggered event
-        if(sb==SpeedScrollBar){
-
-        }
-        if(sb==ObjSizeScrollBar){
-            TS=e.getValue();
-            TS=(TS/2)*2+1;//make odd to account for center positions
-            Obj.update(TS);
-        }
-        Obj.repaint();
-    }*/
     public void adjustmentValueChanged(AdjustmentEvent e) {
         int TS;
         Scrollbar sb = (Scrollbar) e.getSource(); // Get the scrollbar that triggered the event
@@ -399,9 +386,32 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
             SObj=SB;
             rect=true;
             clear=false;
-            y=ScreenHeight/2;
-            x=ScreenWidth/2;
+            //y=ScreenHeight/2;??? what do theses do??
+            //x=ScreenWidth/2;
+
+            boolean down = true;
+            boolean right = true;
+
+            x = SObj / 2;
+            y = SObj / 2;
+
+            dy = 1;
+            dx = 1;
+
         }
+
+        public void calcBounds() {
+            int offset = (SObj - 1) / 2;  // Calculate the offset
+    
+            // Calculate the min and max X and Y values for the object's display area
+            int minX = x - offset;
+            int maxX = x + offset;
+            int minY = y - offset;
+            int maxY = y + offset;
+        }
+
+        
+    
         //mutators
         public void rectangle(boolean r){
             rect=r;
@@ -484,7 +494,20 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
                 g.setColor(Color.black);
                 g.drawOval(x-(SObj-1)/2, y-(SObj-1)/2,SObj-1,SObj-1);
             }
+
+            // if(!tail){
+            //     g.setColor(getBackground());
+            //     if
+            // }
         }
+
+        // test for debugging
+        // public void move() {
+        //     if (x <= 0 || x + SOBJ >= getWidth()) dx = -dx;
+        //     if (y <= 0 || y + SOBJ >= getHeight()) dy = -dy;
+        //     x += dx;
+        //     y += dy;
+        // }
     }
 
    
