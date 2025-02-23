@@ -181,6 +181,7 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
     }
 
     public void stop(){
+        run = false;
         Start.removeActionListener(this);
         Shape.removeActionListener(this);
         Clear.removeActionListener(this);
@@ -194,6 +195,7 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         ObjSizeScrollBar.removeAdjustmentListener(this);
 
         dispose();
+        thethread.interrupt();
         System.exit(0);
     }
 
@@ -212,20 +214,33 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         if(source==Start){
             if(Start.getLabel()=="Pause"){
                 Start.setLabel("Run");
+                TimerPause = false;
+                //thethread.interrupt();
             }
             else{
                 Start.setLabel("Pause");
+                TimerPause = true;
+                //thethread.interrupt();
             }
         }
         if(source==Tail){
             if(Tail.getLabel()=="Tail"){
                 Tail.setLabel("No Tail");
+                started = true;
+                Obj.Clear();
             }
             else{
                 Tail.setLabel("Tail");
+                started = false;
+                //start tail mode here
             }
         }
         if(source==Shape){
+
+            if (!started) {
+                Obj.Clear(); // Clear the object if animation hasn't started
+            }
+
             if(Shape.getLabel()=="Circle"){
                 Shape.setLabel("Square");
                 Obj.rectangle(false);
@@ -243,9 +258,11 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         if(source==Quit){
             stop();
         }
+        
     }
 
-    public void adjustmentValueChanged(AdjustmentEvent e){
+
+    /*public void adjustmentValueChanged(AdjustmentEvent e){
         int TS;
         Scrollbar sb=(Scrollbar)e.getSource();//get scroll bar that triggered event
         if(sb==SpeedScrollBar){
@@ -257,7 +274,52 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
             Obj.update(TS);
         }
         Obj.repaint();
+    }*/
+    public void adjustmentValueChanged(AdjustmentEvent e) {
+        int TS;
+        Scrollbar sb = (Scrollbar) e.getSource(); // Get the scrollbar that triggered the event
+    
+        // Speed Scrollbar
+        if (sb == SpeedScrollBar) {
+            // Recalculate the delay based on the speed value
+            int speedValue = SpeedScrollBar.getValue();
+            delay = Math.max(1, 100 - speedValue); // Calculate delay (inversely proportional to speed)
+    
+            // Interrupt the thread to apply the new delay
+            if (thethread != null) {
+                thethread.interrupt();
+            }
+        }
+    
+        // Object Size Scrollbar
+        if (sb == ObjSizeScrollBar) {
+            // Get the new size value from the scrollbar
+            TS = e.getValue();
+            
+            // Make sure the size is an odd number for center alignment
+            TS = (TS / 2) * 2 + 1; // Ensure the size is odd to keep it centered
+            
+            // Validate if the new size will fit inside the screen without touching the borders
+            if (TS <= ScreenWidth && TS <= ScreenHeight) {
+                // Update the object size if it fits
+                Obj.update(TS);
+            } else {
+                // Revert the scrollbar value if the size doesn't fit
+                ObjSizeScrollBar.setValue(SObj); // Set back to previous valid size
+            }
+    
+            // After updating, check if in No Tail mode and clear the display if necessary
+            if (Tail.getLabel().equals("No Tail")) {
+                Obj.Clear(); // Clear the object if in No Tail mode
+            }
+        }
+    
+        // Repaint the object after the size change
+        Obj.repaint();
     }
+    
+
+
     //========================END ACTION HANDLER=======================================
 
     //========================WINDOW LISTENER METHODS=================================
@@ -280,6 +342,23 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
 
 
     //====================COMPONENT METHODS============
+    private void checkSize() {
+        // Get the current object size
+        int currentSize = Obj.getSizeObj();
+    
+        // Check if the current object size is larger than the screen's width or height
+        if (currentSize > ScreenWidth || currentSize > ScreenHeight) {
+            // Adjust the size to fit within the screen
+            currentSize = Math.min(ScreenWidth, ScreenHeight);
+    
+            // Update the object with the new size
+            Obj.update(currentSize);
+    
+            // Update the scrollbar to reflect the new size
+            ObjSizeScrollBar.setValue(currentSize);
+        }
+    }
+    
 
     public void componentResized(ComponentEvent e){
         WinWidth=getWidth();
@@ -287,6 +366,8 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         MakeSheet();
 
         Obj.reSize(ScreenWidth,ScreenHeight);
+        //check obj size
+        checkSize();
 
         SizeScreen();
     }
@@ -330,16 +411,51 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
             SObj=NS;
         }
 
+        public void stayInBounds(int newScreenWidth, int newScreenHeight) {
+            // Calculate right and bottom 
+            int right = x + SObj / 2;
+            int bottom = y + SObj / 2;
+        
+            // Ensure the object is within bounds
+            if (right > newScreenWidth) {
+                x = newScreenWidth - SObj / 2;
+            }
+            if (bottom > newScreenHeight) {
+                y = newScreenHeight - SObj / 2;
+            }
+        
+            // make sure doesn't move past the left/top edge
+            if (x - SObj / 2 < 0) {
+                x = SObj / 2;
+            }
+            if (y - SObj / 2 < 0) {
+                y = SObj / 2;
+            }
+        }
+        
+
         public void reSize(int w, int h){
             ScreenWidth=w;
             ScreenHeight=h;
             y=ScreenHeight/2;
             x=ScreenWidth/2;
+            stayInBounds(w, h);
         }
 
         public void Clear(){
             clear=true;
         }
+
+        //--------------------Get/Set---------------
+        public int getXPos() { return x; }
+        public int getYPos() { return y; }
+        public int getSizeObj() { return SObj; }
+
+        public void setXPos(int newX) { x = newX; }
+        public void setYPos(int newY) { y = newY; }
+        public void setSizeObj(int newSize) { SObj = newSize; }
+
+        //------------------------------------------
 
         //PAINT
         public void paint(Graphics g){
@@ -373,35 +489,38 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
 
    
     public void run() {
-        /*while (run) { // Continue looping while the run flag is true
-            if (!TimerPause) { // Only proceed if not paused
-                started = true; // Mark that animation has started
+   
+            while (run) {
+                if (!TimerPause) {
+                    started = true;
+                    
+                    try {
+                        Thread.sleep(delay); // Control animation speed
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+        
+                    int oldX = Obj.getXPos();
+                    int oldY = Obj.getYPos();
+                    int oldSize = Obj.getSizeObj();
+        
+                    Obj.setSizeObj(newSize);  // Update the object's size
+                    Obj.setXPos(Obj.getXPos() + dx); // Move horizontally
+                    Obj.setYPos(Obj.getYPos() + dy); // Move vertically
+        
+                    if (!started) { // Check if tails are off
+                        Obj.repaint(oldX - (oldSize - 1) / 2, oldY - (oldSize - 1) / 2, oldSize, oldSize);
+                    }
+        
+                    Obj.repaint(Obj.getXPos() - (Obj.getSizeObj() - 1) / 2, Obj.getYPos() - (Obj.getSizeObj() - 1) / 2, Obj.getSizeObj(), Obj.getSizeObj());
+                }
 
+                //small delay, outside of decison but in loop
                 try {
-                    Thread.sleep(delay); // Control animation speed
-                } catch (InterruptedException e) {
-                    e.printStackTrace(); // Handle interruption properly
-                }
-
-                // Retrieve object properties using getters (if x and y are private)
-                int oldX = getX();
-                int oldY = getY();
-                int oldSize = getSize();
-
-                // Update object's size and position
-                setSize(newSize); // Assuming newSize is defined somewhere
-                setX(getX() + getDX()); // Move horizontally
-                setY(getY() + getDY()); // Move vertically
-
-                // If no tails are requested, erase old object
-                if (!showTails) {
-                    repaint(oldX - (oldSize - 1) / 2, oldY - (oldSize - 1) / 2, oldSize, oldSize);
-                }
-
-                // Repaint new object at updated position
-                repaint(getX() - (getSize() - 1) / 2, getY() - (getSize() - 1) / 2, getSize(), getSize());
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {}
             }
-        }*/
+
     }
 
 
