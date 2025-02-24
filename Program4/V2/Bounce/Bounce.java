@@ -65,7 +65,7 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         setVisible(true);
         MakeSheet();
         started = false;
-
+        
         try{
             initComponents();
         }catch (Exception e){
@@ -79,7 +79,7 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
     public void initComponents()throws Exception, IOException{
          //initialize componenets
          //start timerPaused as true to pause animation
-         // TODO: idk how to calculate the delay rn?! calculate offset, tail not mowrking, cant get it the top left corner 
+         // TODO: idk how to calculate the delay rn?! calculate offset, cant get it the top left corner 
          TimerPause = true;
          runBall = true;
          //buttons
@@ -491,6 +491,7 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         }
         //UPDATE
         public void update(Graphics g){
+            
             if(clear){ 
                 super.paint(g);
                 clear=false;
