@@ -214,13 +214,15 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         if(source==Start){
             if(Start.getLabel()=="Pause"){
                 Start.setLabel("Run");
-                TimerPause = false;
+                //started =true;
+                TimerPause = true;
                 
                 //thethread.interrupt();
             }
             else{
                 Start.setLabel("Pause");
-                TimerPause = true;
+                TimerPause = false;
+                started =true;
                 //thethread.interrupt();
             }
         }
@@ -543,19 +545,19 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
                         e.printStackTrace();
                     }
         
-                    int oldX = Obj.getXPos();
-                    int oldY = Obj.getYPos();
-                    int oldSize = Obj.getSizeObj();
+                    // int oldX = Obj.getXPos();
+                    // int oldY = Obj.getYPos();
+                    // int oldSize = Obj.getSizeObj();
         
-                    Obj.setSizeObj(newSize);  // Update the object's size
-                    Obj.setXPos(Obj.getXPos() + dx); // Move horizontally
-                    Obj.setYPos(Obj.getYPos() + dy); // Move vertically
+                    // Obj.setSizeObj(newSize);  // Update the object's size
+                    // Obj.setXPos(Obj.getXPos() + dx); // Move horizontally
+                    // Obj.setYPos(Obj.getYPos() + dy); // Move vertically
         
-                    if (!started) { // Check if tails are off
-                        Obj.repaint(oldX - (oldSize - 1) / 2, oldY - (oldSize - 1) / 2, oldSize, oldSize);
-                    }
+                    // if (!started) { // Check if tails are off
+                    //     Obj.repaint(oldX - (oldSize - 1) / 2, oldY - (oldSize - 1) / 2, oldSize, oldSize);
+                    // }
         
-                    Obj.repaint(Obj.getXPos() - (Obj.getSizeObj() - 1) / 2, Obj.getYPos() - (Obj.getSizeObj() - 1) / 2, Obj.getSizeObj(), Obj.getSizeObj());
+                    // Obj.repaint(Obj.getXPos() - (Obj.getSizeObj() - 1) / 2, Obj.getYPos() - (Obj.getSizeObj() - 1) / 2, Obj.getSizeObj(), Obj.getSizeObj());
                 }
 
                 //small delay, outside of decison but in loop
@@ -564,6 +566,7 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
                 } catch (InterruptedException e) {}
 
                 Obj.move();
+                Obj.repaint();
             }
 
     }
