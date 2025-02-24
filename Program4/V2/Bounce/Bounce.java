@@ -42,11 +42,12 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
 
     //timer delay constant
     private final double DELAY = 5;
-    boolean run;
+    boolean runBall;
     boolean TimerPause;
     boolean started;
     int speed, delay;
     private int dx, dy, newSize;
+    boolean tailSet = false;
 
     Button Start,Shape,Clear,Tail,Quit;//Buttons
 
@@ -80,7 +81,7 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
          //start timerPaused as true to pause animation
          // TODO: idk how to calculate the delay rn?! calculate offset, tail not mowrking, cant get it the top left corner 
          TimerPause = true;
-         run = true;
+         runBall = true;
          //buttons
          Start=new Button("Run");
          Shape= new Button("Circle");
@@ -181,7 +182,7 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
     }
 
     public void stop(){
-        run = false;
+        runBall = false;
         Start.removeActionListener(this);
         Shape.removeActionListener(this);
         Clear.removeActionListener(this);
@@ -222,7 +223,7 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
             else{
                 Start.setLabel("Pause");
                 TimerPause = false;
-                started =true;
+                started =true;//do i need this here?
                 //thethread.interrupt();
             }
         }
@@ -230,11 +231,16 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
             if(Tail.getLabel()=="Tail"){
                 Tail.setLabel("No Tail");
                 started = true;
-                Obj.Clear();
+                //Obj.Clear();
+                Obj.setTail(true);
             }
             else{
                 Tail.setLabel("Tail");
                 started = false;
+                Obj.setTail(false);
+                //Obj.Clear();
+
+
                 //start tail mode here
             }
         }
@@ -378,6 +384,7 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         private int ScreenWidth;
         private int ScreenHeight;
         private int SObj;
+        int prevX, prevY;
 
         private int x, y;
         private boolean rect=true;
@@ -428,6 +435,11 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
             SObj=NS;
         }
 
+        public void setTail(boolean mode){
+            tailSet=mode;
+            //if (!tailSet) Clear();
+        }
+
         public void stayInBounds(int newScreenWidth, int newScreenHeight) {
             // Calculate right and bottom 
             int right = x + SObj / 2;
@@ -441,13 +453,7 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
                 y = newScreenHeight - SObj / 2;
             }
         
-            // make sure doesn't move past the left/top edge
-            // if (x - SObj / 2 < 0) {
-            //     x = SObj / 2;
-            // }
-            // if (y - SObj / 2 < 0) {
-            //     y = SObj / 2;
-            // }
+            //dont let past edge
             if (x < 0) x = 0;
             if (y < 0) y = 0;
 
@@ -485,11 +491,22 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         }
         //UPDATE
         public void update(Graphics g){
-            if(clear){
+            if(clear){ 
                 super.paint(g);
                 clear=false;
                 g.setColor(Color.red);
                 g.drawRect(0, 0, ScreenWidth-1, ScreenHeight-1);
+            }
+
+            if (!tailSet) {
+                g.setColor(getBackground());
+               
+                if (rect) {
+                    g.fillRect(prevX - (SObj - 1) / 2 - 1, prevY - (SObj - 1) / 2 - 1, SObj + 2, SObj + 2);
+                } else {
+                    g.fillOval(prevX - (SObj - 1) / 2 - 1, prevY - (SObj - 1) / 2 - 1, SObj + 2, SObj + 2);
+                }
+
             }
 
             if(rect){
@@ -497,27 +514,23 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
                 g.fillRect(x-(SObj-1)/2, y-(SObj-1)/2,SObj,SObj);
                 g.setColor(Color.black);
                 g.drawRect(x-(SObj-1)/2, y-(SObj-1)/2,SObj-1,SObj-1);
-            }
-            else{
+            }else{
                 g.setColor(Color.lightGray);
                 g.fillOval(x-(SObj-1)/2, y-(SObj-1)/2,SObj,SObj);
                 g.setColor(Color.black);
                 g.drawOval(x-(SObj-1)/2, y-(SObj-1)/2,SObj-1,SObj-1);
             }
 
-            // if(!tail){
-            //     g.setColor(getBackground());
-            //     if
-            // }
+            g.setColor(Color.red);
+            g.drawRect(0, 0, ScreenWidth-1, ScreenHeight-1);
+
+            prevX = x;
+            prevY = y;
+
+            
         }
 
-        // test for debugging
-        // public void move() {
-        //     if (x <= 0 || x + SOBJ >= getWidth()) dx = -dx;
-        //     if (y <= 0 || y + SOBJ >= getHeight()) dy = -dy;
-        //     x += dx;
-        //     y += dy;
-        // }
+
 
         private void move() {
             if (y + SObj >= ScreenHeight || y <= 0) {
@@ -535,8 +548,8 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
    
     public void run() {
    
-            while (run) {
-                if (!TimerPause) {
+            while (runBall) {
+                if (!TimerPause){
                     started = true;
                     
                     try {
@@ -545,19 +558,7 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
                         e.printStackTrace();
                     }
         
-                    // int oldX = Obj.getXPos();
-                    // int oldY = Obj.getYPos();
-                    // int oldSize = Obj.getSizeObj();
-        
-                    // Obj.setSizeObj(newSize);  // Update the object's size
-                    // Obj.setXPos(Obj.getXPos() + dx); // Move horizontally
-                    // Obj.setYPos(Obj.getYPos() + dy); // Move vertically
-        
-                    // if (!started) { // Check if tails are off
-                    //     Obj.repaint(oldX - (oldSize - 1) / 2, oldY - (oldSize - 1) / 2, oldSize, oldSize);
-                    // }
-        
-                    // Obj.repaint(Obj.getXPos() - (Obj.getSizeObj() - 1) / 2, Obj.getYPos() - (Obj.getSizeObj() - 1) / 2, Obj.getSizeObj(), Obj.getSizeObj());
+
                 }
 
                 //small delay, outside of decison but in loop
@@ -570,8 +571,6 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
             }
 
     }
-
-
 
 
     //===========END OBJECT CLASS==================
