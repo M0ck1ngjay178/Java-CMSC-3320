@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 
- 
+
 public class Bounce extends Frame implements WindowListener, ComponentListener, ActionListener, AdjustmentListener, Runnable {
     private static final long serialVersionUID = 10L;
     //constants
@@ -41,13 +41,13 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
     private Insets I;//insets of frame
 
     //timer delay constant
-    private final double DELAY = 5;
+    private final int DELAY = 50;
     boolean runBall;
     boolean TimerPause;
     boolean started;
     int speed, delay;
-    private int dx, dy, newSize;
-    boolean tailSet = false;
+    private int dx, dy; //newSize;
+    boolean tailSet = true;
 
     Button Start,Shape,Clear,Tail,Quit;//Buttons
 
@@ -80,6 +80,7 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
          //initialize componenets
          //start timerPaused as true to pause animation
          // TODO: idk how to calculate the delay rn?! calculate offset, cant get it the top left corner 
+         delay = DELAY;
          TimerPause = true;
          runBall = true;
          //buttons
@@ -217,6 +218,7 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
                 Start.setLabel("Run");
                 //started =true;
                 TimerPause = true;
+//System.out.println("Ture"); 
                 
                 //thethread.interrupt();
             }
@@ -224,6 +226,7 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
                 Start.setLabel("Pause");
                 TimerPause = false;
                 started =true;//do i need this here?
+//System.out.println("false"); 
                 //thethread.interrupt();
             }
         }
@@ -279,7 +282,9 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         if (sb == SpeedScrollBar) {
             // Recalculate the delay based on the speed value
             int speedValue = SpeedScrollBar.getValue();
-            delay = Math.max(1, 100 - speedValue); // Calculate delay
+//            delay = Math.max(1, 100 - speedValue); // Calculate delay
+            delay = 100 - speedValue + 1; // Calculate delay
+//            SPEEDL.setText(Integer.toString(delay));
     
             // Interrupt the thread to apply the new delay
             if (thethread != null) {
@@ -400,8 +405,8 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
             // y = Math.max(offset, Math.min(ScreenHeight - offset, y));
 
 
-            boolean down = true;
-            boolean right = true;
+            // boolean down = true;
+            // boolean right = true;
 
             x = SObj / 2;
             y = SObj / 2;
@@ -482,8 +487,8 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
 
         //PAINT
         public void paint(Graphics g){
-            g.setColor(Color.red);
-            g.drawRect(0, 0, ScreenWidth-1, ScreenHeight-1);
+//            g.setColor(Color.red);
+//            g.drawRect(0, 0, ScreenWidth-1, ScreenHeight-1);
             update(g);
         }
         //UPDATE
@@ -492,8 +497,8 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
             if(clear){ 
                 super.paint(g);
                 clear=false;
-                g.setColor(Color.red);
-                g.drawRect(0, 0, ScreenWidth-1, ScreenHeight-1);
+//                g.setColor(Color.red);
+//                g.drawRect(0, 0, ScreenWidth-1, ScreenHeight-1);
             }
 
             if (!tailSet) {
@@ -531,10 +536,10 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
 
 
         private void move() {
-            if (y + SObj >= ScreenHeight || y <= 0) {
+            if (y + (SObj-1)/2 >= ScreenHeight || y <= 0) {
                 dy = -dy;
             }
-            if (x + SObj >= ScreenWidth || x <= 0) {
+            if (x + (SObj-1)/2 >= ScreenWidth || x <= 0) {
                 dx = -dx;
             }
             x += dx;
@@ -547,7 +552,7 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
     public void run() {
    
             while (runBall) {
-                if (!TimerPause){
+/*                if (!TimerPause){
                     started = true;
                     
                     try {
@@ -556,18 +561,22 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
                         e.printStackTrace();
                     }
         
-                }
 
+                }
+*/
                 //small delay, outside of decison but in loop
                 try {
-                    Thread.sleep(1);
+                    Thread.sleep(delay);
                 } catch (InterruptedException e) {}
-
-                Obj.move();
-                Obj.repaint();
+				if(!TimerPause)
+				{
+                	Obj.move();
+                	Obj.repaint();
+				}
             }
 
     }
+
 
     //===========END OBJECT CLASS==================
 
