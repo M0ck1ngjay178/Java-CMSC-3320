@@ -437,8 +437,8 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
             // boolean down = true;
             // boolean right = true;
 
-            x = SObj / 2;
-            y = SObj / 2;
+            x = (SObj / 2)+1;
+            y = (SObj / 2)+1;
 
             //start at topleft corner
             //  x = (SObj - 1)/ 2-1;
@@ -493,8 +493,8 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         public void reSize(int w, int h){
             ScreenWidth=w;
             ScreenHeight=h;
-            y=ScreenHeight/2;
-            x=ScreenWidth/2;
+            // y=ScreenHeight/2;
+            // x=ScreenWidth/2;
             stayInBounds(w, h);
         }
 
