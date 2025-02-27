@@ -65,6 +65,10 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         setVisible(true);
         MakeSheet();
         started = false;
+
+        ScreenWidth = WinWidth - WinLeft;
+        ScreenHeight = WinHeight - WinTop;
+        Obj=new Objc(SObj,ScreenWidth,ScreenHeight);
         
         try{
             initComponents();
@@ -125,7 +129,12 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
          ObjSizeScrollBar.setValue(SOBJ);
          ObjSizeScrollBar.setVisibleAmount(SBvisible);
          ObjSizeScrollBar.setBackground(Color.gray);
-         Obj=new Objc(SObj,ScreenWidth,ScreenHeight);
+        
+        //  ScreenWidth = WinWidth - WinLeft;
+        //  ScreenHeight = WinHeight - WinTop;
+         
+
+        //  Obj=new Objc(SObj,ScreenWidth,ScreenHeight);
          Obj.setBackground(Color.white);
 
          add(SpeedScrollBar);
@@ -370,6 +379,20 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         MakeSheet();
 
         Obj.reSize(ScreenWidth,ScreenHeight);
+        //debugging checks
+        // if (Obj == null) {
+        //     // Initialize Obj only once
+        //     Obj = new Objc(SObj, ScreenWidth, ScreenHeight);
+        //     System.out.println("Obj initialized: " + (Obj != null));
+        // }        
+
+        // if (this.Obj != null) {
+        //     this.Obj.reSize(ScreenWidth,ScreenHeight);
+        // } else {
+        //     System.out.println("Obj is not initialized yet.");
+        // }
+
+
         //check obj size
         checkSize();
 
@@ -417,21 +440,20 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
             x = SObj / 2;
             y = SObj / 2;
 
+            //start at topleft corner
+            //  x = (SObj - 1)/ 2-1;
+            //  y = (SObj - 1)/ 2 +1;
+            // x = 0 + SObj / 2;
+            // y = 0 + SObj / 2;
+            // x=0;
+            // y=0;
+            
+
+
             dy = 1;
             dx = 1;
 
         }
-
-        // public void calcBounds() {
-        //     int offset = (SObj - 1) / 2;  // Calculate the offset
-    
-        //     // Calculate the min and max X and Y values for the object's display area
-        //     int minX = x - offset;
-        //     int maxX = x + offset;
-        //     int minY = y - offset;
-        //     int maxY = y + offset;
-        // }
-
         
     
         //mutators
