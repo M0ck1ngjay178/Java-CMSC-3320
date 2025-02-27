@@ -12,7 +12,7 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
     private final int BUTTONH=20;//button height
     private final int BUTTONHS=5;//button height spacing
 
-    private final int MAXObj=100; //max objecct size
+    private final int MAXObj=100; //max object size
     private final int MINObj=10;//min object size
     private final int SPEED=50;//initial speed
     private final int SBvisible=10;//visible Scroll bar
@@ -298,19 +298,25 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
             TS = e.getValue();
             
             // Make sure the size is an odd number for center alignment
-            TS = (TS / 2) * 2 + 1; // Ensure the size is odd to keep it centered
+            //TS = (TS / 2) * 2 + 1; // Ensure the size is odd to keep it centered-----this would make it even if it is originally odd
+            if(TS%2==0){
+                TS=TS+1;
+            }
             
             // Validate if the new size will fit inside the screen without touching the borders
-            if (TS <= ScreenWidth && TS <= ScreenHeight) {
+            if (TS<=ScreenWidth && TS <= ScreenHeight) {
                 // Update the object size if it fits
+                
                 Obj.update(TS);
+                
+                
             } else {
                 // Revert the scrollbar value if the size doesn't fit
                 ObjSizeScrollBar.setValue(SObj); // Set back to previous valid size
             }
     
             // After updating, check if in No Tail mode and clear the display if necessary
-            if (Tail.getLabel().equals("No Tail")) {
+            if (Tail.getLabel().equals("Tail")) {// when the text is Tail, that means there is currently no tail, so must clear
                 Obj.Clear(); // Clear the object if in No Tail mode
             }
         }
@@ -408,11 +414,8 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
             // boolean down = true;
             // boolean right = true;
 
-            // x = SObj / 2;
-            // y = SObj / 2;
-            x = (SObj - 1) / 2;
-            y = (SObj - 1) / 2;
-
+            x = SObj / 2;
+            y = SObj / 2;
 
             dy = 1;
             dx = 1;
@@ -452,10 +455,10 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         
             // Ensure the object is within bounds
             if (right > newScreenWidth) {
-                x = newScreenWidth - SObj / 2;
+                x = newScreenWidth - SObj/2;
             }
             if (bottom > newScreenHeight) {
-                y = newScreenHeight - SObj / 2;
+                y = newScreenHeight - SObj/2;
             }
         
             //dont let past edge
@@ -555,7 +558,7 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
     public void run() {
    
             while (runBall) {
-/*                if (!TimerPause){
+/*                 if (!TimerPause){
                     started = true;
                     
                     try {
