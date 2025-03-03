@@ -98,7 +98,6 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
     //initialize componenets
     public void initComponents()throws Exception, IOException{
          
-        
          delay = DELAY;
          TimerPause = true;
          runBall = true;
@@ -258,53 +257,61 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
     //handles button actions
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource(); //get current source
-
+        //--------Start Button-----------------
         if(source==Start){
-            if(Start.getLabel()=="Pause"){
-                Start.setLabel("Run");                
-                TimerPause = true;
+            if(Start.getLabel()=="Pause"){ //if the button is paused
+                Start.setLabel("Run");  //set the label to run              
+                TimerPause = true;//set timer to true to stop thread
             }
             else{
-                Start.setLabel("Pause");
-                TimerPause = false;
-                started =true;
+                Start.setLabel("Pause"); //otherwise, set label back to pause
+                TimerPause = false; //set timer back to false to restat the thread
+                started =true;     //reset stated to true
             }
         }
+        //--------End Start Button-----------------
 
+        //--------Tail Button-----------------
         if(source==Tail){
-            if(Tail.getLabel()=="Tail"){
-                Tail.setLabel("No Tail");
-                started = true;
-                Obj.setTail(true);
+            if(Tail.getLabel()=="Tail"){ //check if button is tail
+                Tail.setLabel("No Tail");// if it is, set label to no tail for next state transition
+                started = true; //set started to true
+                Obj.setTail(true);// call setTail to turn tail mode on, pass true
             }
             else{
-                Tail.setLabel("Tail");
-                started = false;
-                Obj.setTail(false);
+                Tail.setLabel("Tail");//otherwise, set label to tail
+                started = false;    //set started to false
+                Obj.setTail(false);// pass false to setTail, to remove tail
             }
         }
+        //--------End Tail Button-----------------
 
+        //--------Shape Button-----------------
         if(source==Shape){
-
-            if(Shape.getLabel()=="Circle"){
-                Shape.setLabel("Square");
-                Obj.rectangle(false);
+            if(Shape.getLabel()=="Circle"){//check if button is circle
+                Shape.setLabel("Square");//set it back to square for te next state transition
+                Obj.rectangle(false);       //call rectangle method, pass false to signal the drawing a circle   
             }
             else{
-                Shape.setLabel("Circle");
-                Obj.rectangle(true);
+                Shape.setLabel("Circle"); //otherwise, set lable to circle
+                Obj.rectangle(true);//draw square by passing true
             }
-            Obj.repaint();
+            Obj.repaint();// force repaint of object
         }
+        //--------End Shape Button-----------------
 
-        if(source==Clear){
-            Obj.Clear();
-            Obj.repaint();
+        //--------Clear Button-----------------
+        if(source==Clear){// check if source is equal to clear
+            Obj.Clear(); //call clear 
+            Obj.repaint();//force repaint
         }
+        //--------End Clear Button----------------
 
-        if(source==Quit){
-            stop();
+        //--------Quit Button-----------------
+        if(source==Quit){//if source is equal to quit button
+            stop();//call stop to close action listerners and proccesses, windowClosing method
         }
+        //--------End Quit Button---------------
         
     }
     //========================END ACTION HANDLER=======================================
@@ -352,8 +359,8 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
                 ObjSizeScrollBar.setValue(SObj); // Set back to previous valid size
             }
     
-            // After updating, check if in No Tail mode and clear the display if necessary
-            if (Tail.getLabel().equals("Tail")) {// when the text is Tail, that means there is currently no tail, so must clear
+            //after updating, check if in No Tail mode, clear the display if necessary
+            if (Tail.getLabel().equals("Tail")) {// when the text is Tail, that means there is currently no tail, so clear
                 Obj.Clear(); // Clear the object if in No Tail mode
             }
         }
@@ -408,7 +415,6 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         WinWidth=getWidth();
         WinHeight=getHeight();
 
-
         MakeSheet();
 
         //resize the object to fit the new screen dimensions
@@ -453,12 +459,11 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
             rect=true;
             clear=false;
         
-            x = (SObj / 2)+1;
-            y = (SObj / 2)+1;
+            x = (SObj / 2)+1; //calculate offset for x
+            y = (SObj / 2)+1; //calculate offset for y
 
-            dy = 1;
-            dx = 1;
-
+            dy = 1; //set initial y flags to true
+            dx = 1;//set initial x flags to true
         }
         
         //mutators
@@ -514,33 +519,32 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         public void setXPos(int newX) { x = newX; }
         public void setYPos(int newY) { y = newY; }
         public void setSizeObj(int newSize) { SObj = newSize; }
-
-        //------------------------------------------
+        //-----------------End Get/Set--------------------
 
         //PAINT
         public void paint(Graphics g){
             update(g);
         }
 
-        //UPDATE
+        //UPDATE graphics for the ball
         public void update(Graphics g){
             
-            if(clear){ 
-                super.paint(g);
-                clear=false;
+            if(clear){ //if passed clear,
+                super.paint(g);// paint over canvas
+                clear=false;//set clear back to false for next iteration
             }
 
-            if (!tailSet) {
-                g.setColor(getBackground());
+            if (!tailSet) { //if tail is not on, draw object
+                g.setColor(getBackground());//get background color
                
                 if (rect) {
-                    g.fillRect(prevX - (SObj - 1) / 2 - 1, prevY - (SObj - 1) / 2 - 1, SObj + 2, SObj + 2);
+                    g.fillRect(prevX - (SObj - 1) / 2 - 1, prevY - (SObj - 1) / 2 - 1, SObj + 2, SObj + 2); //draw square
                 } else {
-                    g.fillOval(prevX - (SObj - 1) / 2 - 1, prevY - (SObj - 1) / 2 - 1, SObj + 2, SObj + 2);
+                    g.fillOval(prevX - (SObj - 1) / 2 - 1, prevY - (SObj - 1) / 2 - 1, SObj + 2, SObj + 2);//draw circle
                 }
 
             }
-
+            //otherwise draw for tail mode
             if(rect){
                 g.setColor(Color.lightGray);
                 g.fillRect(x-(SObj-1)/2, y-(SObj-1)/2,SObj,SObj);
@@ -552,10 +556,11 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
                 g.setColor(Color.black);
                 g.drawOval(x-(SObj-1)/2, y-(SObj-1)/2,SObj-1,SObj-1);
             }
-
+            //draw background canvas at end to prevend thread updating glitches
             g.setColor(Color.red);
             g.drawRect(0, 0, ScreenWidth-1, ScreenHeight-1);
 
+            //store previous values of x and y before next position
             prevX = x;
             prevY = y;
            
@@ -569,9 +574,9 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
             if (x + (SObj-1)/2 >= ScreenWidth || x-(SObj-1)/2<=0) {
                 dx = -dx;
             }
-            x += dx;
-            y += dy;
-            repaint();
+            x += dx;//update position of x
+            y += dy;//update position of y
+            repaint();//force repaint
         }
     }
 
@@ -591,16 +596,16 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
                 	Obj.repaint(); //repaint the object
 				}
             }
-
     }
-
-
     //===========END OBJECT CLASS==================
 
 
+    /*****************MAIN**************************/
     public static void main(String[] args) {
         new Bounce();
     }
+    /*****************END MAIN********************/
+
 
 }
 //---------------------------------------------END CLASS BOUNCE-------------------------------------------------------------------------
