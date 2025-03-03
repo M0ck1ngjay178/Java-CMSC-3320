@@ -606,7 +606,6 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
     }
     /*****************END MAIN********************/
 
-
 }
 //---------------------------------------------END CLASS BOUNCE-------------------------------------------------------------------------
 
