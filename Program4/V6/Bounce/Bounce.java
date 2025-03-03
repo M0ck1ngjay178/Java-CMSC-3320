@@ -1,9 +1,22 @@
+/*******************HEADER*******************************/
+/*  CMSC-3320 Technical Computing Using Java		    */   
+/* 	Bounce Program					                    */
+/*	Group 1												*/
+/*	Group Names: 										*/
+/*     -Margo Bonal,      bon8330@pennwest.edu			*/
+/*     -Luke Ruffing,     ruf96565@pennwest.edu 		*/
+/*     -Ethan Janovich,   jan60248@pennwest.edu			*/
+/*     -Nikolaus Roebuck, roe01807@pennwest.edu  		*/
+/*******************END HEADER***************************/
+
+//---------LIBRARIES--------------
 package Bounce;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+//---------END LIBRARIES-----------
 
-
+//---------------------------------------------CLASS BOUNCE-------------------------------------------------------------------------
 public class Bounce extends Frame implements WindowListener, ComponentListener, ActionListener, AdjustmentListener, Runnable {
 
     private static final long serialVersionUID = 10L;
@@ -230,7 +243,6 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         System.exit(0);
     }
 
-
     //starts the program
     public void start(){
         Obj.repaint(); //repaint object
@@ -349,8 +361,6 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         // Repaint the object after the size change
         Obj.repaint();
     }
-    
-    
 
     //========================WINDOW LISTENER METHODS=================================
     
@@ -451,7 +461,6 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
 
         }
         
-    
         //mutators
         public void rectangle(boolean r){
             rect=r;
@@ -594,3 +603,5 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
     }
 
 }
+//---------------------------------------------END CLASS BOUNCE-------------------------------------------------------------------------
+
