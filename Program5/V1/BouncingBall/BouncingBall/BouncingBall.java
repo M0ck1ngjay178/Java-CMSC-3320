@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 
+
 public class BouncingBall extends Frame implements WindowListener, MouseListener, MouseMotionListener{
 
     final int   WinLeft = 10;//left side of frame
@@ -67,22 +68,22 @@ public class BouncingBall extends Frame implements WindowListener, MouseListener
  
      public void windowClosed(WindowEvent e){}
      public void windowOpened(WindowEvent e){
-        list.add("Window opened");
+        //list.add("Window opened");
      }
  
      public void windowActivated(WindowEvent e){
-        list.add("Window activated");
+       // list.add("Window activated");
 
      }
      public void windowDeactivated(WindowEvent e){
-        list.add("Window Deactivated");
+        //list.add("Window Deactivated");
      }
  
      public void windowIconified(WindowEvent e){
-        list.add("Window Iconified");
+        //list.add("Window Iconified");
      }
      public void windowDeiconified(WindowEvent e){
-        list.add("Window Deiconified");
+        //list.add("Window Deiconified");
      }
     //========================END WINDOW LISTENER METHODS=================================
 
@@ -120,24 +121,29 @@ public class BouncingBall extends Frame implements WindowListener, MouseListener
 
     public void mouseDragged(MouseEvent e){
 
-        list.add("Mouse Moved");
+        //list.add("Mouse Moved");
     }
 
     public void mouseEntered(MouseEvent e){
 
-        list.add("Mouse Entered");
+        //list.add("Mouse Entered");
     }
 
     public void mouseExited(MouseEvent e){
 
-        list.add("Mouse Exited");
+        //list.add("Mouse Exited");
     }
-    
-
-
-    
 
 
 
-    
+
+    /*****************MAIN**************************/
+    public static void main(String[] args) {
+        new BouncingBall();
+    }
+    /*****************END MAIN********************/
+
+
+
+
 }
