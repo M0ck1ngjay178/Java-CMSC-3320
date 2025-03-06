@@ -32,28 +32,7 @@ public class BouncingBall extends Frame implements WindowListener, MouseListener
 
        //stops the program, removes listeners, and exits the program
        public void stop(){
-
-        // //stop the ball movement
-        // runBall = false;
-
-        // //removes action listeners
-        // Start.removeActionListener(this);
-        // Shape.removeActionListener(this);
-        // Clear.removeActionListener(this);
-        // Tail.removeActionListener(this);
-        // Quit.removeActionListener(this);
-
-        // //removes component and window listeners
-        // this.removeComponentListener(this);
-        // this.removeWindowListener(this);
-
-        // //removes adjustment listeners from scrollbars
-        // SpeedScrollBar.removeAdjustmentListener(this);
-        // ObjSizeScrollBar.removeAdjustmentListener(this);
-
-        // //disposes the frame and stops the thread
         dispose();
-        // thethread.interrupt();
 
         //terminates the program
         System.exit(0);
