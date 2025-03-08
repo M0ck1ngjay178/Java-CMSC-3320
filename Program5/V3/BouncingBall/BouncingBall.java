@@ -8,7 +8,7 @@
 /*     -Ethan Janovich,   jan60248@pennwest.edu			*/
 /*     -Nikolaus Roebuck, roe01807@pennwest.edu  		*/
 /*******************END HEADER***************************/
-
+//scrap all of this
 //---------LIBRARIES--------------
 package BouncingBall;
 import java.awt.*;
@@ -88,158 +88,204 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
         setTitle("Bouncing Ball");
         ScreenWidth = WinWidth - WinLeft;
         ScreenHeight = WinHeight - WinTop;
-        Obj=new Objc(SObj,ScreenWidth,ScreenHeight);
-        setLayout(new BorderLayout());//layout border
-        setBounds(WinLeft, WinTop, FrameSize.x, FrameSize.y);//size and position the frame
-        //setBackground(Color.lightGray);
-
-        setVisible(true);
-        MakeSheet();
-        started = false;
-
         
-        try{
+        Obj = new Objc(SObj, ScreenWidth, ScreenHeight);
+        setLayout(new BorderLayout()); // Use BorderLayout to manage components
+        
+        setBounds(WinLeft, WinTop, FrameSize.x, FrameSize.y); // Set frame position and size
+        
+        setVisible(true);
+        MakeSheet(); // Calculate screen size
+    
+        started = false;
+        
+        try {
             initComponents();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        SizeScreen();
-
-        start();
+        
+        validate();
+        repaint();  // Ensure components update visually
     }
+    
     
 
 
     //initialize componenets
-    public void initComponents()throws Exception, IOException{
+    // public void initComponents()throws Exception, IOException{
          
-         delay = DELAY;
-         TimerPause = true;
-         runBall = true;
+    //      delay = DELAY;
+    //      TimerPause = true;
+    //      runBall = true;
 
-         //initialize buttons
-         Start=new Button("Run");
-         Pause= new Button("Pause");
-         Quit=new Button("Quit");
+    //      //initialize buttons
+    //      Start=new Button("Run");
+    //      Pause= new Button("Pause");
+    //      Quit=new Button("Quit");
 
-         //add buttons to frame
-         add("Center",Start);
-         add("Center",Pause);
-         add("Center",Quit);
+    //      //add buttons to frame
+    //      add("Center",Start);
+    //      add("Center",Pause);
+    //      add("Center",Quit);
         
-         //add action listeners
-         Start.addActionListener(this);
-         Pause.addActionListener(this);
-         Quit.addActionListener(this);
+    //      //add action listeners
+    //      Start.addActionListener(this);
+    //      Pause.addActionListener(this);
+    //      Quit.addActionListener(this);
 
-         //add window and component listeners
-         this.addComponentListener(this);
-         this.addWindowListener(this);
-         //addWindowListener(this);
-         list.addMouseListener(this);
-         list.addMouseMotionListener(this);
+    //      //add window and component listeners
+    //      this.addComponentListener(this);
+    //      this.addWindowListener(this);
+    //      //addWindowListener(this);
+    //      list.addMouseListener(this);
+    //      list.addMouseMotionListener(this);
 
-         //set frame preferences
-         setPreferredSize(new Dimension(WIDTH,HEIGHT));
-         setMinimumSize(getPreferredSize());
-         setBounds(WinLeft,WinTop,WIDTH,HEIGHT);
+    //      //set frame preferences
+    //      setPreferredSize(new Dimension(WIDTH,HEIGHT));
+    //      setMinimumSize(getPreferredSize());
+    //      setBounds(WinLeft,WinTop,WIDTH,HEIGHT);
 
-         //initilize scrollbars
-         SpeedScrollBar=new Scrollbar(Scrollbar.HORIZONTAL);
-         SpeedScrollBar.setMaximum(SpeedSBmax);
-         SpeedScrollBar.setMinimum(SpeedSBmin);
-         SpeedScrollBar.setUnitIncrement(SBunit);
-         SpeedScrollBar.setBlockIncrement(SBblock);
-         SpeedScrollBar.setValue(SpeedSBinit);
-         SpeedScrollBar.setVisibleAmount(SBvisible);
-         SpeedScrollBar.setBackground(Color.gray);
+    //      //initilize scrollbars
+    //      SpeedScrollBar=new Scrollbar(Scrollbar.HORIZONTAL);
+    //      SpeedScrollBar.setMaximum(SpeedSBmax);
+    //      SpeedScrollBar.setMinimum(SpeedSBmin);
+    //      SpeedScrollBar.setUnitIncrement(SBunit);
+    //      SpeedScrollBar.setBlockIncrement(SBblock);
+    //      SpeedScrollBar.setValue(SpeedSBinit);
+    //      SpeedScrollBar.setVisibleAmount(SBvisible);
+    //      SpeedScrollBar.setBackground(Color.gray);
 
-         ObjSizeScrollBar=new Scrollbar(Scrollbar.HORIZONTAL);
-         ObjSizeScrollBar.setMaximum(MAXObj);
-         ObjSizeScrollBar.setMinimum(MINObj);
-         ObjSizeScrollBar.setUnitIncrement(SBunit);
-         ObjSizeScrollBar.setBlockIncrement(SBblock);
-         ObjSizeScrollBar.setValue(SOBJ);
-         ObjSizeScrollBar.setVisibleAmount(SBvisible);
-         ObjSizeScrollBar.setBackground(Color.gray);
+    //      ObjSizeScrollBar=new Scrollbar(Scrollbar.HORIZONTAL);
+    //      ObjSizeScrollBar.setMaximum(MAXObj);
+    //      ObjSizeScrollBar.setMinimum(MINObj);
+    //      ObjSizeScrollBar.setUnitIncrement(SBunit);
+    //      ObjSizeScrollBar.setBlockIncrement(SBblock);
+    //      ObjSizeScrollBar.setValue(SOBJ);
+    //      ObjSizeScrollBar.setVisibleAmount(SBvisible);
+    //      ObjSizeScrollBar.setBackground(Color.gray);
         
-         //setBackground(Color.lightGray);
-         sheet.setLayout(new BorderLayout(0,0));//sheet border layout
-         Obj.setBackground(Color.WHITE);//this should be sheet tho ommmgg!!! AHHH
-         sheet.setVisible(true);
+    //      //setBackground(Color.lightGray);
+    //      sheet.setLayout(new BorderLayout(0,0));//sheet border layout
+    //      Obj.setBackground(Color.WHITE);//this should be sheet tho ommmgg!!! AHHH
+    //      sheet.setVisible(true);
  
-         sheet.add("Center", Obj);//add the list to the center of the panel sheet
-         control.setLayout(gbl);
-         //setupControlPanel();
-         control.setBackground(Color.lightGray);
+    //      sheet.add("Center", Obj);//add the list to the center of the panel sheet
+    //      control.setLayout(gbl);
+    //      //setupControlPanel();
+    //      control.setBackground(Color.lightGray);
 
-         add("Center", sheet);//add sheet panel to center of application
-         add("South", control);
+    //      add("Center", sheet);//add sheet panel to center of application
+    //      add("South", control);
 
-        //sets backround color
-         //
-         //add scrollbars
-         add(SpeedScrollBar);
-         add(ObjSizeScrollBar);
-         add(SPEEDL);
-         add(SIZEL);
-         add(Obj);
+    //     //sets backround color
+    //      //
+    //      //add scrollbars
+    //      add(SpeedScrollBar);
+    //      add(ObjSizeScrollBar);
+    //      add(SPEEDL);
+    //      add(SIZEL);
+    //      add(Obj);
 
-         //add scrollbar listeners
-         SpeedScrollBar.addAdjustmentListener(this);
-         ObjSizeScrollBar.addAdjustmentListener(this);
+    //      //add scrollbar listeners
+    //      SpeedScrollBar.addAdjustmentListener(this);
+    //      ObjSizeScrollBar.addAdjustmentListener(this);
 
-         validate();       
-    }
-
-    // Function to setup GridBagLayout for control panel
-    // private void setupControlPanel() {
-    //     GridBagLayout gbl = new GridBagLayout(); // Explicitly create GridBagLayout
-    //     control.setLayout(gbl); // Assign it to the control panel
-    //     control.setBackground(Color.LIGHT_GRAY);
-        
-    //     GridBagConstraints gbc = new GridBagConstraints();
-    //     gbc.insets = new Insets(10, 10, 10, 10); // Padding for spacing
-    //     gbc.fill = GridBagConstraints.HORIZONTAL;
-    //     gbc.weightx = 1.0; // Allow components to expand horizontally
-    //     gbc.weighty = 1.0; // Distribute space evenly
-
-    //     // Set preferred sizes for scrollbars
-    //     SpeedScrollBar.setPreferredSize(new Dimension(150, 20));
-    //     ObjSizeScrollBar.setPreferredSize(new Dimension(150, 20));
-
-    //     // Row 1: Speed Label & Scrollbar
-    //     gbc.gridx = 0; gbc.gridy = 0;
-    //     gbc.gridwidth = 1; // Reset gridwidth
-    //     control.add(SPEEDL, gbc);
-
-    //     gbc.gridx = 1; gbc.gridy = 0;
-    //     gbc.gridwidth = 2; // Span across 2 columns
-    //     control.add(SpeedScrollBar, gbc);
-
-    //     // Row 2: Size Label & Scrollbar
-    //     gbc.gridx = 0; gbc.gridy = 1;
-    //     gbc.gridwidth = 1;
-    //     control.add(SIZEL, gbc);
-
-    //     gbc.gridx = 1; gbc.gridy = 1;
-    //     gbc.gridwidth = 2;
-    //     control.add(ObjSizeScrollBar, gbc);
-
-    //     // Reset gridwidth before adding buttons
-    //     gbc.gridwidth = 1;
-        
-    //     // Row 3: Buttons (Start, Pause, Quit)
-    //     gbc.gridx = 0; gbc.gridy = 2;
-    //     gbc.anchor = GridBagConstraints.CENTER; // Center buttons
-    //     control.add(Start, gbc);
-
-    //     gbc.gridx = 1; gbc.gridy = 2;
-    //     control.add(Pause, gbc);
-
-    //     gbc.gridx = 2; gbc.gridy = 2;
-    //     control.add(Quit, gbc);
+    //      validate();       
     // }
+
+    public void initComponents() throws Exception, IOException {
+        delay = DELAY;
+        TimerPause = true;
+        runBall = true;
+    
+        // Initialize buttons
+        Start = new Button("Run");
+        Pause = new Button("Pause");
+        Quit = new Button("Quit");
+    
+        // Initialize scrollbars
+        SpeedScrollBar = new Scrollbar(Scrollbar.HORIZONTAL);
+        SpeedScrollBar.setMaximum(SpeedSBmax);
+        SpeedScrollBar.setMinimum(SpeedSBmin);
+        SpeedScrollBar.setUnitIncrement(SBunit);
+        SpeedScrollBar.setBlockIncrement(SBblock);
+        SpeedScrollBar.setValue(SpeedSBinit);
+        SpeedScrollBar.setVisibleAmount(SBvisible);
+        SpeedScrollBar.setBackground(Color.gray);
+    
+        ObjSizeScrollBar = new Scrollbar(Scrollbar.HORIZONTAL);
+        ObjSizeScrollBar.setMaximum(MAXObj);
+        ObjSizeScrollBar.setMinimum(MINObj);
+        ObjSizeScrollBar.setUnitIncrement(SBunit);
+        ObjSizeScrollBar.setBlockIncrement(SBblock);
+        ObjSizeScrollBar.setValue(SOBJ);
+        ObjSizeScrollBar.setVisibleAmount(SBvisible);
+        ObjSizeScrollBar.setBackground(Color.gray);
+    
+        // Set panel layout
+        sheet.setLayout(new BorderLayout());
+        Obj.setBackground(Color.WHITE);
+        sheet.setVisible(true);
+        sheet.add(Obj, BorderLayout.CENTER);
+    
+        // Setup control panel
+        setupControlPanel();
+    
+        // Add main panels to frame
+        add(sheet, BorderLayout.CENTER);  // Object area
+        add(control, BorderLayout.SOUTH); // Control panel (buttons + scrollbars)
+    
+        // Add action listeners
+        Start.addActionListener(this);
+        Pause.addActionListener(this);
+        Quit.addActionListener(this);
+    
+        // Add scrollbar listeners
+        SpeedScrollBar.addAdjustmentListener(this);
+        ObjSizeScrollBar.addAdjustmentListener(this);
+    
+        // Add window & component listeners
+        this.addComponentListener(this);
+        this.addWindowListener(this);
+        list.addMouseListener(this);
+        list.addMouseMotionListener(this);
+    
+        validate();
+    }
+    
+    
+
+    private void setupControlPanel() {
+        control.setLayout(new GridBagLayout());
+        control.setBackground(Color.lightGray);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+    
+        // Row 1: Speed Label & Scrollbar
+        gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 1;
+        control.add(SPEEDL, gbc);
+        gbc.gridx = 1; gbc.gridwidth = 2;
+        control.add(SpeedScrollBar, gbc);
+    
+        // Row 2: Size Label & Scrollbar
+        gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 1;
+        control.add(SIZEL, gbc);
+        gbc.gridx = 1; gbc.gridwidth = 2;
+        control.add(ObjSizeScrollBar, gbc);
+    
+        // Row 3: Buttons
+        gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 1;
+        control.add(Start, gbc);
+        gbc.gridx = 1;
+        control.add(Pause, gbc);
+        gbc.gridx = 2;
+        control.add(Quit, gbc);
+    }
+    
+
 
 
 
