@@ -65,7 +65,7 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
     boolean tailSet = true;       //flag that tracks tail visibility
 
     Button Start,Shape,Clear,Tail,Quit; //Buttons
-    private Panel topPanel, bottomPanel; //add panels
+    private Panel sheet, control; //add panels
 
     //objects
     private Objc Obj; //object to draw
@@ -74,101 +74,7 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
     Scrollbar SpeedScrollBar, ObjSizeScrollBar;//scrollbars
     private Thread thethread; //thread for timer delay
 
-    //Bounce Constructor
-    // Bounce() {
-    //     setTitle("Bouncing Ball");
-    //     setLayout(null);
-    //     setVisible(true);
-    //     MakeSheet();
-    //     started = false;
-
-    //     ScreenWidth = WinWidth - WinLeft;
-    //     ScreenHeight = WinHeight - WinTop;
-    //     Obj=new Objc(SObj,ScreenWidth,ScreenHeight);
-        
-    //     try{
-    //         initComponents();
-    //     }catch (Exception e){
-    //         e.printStackTrace();
-    //     }
-    //     SizeScreen();
-
-    //     start();
-    // }
-
-    //initialize componenets
-    // public void initComponents()throws Exception, IOException{
-         
-    //      delay = DELAY;
-    //      TimerPause = true;
-    //      runBall = true;
-
-    //      //initialize buttons
-    //      Start=new Button("Run");
-    //      Shape= new Button("Circle");
-    //      Clear= new Button("Clear");
-    //      Tail=new Button("No Tail");
-    //      Quit=new Button("Quit");
-
-    //      //add buttons to frame
-    //      add("Center",Start);
-    //      add("Center",Shape);
-    //      add("Center",Tail);
-    //      add("Center",Clear);
-    //      add("Center",Quit);
-        
-    //      //add action listeners
-    //      Start.addActionListener(this);
-    //      Shape.addActionListener(this);
-    //      Tail.addActionListener(this);
-    //      Clear.addActionListener(this);
-    //      Quit.addActionListener(this);
-
-    //      //add window and component listeners
-    //      this.addComponentListener(this);
-    //      this.addWindowListener(this);
-
-    //      //set frame preferences
-    //      setPreferredSize(new Dimension(WIDTH,HEIGHT));
-    //      setMinimumSize(getPreferredSize());
-    //      setBounds(WinLeft,WinTop,WIDTH,HEIGHT);
-
-    //      //initilize scrollbars
-    //      SpeedScrollBar=new Scrollbar(Scrollbar.HORIZONTAL);
-    //      SpeedScrollBar.setMaximum(SpeedSBmax);
-    //      SpeedScrollBar.setMinimum(SpeedSBmin);
-    //      SpeedScrollBar.setUnitIncrement(SBunit);
-    //      SpeedScrollBar.setBlockIncrement(SBblock);
-    //      SpeedScrollBar.setValue(SpeedSBinit);
-    //      SpeedScrollBar.setVisibleAmount(SBvisible);
-    //      SpeedScrollBar.setBackground(Color.gray);
-
-    //      ObjSizeScrollBar=new Scrollbar(Scrollbar.HORIZONTAL);
-    //      ObjSizeScrollBar.setMaximum(MAXObj);
-    //      ObjSizeScrollBar.setMinimum(MINObj);
-    //      ObjSizeScrollBar.setUnitIncrement(SBunit);
-    //      ObjSizeScrollBar.setBlockIncrement(SBblock);
-    //      ObjSizeScrollBar.setValue(SOBJ);
-    //      ObjSizeScrollBar.setVisibleAmount(SBvisible);
-    //      ObjSizeScrollBar.setBackground(Color.gray);
-        
-       
-    //     //sets backround color
-    //      Obj.setBackground(Color.white);
-
-    //      //add scrollbars
-    //      add(SpeedScrollBar);
-    //      add(ObjSizeScrollBar);
-    //      add(SPEEDL);
-    //      add(SIZEL);
-    //      add(Obj);
-
-    //      //add scrollbar listeners
-    //      SpeedScrollBar.addAdjustmentListener(this);
-    //      ObjSizeScrollBar.addAdjustmentListener(this);
-
-    //      validate();       
-    // }
+    
     public Bounce() {
         setTitle("Bouncing Ball");
         setLayout(new GridBagLayout()); // Set layout manager
@@ -189,64 +95,100 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         start();
     }
 
+
+
     public void initComponents() throws Exception {
         delay = DELAY;
         TimerPause = true;
         runBall = true;
-
+    
         // Initialize Buttons
         Start = new Button("Run");
         Shape = new Button("Circle");
         Clear = new Button("Clear");
         Tail = new Button("No Tail");
         Quit = new Button("Quit");
-
-        // Initialize Scrollbars
-        SpeedScrollBar = new Scrollbar(Scrollbar.HORIZONTAL, SpeedSBinit, SBvisible, SpeedSBmin, SpeedSBmax);
+    
+        // Initialize Scrollbars (Horizontal)
+        SpeedScrollBar = new Scrollbar(Scrollbar.HORIZONTAL);
+        SpeedScrollBar.setMaximum(SpeedSBmax);
+        SpeedScrollBar.setMinimum(SpeedSBmin);
+        SpeedScrollBar.setUnitIncrement(SBunit);
+        SpeedScrollBar.setBlockIncrement(SBblock);
+        SpeedScrollBar.setValue(SpeedSBinit);
+        SpeedScrollBar.setVisibleAmount(SBvisible);
         SpeedScrollBar.setBackground(Color.gray);
-
-        ObjSizeScrollBar = new Scrollbar(Scrollbar.HORIZONTAL, SOBJ, SBvisible, MINObj, MAXObj);
+    
+        ObjSizeScrollBar = new Scrollbar(Scrollbar.HORIZONTAL);
+        ObjSizeScrollBar.setMaximum(MAXObj);
+        ObjSizeScrollBar.setMinimum(MINObj);
+        ObjSizeScrollBar.setUnitIncrement(SBunit);
+        ObjSizeScrollBar.setBlockIncrement(SBblock);
+        ObjSizeScrollBar.setValue(SOBJ);
+        ObjSizeScrollBar.setVisibleAmount(SBvisible);
         ObjSizeScrollBar.setBackground(Color.gray);
-
+    
         // Create Panels
-        topPanel = new Panel(new BorderLayout());
-        bottomPanel = new Panel(new GridBagLayout());
-
+        sheet = new Panel(new GridBagLayout()); // Use GridBagLayout
+        control = new Panel(new GridBagLayout());  // Use GridBagLayout for control panel
+    
         // Add components to top panel (canvas)
         Obj.setBackground(Color.white);
-        topPanel.add(Obj, BorderLayout.CENTER);
-
-        // Set preferred size for bottom panel to ensure visibility
-        bottomPanel.setPreferredSize(new Dimension(400, 100));
-
-        // Set up bottom panel layout
+        setBackground(Color.lightGray);
+        sheet.add(Obj, new GridBagConstraints());
+    
+        // Panel for Buttons (Centered)
+        Panel buttonPanel = new Panel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = 0; gbc.gridy = 0; bottomPanel.add(Start, gbc);
-        gbc.gridx = 1; bottomPanel.add(Shape, gbc);
-        gbc.gridx = 2; bottomPanel.add(Tail, gbc);
-        gbc.gridx = 3; bottomPanel.add(Clear, gbc);
-        gbc.gridx = 4; bottomPanel.add(Quit, gbc);
-
-        gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 5;
-        bottomPanel.add(SpeedScrollBar, gbc);
-        gbc.gridy = 2;
-        bottomPanel.add(ObjSizeScrollBar, gbc);
-
+    
+        gbc.gridx = 0; gbc.gridy = 0; buttonPanel.add(Start, gbc);
+        gbc.gridx = 1; buttonPanel.add(Shape, gbc);
+        gbc.gridx = 2; buttonPanel.add(Tail, gbc);
+        gbc.gridx = 3; buttonPanel.add(Clear, gbc);
+        gbc.gridx = 4; buttonPanel.add(Quit, gbc);
+    
+        // Add buttons panel to control (Buttons in the center)
+        GridBagConstraints buttonPanelConstraints = new GridBagConstraints();
+        buttonPanelConstraints.gridx = 1; 
+        buttonPanelConstraints.gridy = 0; 
+        buttonPanelConstraints.gridwidth = 2; // Span across multiple columns
+        control.add(buttonPanel, buttonPanelConstraints);
+    
+        // Add Scrollbars to control panel (East and West positions)
+        GridBagConstraints sbConstraints = new GridBagConstraints();
+        sbConstraints.fill = GridBagConstraints.HORIZONTAL;
+    
+        // Left position (SpeedScrollBar)
+        sbConstraints.gridx = 0;  // Position on the left side (West)
+        sbConstraints.gridy = 0;  // Scrollbars are in a new row, below the buttons
+        sbConstraints.weightx = 0; // Don't stretch horizontally
+        sbConstraints.weighty = 0; // Don't stretch vertically
+        sbConstraints.gridwidth = 1;
+        control.add(SpeedScrollBar, sbConstraints);
+    
+        // Right position (ObjSizeScrollBar)
+        sbConstraints.gridx = 3;  // Position on the right side (East)
+        sbConstraints.gridy = 0;  // Scrollbars are in a new row, below the buttons
+        sbConstraints.weightx = 0; // Don't stretch horizontally
+        sbConstraints.weighty = 0; // Don't stretch vertically
+        sbConstraints.gridwidth = 1;
+        control.add(ObjSizeScrollBar, sbConstraints);
+    
         // Add Panels to Frame
         GridBagConstraints frameGbc = new GridBagConstraints();
         frameGbc.gridx = 0;
         frameGbc.gridy = 0;
         frameGbc.weightx = 1.0;
-        frameGbc.weighty = 0.8; // Ensures top panel doesn't take all space
+        frameGbc.weighty = 0.8;
         frameGbc.fill = GridBagConstraints.BOTH;
-        add(topPanel, frameGbc);
-
+        add(sheet, frameGbc);
+    
         frameGbc.gridy = 1;
-        frameGbc.weighty = 0.2; // Ensures bottom panel is always visible
-        add(bottomPanel, frameGbc);
-
+        frameGbc.weighty = 0.2;
+        add(control, frameGbc);
+    
         // Add Listeners
         Start.addActionListener(this);
         Shape.addActionListener(this);
@@ -257,11 +199,16 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         ObjSizeScrollBar.addAdjustmentListener(this);
         this.addComponentListener(this);
         this.addWindowListener(this);
-
+    
         pack();
         setMinimumSize(getPreferredSize());
         setBounds(WinLeft, WinTop, WIDTH, HEIGHT);
     }
+    
+    
+
+    
+    
 
     //creates layout and calculates screen size
     private void MakeSheet(){
@@ -273,39 +220,11 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         CENTER=(ScreenWidth/2);
         BUTTONW=ScreenWidth/11;
         BUTTONS=BUTTONW/4;
-        setBackground(Color.lightGray);
+        //setBackground(Color.lightGray);
 
         ScrollBarW=2*BUTTONW; // scroll bar width
     }
 
-    //positions and sizes buttons, scrollbars, and labels on the screen
-    // private void SizeScreen(){
-
-    //     //position the buttons
-    //     Start.setLocation(CENTER-2*(BUTTONW+BUTTONS)-BUTTONW/2,ScreenHeight+BUTTONHS+I.top);
-    //     Shape.setLocation(CENTER-BUTTONW-BUTTONS-BUTTONW/2,ScreenHeight+BUTTONHS+I.top);
-    //     Tail.setLocation(CENTER-BUTTONW/2,ScreenHeight+BUTTONHS+I.top);
-    //     Clear.setLocation(CENTER+BUTTONS+BUTTONW/2,ScreenHeight+BUTTONHS+I.top);
-    //     Quit.setLocation(CENTER+BUTTONW+2*BUTTONS+BUTTONW/2,ScreenHeight+BUTTONHS+I.top);
-
-    //     //size the buttons
-    //     Start.setSize(BUTTONW,BUTTONH);
-    //     Shape.setSize(BUTTONW,BUTTONH);
-    //     Tail.setSize(BUTTONW,BUTTONH);
-    //     Clear.setSize(BUTTONW,BUTTONH);
-    //     Quit.setSize(BUTTONW,BUTTONH);
-
-    //     //position the scrollbars object and labels
-    //     SpeedScrollBar.setLocation(I.left+BUTTONS,ScreenHeight+BUTTONHS+I.top);
-    //     ObjSizeScrollBar.setLocation(WinWidth-ScrollBarW-I.right-BUTTONS,ScreenHeight+BUTTONHS+I.top);
-    //     SPEEDL.setLocation(I.left+BUTTONS,ScreenHeight+BUTTONHS+BUTTONH+I.top);
-    //     SIZEL.setLocation(WinWidth-ScrollBarW-I.right,ScreenHeight+BUTTONHS+BUTTONH+I.top);
-    //     SpeedScrollBar.setSize(ScrollBarW,SCROLLBARH);
-    //     ObjSizeScrollBar.setSize(ScrollBarW,SCROLLBARH);
-    //     SPEEDL.setSize(ScrollBarW,BUTTONH);
-    //     SIZEL.setSize(ScrollBarW,SCROLLBARH);
-    //     Obj.setBounds(I.left,I.top,ScreenWidth,ScreenHeight);
-    // }
 
     private void SizeScreen() {
         // Get insets

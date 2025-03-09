@@ -193,6 +193,8 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
 
     //      validate();       
     // }
+
+    //keep this was working just not proper sizes
     public void initComponents() throws Exception, IOException {
         delay = DELAY;
         TimerPause = true;

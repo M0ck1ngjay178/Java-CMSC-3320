@@ -1,0 +1,188 @@
+
+    //where did ball go???
+    // public void initComponents() throws Exception {
+    //     delay = DELAY;
+    //     TimerPause = true;
+    //     runBall = true;
+    
+    //     // Initialize Buttons
+    //     Start = new Button("Run");
+    //     Shape = new Button("Circle");
+    //     Clear = new Button("Clear");
+    //     Tail = new Button("No Tail");
+    //     Quit = new Button("Quit");
+    
+    //     // Initialize Scrollbars (Horizontal)
+    //     // SpeedScrollBar = new Scrollbar(Scrollbar.HORIZONTAL, SpeedSBinit, SBvisible, SpeedSBmin, SpeedSBmax);
+    //     // SpeedScrollBar.setBackground(Color.gray);
+    
+    //     // ObjSizeScrollBar = new Scrollbar(Scrollbar.HORIZONTAL, SOBJ, SBvisible, MINObj, MAXObj);
+    //     // ObjSizeScrollBar.setBackground(Color.gray);
+
+    //     //initilize scrollbars
+    //     SpeedScrollBar=new Scrollbar(Scrollbar.HORIZONTAL);
+    //     SpeedScrollBar.setMaximum(SpeedSBmax);
+    //     SpeedScrollBar.setMinimum(SpeedSBmin);
+    //     SpeedScrollBar.setUnitIncrement(SBunit);
+    //     SpeedScrollBar.setBlockIncrement(SBblock);
+    //     SpeedScrollBar.setValue(SpeedSBinit);
+    //     SpeedScrollBar.setVisibleAmount(SBvisible);
+    //     SpeedScrollBar.setBackground(Color.gray);
+
+    //     ObjSizeScrollBar=new Scrollbar(Scrollbar.HORIZONTAL);
+    //     ObjSizeScrollBar.setMaximum(MAXObj);
+    //     ObjSizeScrollBar.setMinimum(MINObj);
+    //     ObjSizeScrollBar.setUnitIncrement(SBunit);
+    //     ObjSizeScrollBar.setBlockIncrement(SBblock);
+    //     ObjSizeScrollBar.setValue(SOBJ);
+    //     ObjSizeScrollBar.setVisibleAmount(SBvisible);
+    //     ObjSizeScrollBar.setBackground(Color.gray);
+    
+    //     // Create Panels
+    //     sheet = new Panel(new BorderLayout());
+    //     control = new Panel(new BorderLayout());  // Use BorderLayout for proper positioning
+    
+    //     // Add components to top panel (canvas)
+    //     Obj.setBackground(Color.white);
+    //     setBackground(Color.lightGray);
+    //     sheet.add(Obj, BorderLayout.CENTER);
+    //     //sheet.add("Center", Obj);
+    //     //Obj.add("Center", Obj);
+    
+    //     // Panel for Buttons (Centered)
+    //     Panel buttonPanel = new Panel(new GridBagLayout());
+    //     GridBagConstraints gbc = new GridBagConstraints();
+    //     gbc.insets = new Insets(5, 5, 5, 5);
+    //     gbc.fill = GridBagConstraints.HORIZONTAL;
+    
+    //     gbc.gridx = 0; gbc.gridy = 0; buttonPanel.add(Start, gbc);
+    //     gbc.gridx = 1; buttonPanel.add(Shape, gbc);
+    //     gbc.gridx = 2; buttonPanel.add(Tail, gbc);
+    //     gbc.gridx = 3; buttonPanel.add(Clear, gbc);
+    //     gbc.gridx = 4; buttonPanel.add(Quit, gbc);
+    
+    //     // Add components to the control panel
+    //     control.add(SpeedScrollBar, BorderLayout.WEST);  // Left-side scrollbar
+    //     control.add(ObjSizeScrollBar, BorderLayout.EAST); // Right-side scrollbar
+    //     control.add(buttonPanel, BorderLayout.CENTER);   // Buttons in the center
+    
+    //     // Add Panels to Frame
+    //     GridBagConstraints frameGbc = new GridBagConstraints();
+    //     frameGbc.gridx = 0;
+    //     frameGbc.gridy = 0;
+    //     frameGbc.weightx = 1.0;
+    //     frameGbc.weighty = 0.8;
+    //     frameGbc.fill = GridBagConstraints.BOTH;
+    //     add(sheet, frameGbc);
+    
+    //     frameGbc.gridy = 1;
+    //     frameGbc.weighty = 0.2;
+    //     add(control, frameGbc);
+    
+    //     // Add Listeners
+    //     Start.addActionListener(this);
+    //     Shape.addActionListener(this);
+    //     Tail.addActionListener(this);
+    //     Clear.addActionListener(this);
+    //     Quit.addActionListener(this);
+    //     SpeedScrollBar.addAdjustmentListener(this);
+    //     ObjSizeScrollBar.addAdjustmentListener(this);
+    //     this.addComponentListener(this);
+    //     this.addWindowListener(this);
+    
+    //     pack();
+    //     setMinimumSize(getPreferredSize());
+    //     setBounds(WinLeft, WinTop, WIDTH, HEIGHT);
+    // }
+
+    // public void initComponents() throws Exception {
+    //     delay = DELAY;
+    //     TimerPause = true;
+    //     runBall = true;
+    
+    //     // Initialize Buttons
+    //     Start = new Button("Run");
+    //     Shape = new Button("Circle");
+    //     Clear = new Button("Clear");
+    //     Tail = new Button("No Tail");
+    //     Quit = new Button("Quit");
+    
+    //     // Initialize Scrollbars (Horizontal)
+    //     SpeedScrollBar = new Scrollbar(Scrollbar.HORIZONTAL);
+    //     SpeedScrollBar.setMaximum(SpeedSBmax);
+    //     SpeedScrollBar.setMinimum(SpeedSBmin);
+    //     SpeedScrollBar.setUnitIncrement(SBunit);
+    //     SpeedScrollBar.setBlockIncrement(SBblock);
+    //     SpeedScrollBar.setValue(SpeedSBinit);
+    //     SpeedScrollBar.setVisibleAmount(SBvisible);
+    //     SpeedScrollBar.setBackground(Color.gray);
+    //     SpeedScrollBar.setPreferredSize(new Dimension(300, 20)); // Ensures a good size
+    
+    //     ObjSizeScrollBar = new Scrollbar(Scrollbar.HORIZONTAL);
+    //     ObjSizeScrollBar.setMaximum(MAXObj);
+    //     ObjSizeScrollBar.setMinimum(MINObj);
+    //     ObjSizeScrollBar.setUnitIncrement(SBunit);
+    //     ObjSizeScrollBar.setBlockIncrement(SBblock);
+    //     ObjSizeScrollBar.setValue(SOBJ);
+    //     ObjSizeScrollBar.setVisibleAmount(SBvisible);
+    //     ObjSizeScrollBar.setBackground(Color.gray);
+    //     ObjSizeScrollBar.setPreferredSize(new Dimension(300, 20)); // Ensures a good size
+    
+    //     // Create Panels
+    //     sheet = new Panel(new BorderLayout());
+    //     control = new Panel(new BorderLayout());  
+    
+    //     // Add canvas (Obj) to top panel
+    //     Obj.setBackground(Color.white);
+    //     setBackground(Color.lightGray);
+    //     sheet.add(Obj, BorderLayout.CENTER);
+    
+    //     // Panel for Buttons (Centered)
+    //     Panel buttonPanel = new Panel(new GridBagLayout());
+    //     GridBagConstraints gbc = new GridBagConstraints();
+    //     gbc.insets = new Insets(5, 5, 5, 5);
+    //     gbc.fill = GridBagConstraints.HORIZONTAL;
+    
+    //     gbc.gridx = 0; gbc.gridy = 0; buttonPanel.add(Start, gbc);
+    //     gbc.gridx = 1; buttonPanel.add(Shape, gbc);
+    //     gbc.gridx = 2; buttonPanel.add(Tail, gbc);
+    //     gbc.gridx = 3; buttonPanel.add(Clear, gbc);
+    //     gbc.gridx = 4; buttonPanel.add(Quit, gbc);
+    
+    //     // Panel for Scrollbars (Ensures they stretch properly)
+    //     Panel scrollbarPanel = new Panel(new FlowLayout(FlowLayout.CENTER, 10, 5));
+    //     scrollbarPanel.add(SpeedScrollBar);
+    //     scrollbarPanel.add(ObjSizeScrollBar);
+    
+    //     // Add components to the control panel
+    //     control.add(buttonPanel, BorderLayout.CENTER);   // Buttons in the center
+    //     control.add(scrollbarPanel, BorderLayout.SOUTH); // Scrollbars at the bottom
+    
+    //     // Add Panels to Frame
+    //     GridBagConstraints frameGbc = new GridBagConstraints();
+    //     frameGbc.gridx = 0;
+    //     frameGbc.gridy = 0;
+    //     frameGbc.weightx = 1.0;
+    //     frameGbc.weighty = 0.8;
+    //     frameGbc.fill = GridBagConstraints.BOTH;
+    //     add(sheet, frameGbc);
+    
+    //     frameGbc.gridy = 1;
+    //     frameGbc.weighty = 0.2;
+    //     add(control, frameGbc);
+    
+    //     // Add Listeners
+    //     Start.addActionListener(this);
+    //     Shape.addActionListener(this);
+    //     Tail.addActionListener(this);
+    //     Clear.addActionListener(this);
+    //     Quit.addActionListener(this);
+    //     SpeedScrollBar.addAdjustmentListener(this);
+    //     ObjSizeScrollBar.addAdjustmentListener(this);
+    //     this.addComponentListener(this);
+    //     this.addWindowListener(this);
+    
+    //     pack();
+    //     setMinimumSize(getPreferredSize());
+    //     setBounds(WinLeft, WinTop, WIDTH, HEIGHT);
+    // }
