@@ -10,14 +10,14 @@
 /*******************END HEADER***************************/
 
 //---------LIBRARIES--------------
-package Bounce;
+package BouncingBall;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 //---------END LIBRARIES-----------
 
 //---------------------------------------------CLASS BOUNCE-------------------------------------------------------------------------
-public class Bounce extends Frame implements WindowListener, ComponentListener, ActionListener, AdjustmentListener, Runnable {
+public class BouncingBall extends Frame implements WindowListener, ComponentListener, ActionListener, AdjustmentListener, Runnable {
 
     private static final long serialVersionUID = 10L;
 
@@ -75,16 +75,16 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
     private Thread thethread; //thread for timer delay
 
     
-    public Bounce() {
+    public BouncingBall() {
         setTitle("Bouncing Ball");
-        setLayout(new GridBagLayout()); // Set layout manager
+        setLayout(new BorderLayout()); // Set the layout for the main frame to BorderLayout
         setVisible(true);
 
         started = false;
         ScreenWidth = WinWidth - WinLeft;
         ScreenHeight = WinHeight - WinTop;
-        Obj = new Objc(SObj, ScreenWidth, ScreenHeight);
-
+        Obj = new Objc(50, ScreenWidth, ScreenHeight); // Example constructor for Objc
+        MakeSheet();
         try {
             initComponents();
         } catch (Exception e) {
@@ -95,14 +95,8 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         start();
     }
 
-
-
     public void initComponents() throws Exception {
-        delay = DELAY;
-        TimerPause = true;
-        runBall = true;
-    
-        // Initialize Buttons
+        // Initialize buttons
         Start = new Button("Run");
         Shape = new Button("Circle");
         Clear = new Button("Clear");
@@ -128,18 +122,23 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         ObjSizeScrollBar.setVisibleAmount(SBvisible);
         ObjSizeScrollBar.setBackground(Color.gray);
     
-        // Create Panels
-        sheet = new Panel(new GridBagLayout()); // Use GridBagLayout
-        control = new Panel(new GridBagLayout());  // Use GridBagLayout for control panel
+        // Set preferred size to make scrollbars shorter and smaller
+        SpeedScrollBar.setPreferredSize(new Dimension(150, 15));  // Set width and height
+        ObjSizeScrollBar.setPreferredSize(new Dimension(150, 15));  // Set width and height
     
-        // Add components to top panel (canvas)
+        // Create panels with GridBagLayout
+        sheet = new Panel();
+        sheet.setLayout(new GridBagLayout()); // Use GridBagLayout for the sheet panel
+        control = new Panel();
+        control.setLayout(new GridBagLayout());  // Use GridBagLayout for control panel
+    
+        // Add components to the sheet panel (canvas area)
         Obj.setBackground(Color.white);
+        sheet.add(Obj, new GridBagConstraints());  // Add Obj (the canvas) to the sheet
+        control.setBackground(Color.lightGray);
         setBackground(Color.lightGray);
-        sheet.add(Obj, new GridBagConstraints());
     
-
-    
-        // Panel for Buttons (Centered)
+        // Create and set up the button panel
         Panel buttonPanel = new Panel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -151,47 +150,36 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         gbc.gridx = 3; buttonPanel.add(Clear, gbc);
         gbc.gridx = 4; buttonPanel.add(Quit, gbc);
     
-        // Add buttons panel to control (Buttons in the center)
+        // Add button panel to the control panel (Buttons will be centered in GridBagLayout)
         GridBagConstraints buttonPanelConstraints = new GridBagConstraints();
-        buttonPanelConstraints.gridx = 1; 
-        buttonPanelConstraints.gridy = 0; 
-        buttonPanelConstraints.gridwidth = 2; // Span across multiple columns
+        buttonPanelConstraints.gridx = 1;
+        buttonPanelConstraints.gridy = 0;
+        buttonPanelConstraints.gridwidth = 3; // Span across columns
         control.add(buttonPanel, buttonPanelConstraints);
     
-        // Add Scrollbars to control panel (East and West positions)
+        // Add Scrollbars to the control panel (East and West positions)
         GridBagConstraints sbConstraints = new GridBagConstraints();
         sbConstraints.fill = GridBagConstraints.HORIZONTAL;
     
-        // Left position (SpeedScrollBar)
-        sbConstraints.gridx = 0;  // Position on the left side (West)
-        sbConstraints.gridy = 0;  // Scrollbars are in a new row, below the buttons
-        sbConstraints.weightx = 0; // Don't stretch horizontally
-        sbConstraints.weighty = 0; // Don't stretch vertically
-        sbConstraints.gridwidth = 1;
+        // Left position (SpeedScrollBar) - Place it at the far left side of the row
+        sbConstraints.gridx = 0;  // Far left side of the row
+        sbConstraints.gridy = 1;  // New row for the scrollbars
+        sbConstraints.gridwidth = 1;  // Only one column wide
+        sbConstraints.weightx = 1;  // Let it expand if needed
         control.add(SpeedScrollBar, sbConstraints);
     
-        // Right position (ObjSizeScrollBar)
-        sbConstraints.gridx = 3;  // Position on the right side (East)
-        sbConstraints.gridy = 0;  // Scrollbars are in a new row, below the buttons
-        sbConstraints.weightx = 0; // Don't stretch horizontally
-        sbConstraints.weighty = 0; // Don't stretch vertically
-        sbConstraints.gridwidth = 1;
+        // Right position (ObjSizeScrollBar) - Place it at the far right side of the row
+        sbConstraints.gridx = 4;  // Far right side of the row
+        sbConstraints.gridy = 1;  // Same row as SpeedScrollBar
+        sbConstraints.gridwidth = 1;  // Only one column wide
+        sbConstraints.weightx = 1;  // Let it expand if needed
         control.add(ObjSizeScrollBar, sbConstraints);
     
-        // Add Panels to Frame
-        GridBagConstraints frameGbc = new GridBagConstraints();
-        frameGbc.gridx = 0;
-        frameGbc.gridy = 0;
-        frameGbc.weightx = 1.0;
-        frameGbc.weighty = 0.8;
-        frameGbc.fill = GridBagConstraints.BOTH;
-        add(sheet, frameGbc);
+        // Add panels to the frame using BorderLayout
+        add(sheet, BorderLayout.CENTER);  // Sheet panel in the center
+        add(control, BorderLayout.SOUTH);  // Control panel at the bottom
     
-        frameGbc.gridy = 1;
-        frameGbc.weighty = 0.2;
-        add(control, frameGbc);
-    
-        // Add Listeners
+        // Add action listeners to buttons and scrollbars
         Start.addActionListener(this);
         Shape.addActionListener(this);
         Tail.addActionListener(this);
@@ -199,16 +187,16 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         Quit.addActionListener(this);
         SpeedScrollBar.addAdjustmentListener(this);
         ObjSizeScrollBar.addAdjustmentListener(this);
-        this.addComponentListener(this);
-        this.addWindowListener(this);
     
-        pack();
-        setMinimumSize(getPreferredSize());
-        setBounds(WinLeft, WinTop, WIDTH, HEIGHT);
+        // Window settings
+        // pack();
+        // setMinimumSize(getPreferredSize());
+        // setBounds(WinLeft, WinTop, WinWidth, WinHeight);
+        validate();
     }
     
     
-
+    
     
     
 
@@ -632,7 +620,7 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
 
     /*****************MAIN**************************/
     public static void main(String[] args) {
-        new Bounce();
+        new BouncingBall();
     }
     /*****************END MAIN********************/
 
