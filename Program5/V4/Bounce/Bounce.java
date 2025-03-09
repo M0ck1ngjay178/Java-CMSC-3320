@@ -137,6 +137,8 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         setBackground(Color.lightGray);
         sheet.add(Obj, new GridBagConstraints());
     
+
+    
         // Panel for Buttons (Centered)
         Panel buttonPanel = new Panel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -238,6 +240,7 @@ public class Bounce extends Frame implements WindowListener, ComponentListener, 
         Obj.setBounds(I.left, I.top, ScreenWidth, ScreenHeight);
     
     }
+    
     
 
     //stops the program, removes listeners, and exits the program
