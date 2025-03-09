@@ -10,20 +10,20 @@
 /*******************END HEADER***************************/
 
 //---------LIBRARIES--------------
-package BouncingBall;
+package Bounce;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 //---------END LIBRARIES-----------
 
 //---------------------------------------------CLASS BOUNCE-------------------------------------------------------------------------
-public class BouncingBall extends Frame implements WindowListener, ComponentListener, ActionListener, AdjustmentListener, Runnable,MouseListener, MouseMotionListener {
+public class Bounce extends Frame implements WindowListener, ComponentListener, ActionListener, AdjustmentListener, Runnable {
 
     private static final long serialVersionUID = 10L;
 
     //constants
     private final int WIDTH=640; //initial frame width
-    private final int HEIGHT=450;//initial frame height
+    private final int HEIGHT=400;//initial frame height
     private final int BUTTONH=20;//button height
     private final int BUTTONHS=5;//button height spacing
 
@@ -41,8 +41,8 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
     private int WinHeight=HEIGHT;//initial frame height
     private int ScreenWidth;//drawing screen width
     private int ScreenHeight;//drawing screen height
-    //private int WinTop=10;//top of frame
-    //private int WinLeft=10;//left side of frame
+    private int WinTop=10;//top of frame
+    private int WinLeft=10;//left side of frame
     private int BUTTONW=50;//initial button width
     private int CENTER=(WIDTH/2);//initial screen center
     private int BUTTONS=BUTTONW/4;//initial button spacing
@@ -64,7 +64,8 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
     private int dx, dy;           //object movement direction
     boolean tailSet = true;       //flag that tracks tail visibility
 
-    Button Start,Pause, Quit; //Buttons
+    Button Start,Shape,Clear,Tail,Quit; //Buttons
+    private Panel topPanel, bottomPanel; //add panels
 
     //objects
     private Objc Obj; //object to draw
@@ -73,43 +74,27 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
     Scrollbar SpeedScrollBar, ObjSizeScrollBar;//scrollbars
     private Thread thethread; //thread for timer delay
 
-    //------------------PROGRAM 5 ADDITIONS---------------------
-    final int   WinLeft = 10;//left side of frame
-    final int   WinTop = 10;//top of frame
-    Point FrameSize = new Point(640, 400);
-    Panel sheet = new Panel();
-    List list = new List(13);
-    private Panel control = new Panel();
-    GridBagLayout gbl = new GridBagLayout();
-    //GridBagConstraints gbc = new GridBagConstraints();
-    //-----------------------------------------------------------
-
     //Bounce Constructor
-    BouncingBall() {
-        setTitle("Bouncing Ball");
-        ScreenWidth = WinWidth - WinLeft;
-        ScreenHeight = WinHeight - WinTop;
-        Obj=new Objc(SObj,ScreenWidth,ScreenHeight);
-        setLayout(new BorderLayout());//layout border
-        setBounds(WinLeft, WinTop, FrameSize.x, FrameSize.y);//size and position the frame
-        //setBackground(Color.lightGray);
+    // Bounce() {
+    //     setTitle("Bouncing Ball");
+    //     setLayout(null);
+    //     setVisible(true);
+    //     MakeSheet();
+    //     started = false;
 
-        setVisible(true);
-        MakeSheet();
-        started = false;
-
+    //     ScreenWidth = WinWidth - WinLeft;
+    //     ScreenHeight = WinHeight - WinTop;
+    //     Obj=new Objc(SObj,ScreenWidth,ScreenHeight);
         
-        try{
-            initComponents();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        SizeScreen();
+    //     try{
+    //         initComponents();
+    //     }catch (Exception e){
+    //         e.printStackTrace();
+    //     }
+    //     SizeScreen();
 
-        start();
-    }
-    
-
+    //     start();
+    // }
 
     //initialize componenets
     // public void initComponents()throws Exception, IOException{
@@ -120,25 +105,28 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
 
     //      //initialize buttons
     //      Start=new Button("Run");
-    //      Pause= new Button("Pause");
+    //      Shape= new Button("Circle");
+    //      Clear= new Button("Clear");
+    //      Tail=new Button("No Tail");
     //      Quit=new Button("Quit");
 
     //      //add buttons to frame
     //      add("Center",Start);
-    //      add("Center",Pause);
+    //      add("Center",Shape);
+    //      add("Center",Tail);
+    //      add("Center",Clear);
     //      add("Center",Quit);
         
     //      //add action listeners
     //      Start.addActionListener(this);
-    //      Pause.addActionListener(this);
+    //      Shape.addActionListener(this);
+    //      Tail.addActionListener(this);
+    //      Clear.addActionListener(this);
     //      Quit.addActionListener(this);
 
     //      //add window and component listeners
     //      this.addComponentListener(this);
     //      this.addWindowListener(this);
-    //      //addWindowListener(this);
-    //      list.addMouseListener(this);
-    //      list.addMouseMotionListener(this);
 
     //      //set frame preferences
     //      setPreferredSize(new Dimension(WIDTH,HEIGHT));
@@ -164,22 +152,10 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
     //      ObjSizeScrollBar.setVisibleAmount(SBvisible);
     //      ObjSizeScrollBar.setBackground(Color.gray);
         
-    //      //setBackground(Color.lightGray);
-    //      sheet.setLayout(new BorderLayout(0,0));//sheet border layout
-    //      Obj.setBackground(Color.WHITE);//this should be sheet tho ommmgg!!! AHHH
-    //      sheet.setVisible(true);
- 
-    //      sheet.add("Center", Obj);//add the list to the center of the panel sheet
-    //      control.setLayout(gbl);
-    //      //setupControlPanel();
-    //      control.setBackground(Color.lightGray);
-    //      //setupControlPanel();
-
-    //      add("Center", sheet);//add sheet panel to center of application
-    //      add("South", control);
-
+       
     //     //sets backround color
-    //      //
+    //      Obj.setBackground(Color.white);
+
     //      //add scrollbars
     //      add(SpeedScrollBar);
     //      add(ObjSizeScrollBar);
@@ -193,173 +169,99 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
 
     //      validate();       
     // }
-    public void initComponents() throws Exception, IOException {
+    public Bounce() {
+        setTitle("Bouncing Ball");
+        setLayout(new GridBagLayout()); // Set layout manager
+        setVisible(true);
+
+        started = false;
+        ScreenWidth = WinWidth - WinLeft;
+        ScreenHeight = WinHeight - WinTop;
+        Obj = new Objc(SObj, ScreenWidth, ScreenHeight);
+
+        try {
+            initComponents();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        SizeScreen();
+        start();
+    }
+
+    public void initComponents() throws Exception {
         delay = DELAY;
         TimerPause = true;
         runBall = true;
-    
-        // Initialize buttons
+
+        // Initialize Buttons
         Start = new Button("Run");
-        Pause = new Button("Pause");
+        Shape = new Button("Circle");
+        Clear = new Button("Clear");
+        Tail = new Button("No Tail");
         Quit = new Button("Quit");
-    
-        // Initialize scrollbars
-        SpeedScrollBar = new Scrollbar(Scrollbar.HORIZONTAL);
-        SpeedScrollBar.setMaximum(SpeedSBmax);
-        SpeedScrollBar.setMinimum(SpeedSBmin);
-        SpeedScrollBar.setUnitIncrement(SBunit);
-        SpeedScrollBar.setBlockIncrement(SBblock);
-        SpeedScrollBar.setValue(SpeedSBinit);
-        SpeedScrollBar.setVisibleAmount(SBvisible);
+
+        // Initialize Scrollbars
+        SpeedScrollBar = new Scrollbar(Scrollbar.HORIZONTAL, SpeedSBinit, SBvisible, SpeedSBmin, SpeedSBmax);
         SpeedScrollBar.setBackground(Color.gray);
-    
-        ObjSizeScrollBar = new Scrollbar(Scrollbar.HORIZONTAL);
-        ObjSizeScrollBar.setMaximum(MAXObj);
-        ObjSizeScrollBar.setMinimum(MINObj);
-        ObjSizeScrollBar.setUnitIncrement(SBunit);
-        ObjSizeScrollBar.setBlockIncrement(SBblock);
-        ObjSizeScrollBar.setValue(SOBJ);
-        ObjSizeScrollBar.setVisibleAmount(SBvisible);
+
+        ObjSizeScrollBar = new Scrollbar(Scrollbar.HORIZONTAL, SOBJ, SBvisible, MINObj, MAXObj);
         ObjSizeScrollBar.setBackground(Color.gray);
-    
-        // Initialize labels
-        SPEEDL = new Label("Speed", Label.CENTER);
-        SIZEL = new Label("Size", Label.CENTER);
-    
-        // Initialize control panel and set layout
-        control.setLayout(gbl);
+
+        // Create Panels
+        topPanel = new Panel(new BorderLayout());
+        bottomPanel = new Panel(new GridBagLayout());
+
+        // Add components to top panel (canvas)
+        Obj.setBackground(Color.white);
+        topPanel.add(Obj, BorderLayout.CENTER);
+
+        // Set preferred size for bottom panel to ensure visibility
+        bottomPanel.setPreferredSize(new Dimension(400, 100));
+
+        // Set up bottom panel layout
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL; // Stretch components horizontally
-        gbc.insets = new Insets(5, 5, 5, 5); // Padding between components
-    
-        // Row 0: Speed Label
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 1;
-        control.add(SPEEDL, gbc);
-    
-        // Row 0: Speed Scrollbar
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        control.add(SpeedScrollBar, gbc);
-    
-        // Row 1: Size Label
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.gridwidth = 1;
-        control.add(SIZEL, gbc);
-    
-        // Row 1: Size Scrollbar
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        gbc.gridwidth = 2;
-        control.add(ObjSizeScrollBar, gbc);
-    
-        // Row 2: Buttons (Start, Pause, Quit)
-        gbc.gridwidth = 1; // Reset grid width
-        gbc.gridx = 0;
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0; gbc.gridy = 0; bottomPanel.add(Start, gbc);
+        gbc.gridx = 1; bottomPanel.add(Shape, gbc);
+        gbc.gridx = 2; bottomPanel.add(Tail, gbc);
+        gbc.gridx = 3; bottomPanel.add(Clear, gbc);
+        gbc.gridx = 4; bottomPanel.add(Quit, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 5;
+        bottomPanel.add(SpeedScrollBar, gbc);
         gbc.gridy = 2;
-        control.add(Start, gbc);
-    
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        control.add(Pause, gbc);
-    
-        gbc.gridx = 2;
-        gbc.gridy = 2;
-        control.add(Quit, gbc);
-    
-        // Add action listeners to buttons
+        bottomPanel.add(ObjSizeScrollBar, gbc);
+
+        // Add Panels to Frame
+        GridBagConstraints frameGbc = new GridBagConstraints();
+        frameGbc.gridx = 0;
+        frameGbc.gridy = 0;
+        frameGbc.weightx = 1.0;
+        frameGbc.weighty = 0.8; // Ensures top panel doesn't take all space
+        frameGbc.fill = GridBagConstraints.BOTH;
+        add(topPanel, frameGbc);
+
+        frameGbc.gridy = 1;
+        frameGbc.weighty = 0.2; // Ensures bottom panel is always visible
+        add(bottomPanel, frameGbc);
+
+        // Add Listeners
         Start.addActionListener(this);
-        Pause.addActionListener(this);
+        Shape.addActionListener(this);
+        Tail.addActionListener(this);
+        Clear.addActionListener(this);
         Quit.addActionListener(this);
-    
-        // Set frame preferences
-        setPreferredSize(new Dimension(WIDTH, HEIGHT));
-        setMinimumSize(getPreferredSize());
-        setBounds(WinLeft, WinTop, WIDTH, HEIGHT);
-    
-        // Set sheet layout
-        sheet.setLayout(new BorderLayout(0, 0));
-        Obj.setBackground(Color.WHITE);
-        sheet.setVisible(true);
-    
-        // Add object to the center of the sheet
-        sheet.add("Center", Obj); 
-    
-        // Add control panel to the south region of the layout
-        add("South", control);
-    
-        // Add scrollbars and labels to the layout
-        add(SpeedScrollBar, BorderLayout.NORTH);  // Adjust to desired position
-        add(ObjSizeScrollBar, BorderLayout.NORTH); // Adjust to desired position
-        add(SPEEDL, BorderLayout.NORTH);  // Adjust to desired position
-        add(SIZEL, BorderLayout.NORTH);   // Adjust to desired position
-    
-        // Add scrollbar listeners
         SpeedScrollBar.addAdjustmentListener(this);
         ObjSizeScrollBar.addAdjustmentListener(this);
-    
-        // Validate layout after adding components
-        validate();
-        repaint();
+        this.addComponentListener(this);
+        this.addWindowListener(this);
+
+        pack();
+        setMinimumSize(getPreferredSize());
+        setBounds(WinLeft, WinTop, WIDTH, HEIGHT);
     }
-    
-
-
-    
-
-    // private void setupControlPanel() {
-    //     control.setLayout(gbl);
-    //     GridBagConstraints gbc = new GridBagConstraints();
-    
-    //     gbc.fill = GridBagConstraints.HORIZONTAL; // Stretch components horizontally
-    //     gbc.insets = new Insets(5, 5, 5, 5); // Padding between components
-    
-    //     // Row 0: Speed Label
-    //     gbc.gridx = 0;
-    //     gbc.gridy = 0;
-    //     gbc.gridwidth = 1;
-    //     control.add(SPEEDL, gbc);
-    
-    //     // Row 0: Speed Scrollbar
-    //     gbc.gridx = 1;
-    //     gbc.gridy = 0;
-    //     gbc.gridwidth = 2;
-    //     control.add(SpeedScrollBar, gbc);
-    
-    //     // Row 1: Size Label
-    //     gbc.gridx = 0;
-    //     gbc.gridy = 1;
-    //     gbc.gridwidth = 1;
-    //     control.add(SIZEL, gbc);
-    
-    //     // Row 1: Size Scrollbar
-    //     gbc.gridx = 1;
-    //     gbc.gridy = 1;
-    //     gbc.gridwidth = 2;
-    //     control.add(ObjSizeScrollBar, gbc);
-    
-    //     // Row 2: Buttons (Start, Pause, Quit)
-    //     gbc.gridwidth = 1; // Reset grid width
-    
-    //     gbc.gridx = 0;
-    //     gbc.gridy = 2;
-    //     control.add(Start, gbc);
-    
-    //     gbc.gridx = 1;
-    //     gbc.gridy = 2;
-    //     control.add(Pause, gbc);
-    
-    //     gbc.gridx = 2;
-    //     gbc.gridy = 2;
-    //     control.add(Quit, gbc);
-    // }
-    
-    
-
-
 
     //creates layout and calculates screen size
     private void MakeSheet(){
@@ -377,29 +279,47 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
     }
 
     //positions and sizes buttons, scrollbars, and labels on the screen
-    private void SizeScreen(){
+    // private void SizeScreen(){
 
-        //position the buttons
-        Start.setLocation(CENTER-2*(BUTTONW+BUTTONS)-BUTTONW/2,ScreenHeight+BUTTONHS+I.top);
-        Pause.setLocation(CENTER-BUTTONW-BUTTONS-BUTTONW/2,ScreenHeight+BUTTONHS+I.top);
-        Quit.setLocation(CENTER+BUTTONW+2*BUTTONS+BUTTONW/2,ScreenHeight+BUTTONHS+I.top);
+    //     //position the buttons
+    //     Start.setLocation(CENTER-2*(BUTTONW+BUTTONS)-BUTTONW/2,ScreenHeight+BUTTONHS+I.top);
+    //     Shape.setLocation(CENTER-BUTTONW-BUTTONS-BUTTONW/2,ScreenHeight+BUTTONHS+I.top);
+    //     Tail.setLocation(CENTER-BUTTONW/2,ScreenHeight+BUTTONHS+I.top);
+    //     Clear.setLocation(CENTER+BUTTONS+BUTTONW/2,ScreenHeight+BUTTONHS+I.top);
+    //     Quit.setLocation(CENTER+BUTTONW+2*BUTTONS+BUTTONW/2,ScreenHeight+BUTTONHS+I.top);
 
-        //size the buttons
-        Start.setSize(BUTTONW,BUTTONH);
-        Pause.setSize(BUTTONW,BUTTONH);
-        Quit.setSize(BUTTONW,BUTTONH);
+    //     //size the buttons
+    //     Start.setSize(BUTTONW,BUTTONH);
+    //     Shape.setSize(BUTTONW,BUTTONH);
+    //     Tail.setSize(BUTTONW,BUTTONH);
+    //     Clear.setSize(BUTTONW,BUTTONH);
+    //     Quit.setSize(BUTTONW,BUTTONH);
 
-        //position the scrollbars object and labels
-        SpeedScrollBar.setLocation(I.left+BUTTONS,ScreenHeight+BUTTONHS+I.top);
-        ObjSizeScrollBar.setLocation(WinWidth-ScrollBarW-I.right-BUTTONS,ScreenHeight+BUTTONHS+I.top);
-        SPEEDL.setLocation(I.left+BUTTONS,ScreenHeight+BUTTONHS+BUTTONH+I.top);
-        SIZEL.setLocation(WinWidth-ScrollBarW-I.right,ScreenHeight+BUTTONHS+BUTTONH+I.top);
-        SpeedScrollBar.setSize(ScrollBarW,SCROLLBARH);
-        ObjSizeScrollBar.setSize(ScrollBarW,SCROLLBARH);
-        SPEEDL.setSize(ScrollBarW,BUTTONH);
-        SIZEL.setSize(ScrollBarW,SCROLLBARH);
-        Obj.setBounds(I.left,I.top,ScreenWidth,ScreenHeight);
+    //     //position the scrollbars object and labels
+    //     SpeedScrollBar.setLocation(I.left+BUTTONS,ScreenHeight+BUTTONHS+I.top);
+    //     ObjSizeScrollBar.setLocation(WinWidth-ScrollBarW-I.right-BUTTONS,ScreenHeight+BUTTONHS+I.top);
+    //     SPEEDL.setLocation(I.left+BUTTONS,ScreenHeight+BUTTONHS+BUTTONH+I.top);
+    //     SIZEL.setLocation(WinWidth-ScrollBarW-I.right,ScreenHeight+BUTTONHS+BUTTONH+I.top);
+    //     SpeedScrollBar.setSize(ScrollBarW,SCROLLBARH);
+    //     ObjSizeScrollBar.setSize(ScrollBarW,SCROLLBARH);
+    //     SPEEDL.setSize(ScrollBarW,BUTTONH);
+    //     SIZEL.setSize(ScrollBarW,SCROLLBARH);
+    //     Obj.setBounds(I.left,I.top,ScreenWidth,ScreenHeight);
+    // }
+
+    private void SizeScreen() {
+        // Get insets
+        I = getInsets();
+        
+        // Recalculate screen size
+        ScreenWidth = WinWidth - I.left - I.right;
+        ScreenHeight = WinHeight - I.top - 2 * (BUTTONH + BUTTONHS) - I.bottom;
+    
+        // Set the bounds of the main drawing area (canvas)
+        Obj.setBounds(I.left, I.top, ScreenWidth, ScreenHeight);
+    
     }
+    
 
     //stops the program, removes listeners, and exits the program
     public void stop(){
@@ -409,9 +329,9 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
 
         //removes action listeners
         Start.removeActionListener(this);
-        Pause.removeActionListener(this);
-        // Clear.removeActionListener(this);
-        // Tail.removeActionListener(this);
+        Shape.removeActionListener(this);
+        Clear.removeActionListener(this);
+        Tail.removeActionListener(this);
         Quit.removeActionListener(this);
 
         //removes component and window listeners
@@ -459,22 +379,41 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
         }
         //--------End Start Button-----------------
 
-    
-        //--------Shape Button-----------------
-        if(source==Pause){
-            if(Pause.getLabel()=="Pause"){//check if button is circle
-                Pause.setLabel("Square");//set it back to square for te next state transition
-                //Obj.rectangle(false);       //call rectangle method, pass false to signal the drawing a circle   
+        //--------Tail Button-----------------
+        if(source==Tail){
+            if(Tail.getLabel()=="Tail"){ //check if button is tail
+                Tail.setLabel("No Tail");// if it is, set label to no tail for next state transition
+                started = true; //set started to true
+                Obj.setTail(true);// call setTail to turn tail mode on, pass true
             }
             else{
-                Pause.setLabel("Circle"); //otherwise, set lable to circle
-                //Obj.rectangle(true);//draw square by passing true
+                Tail.setLabel("Tail");//otherwise, set label to tail
+                started = false;    //set started to false
+                Obj.setTail(false);// pass false to setTail, to remove tail
+            }
+        }
+        //--------End Tail Button-----------------
+
+        //--------Shape Button-----------------
+        if(source==Shape){
+            if(Shape.getLabel()=="Circle"){//check if button is circle
+                Shape.setLabel("Square");//set it back to square for te next state transition
+                Obj.rectangle(false);       //call rectangle method, pass false to signal the drawing a circle   
+            }
+            else{
+                Shape.setLabel("Circle"); //otherwise, set lable to circle
+                Obj.rectangle(true);//draw square by passing true
             }
             Obj.repaint();// force repaint of object
         }
         //--------End Shape Button-----------------
 
-    
+        //--------Clear Button-----------------
+        if(source==Clear){// check if source is equal to clear
+            Obj.Clear(); //call clear 
+            Obj.repaint();//force repaint
+        }
+        //--------End Clear Button----------------
 
         //--------Quit Button-----------------
         if(source==Quit){//if source is equal to quit button
@@ -529,9 +468,9 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
             }
     
             //after updating, check if in No Tail mode, clear the display if necessary
-            // if (Tail.getLabel().equals("Tail")) {// when the text is Tail, that means there is currently no tail, so clear
-            //     Obj.Clear(); // Clear the object if in No Tail mode
-            // }
+            if (Tail.getLabel().equals("Tail")) {// when the text is Tail, that means there is currently no tail, so clear
+                Obj.Clear(); // Clear the object if in No Tail mode
+            }
         }
     
         // Repaint the object after the size change
@@ -554,54 +493,6 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
     public void windowIconified(WindowEvent e){}
     public void windowDeiconified(WindowEvent e){}
     //========================END WINDOW LISTENER METHODS=================================
-
-    //========================MOUSE METHODS=================================
-
-    public void mousePressed(MouseEvent e){
-
-        String button = "";
-
-        if(e.getButton() == MouseEvent.BUTTON1){
-            button = "Left";
-        }else if(e.getButton() == MouseEvent.BUTTON2){
-            button = "Center";
-        }else if(e.getButton() == MouseEvent.BUTTON3){
-            button = "Right";
-        }
-
-        list.add(button+"mouse button"+e.getButton()+"pressed");
-
-    }
-
-    public void mouseReleased(MouseEvent e){
-
-        list.add("Mouse button"+e.getButton()+"released");
-    }
-
-    public void mouseClicked(MouseEvent e){
-
-        list.add("Mouse Clicked"+e.getClickCount()+"clicks");
-    }
-    public void mouseMoved(MouseEvent e){
-
-        //list.add("Mouse Moved");
-        //System.out.println("Mouse moved");
-    }
-
-    public void mouseDragged(MouseEvent e){
-
-        //list.add("Mouse Moved");
-    }
-
-    public void mouseEntered(MouseEvent e){
-
-        //list.add("Mouse Entered");
-    }
-
-    public void mouseExited(MouseEvent e){
-
-        //list.add("Mouse Exited");
-    }
 
 
     //====================COMPONENT METHODS============
@@ -715,6 +606,7 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
             if (y < 0) y = 0;
 
         }
+        
         //resizes the screen
         public void reSize(int w, int h){
             ScreenWidth=w;
@@ -773,7 +665,7 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
                 g.drawOval(x-(SObj-1)/2, y-(SObj-1)/2,SObj-1,SObj-1);
             }
             //draw background canvas at end to prevend thread updating glitches
-            g.setColor(Color.blue);
+            g.setColor(Color.red);
             g.drawRect(0, 0, ScreenWidth-1, ScreenHeight-1);
 
             //store previous values of x and y before next position
@@ -818,7 +710,7 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
 
     /*****************MAIN**************************/
     public static void main(String[] args) {
-        new BouncingBall();
+        new Bounce();
     }
     /*****************END MAIN********************/
 

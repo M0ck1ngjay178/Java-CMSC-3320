@@ -192,55 +192,6 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
          validate();       
     }
 
-    // Function to setup GridBagLayout for control panel
-    // private void setupControlPanel() {
-    //     GridBagLayout gbl = new GridBagLayout(); // Explicitly create GridBagLayout
-    //     control.setLayout(gbl); // Assign it to the control panel
-    //     control.setBackground(Color.LIGHT_GRAY);
-        
-    //     GridBagConstraints gbc = new GridBagConstraints();
-    //     gbc.insets = new Insets(10, 10, 10, 10); // Padding for spacing
-    //     gbc.fill = GridBagConstraints.HORIZONTAL;
-    //     gbc.weightx = 1.0; // Allow components to expand horizontally
-    //     gbc.weighty = 1.0; // Distribute space evenly
-
-    //     // Set preferred sizes for scrollbars
-    //     SpeedScrollBar.setPreferredSize(new Dimension(150, 20));
-    //     ObjSizeScrollBar.setPreferredSize(new Dimension(150, 20));
-
-    //     // Row 1: Speed Label & Scrollbar
-    //     gbc.gridx = 0; gbc.gridy = 0;
-    //     gbc.gridwidth = 1; // Reset gridwidth
-    //     control.add(SPEEDL, gbc);
-
-    //     gbc.gridx = 1; gbc.gridy = 0;
-    //     gbc.gridwidth = 2; // Span across 2 columns
-    //     control.add(SpeedScrollBar, gbc);
-
-    //     // Row 2: Size Label & Scrollbar
-    //     gbc.gridx = 0; gbc.gridy = 1;
-    //     gbc.gridwidth = 1;
-    //     control.add(SIZEL, gbc);
-
-    //     gbc.gridx = 1; gbc.gridy = 1;
-    //     gbc.gridwidth = 2;
-    //     control.add(ObjSizeScrollBar, gbc);
-
-    //     // Reset gridwidth before adding buttons
-    //     gbc.gridwidth = 1;
-        
-    //     // Row 3: Buttons (Start, Pause, Quit)
-    //     gbc.gridx = 0; gbc.gridy = 2;
-    //     gbc.anchor = GridBagConstraints.CENTER; // Center buttons
-    //     control.add(Start, gbc);
-
-    //     gbc.gridx = 1; gbc.gridy = 2;
-    //     control.add(Pause, gbc);
-
-    //     gbc.gridx = 2; gbc.gridy = 2;
-    //     control.add(Quit, gbc);
-    // }
-
 
 
     //creates layout and calculates screen size
