@@ -108,10 +108,9 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
         started = false;
         TimerPause = true;
         tailSet = false;
-
-        ScreenWidth = WinWidth - WinLeft;
-        ScreenHeight = WinHeight - WinTop;
-        Ball=new Ballc(SBALL,ScreenWidth,ScreenHeight);
+        //where to put this??
+        //Perimeter.grow(-1, -1); // shrink the rectangle one pixel on all sides
+        
         MakeSheet();
         try {
             initComponents();
@@ -158,12 +157,20 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
         BallSizeScrollBar.setPreferredSize(new Dimension(150, 15));  // Set width and height
     
         // Create panels with GridBagLayout
-        sheet.setLayout(new BorderLayout()); // Use BorderLayout for the sheet panel
+        sheet.setLayout(new BorderLayout(0,0)); // Use BorderLayout for the sheet panel
         //sheet.setLayout(null);
+        Ball = new Ballc(SBall, ScreenWidth, ScreenHeight);
         sheet.setVisible(true);
 		Ball.setBackground(Color.white);							//set the background color
         sheet.add ("Center", Ball);
         control.setLayout(new GridBagLayout());  // Use GridBagLayout for control panel
+
+        // initialize points
+        m1.setLocation(0, 0);
+        m2.setLocation(0, 0);
+    
+        // rectangle
+        Perimeter.setBounds(0, 0, ScreenWidth, ScreenHeight);
 
         
         control.setBackground(Color.lightGray);
@@ -225,10 +232,11 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
 
 
         // Add panels to the frame using BorderLayout
- //      
-        add("Center", sheet);  // Sheet panel in the center
+        add(sheet, BorderLayout.CENTER); 
+        //add("Center", sheet);  // Sheet panel in the center
         add("South", control);  // Control panel at the bottom
-    
+        //add(sheet, BorderLayout.SOUTH); 
+        
         // Add action listeners to buttons and scrollbars
         Start.addActionListener(this);
         Stop.addActionListener(this);
@@ -238,9 +246,9 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
 
 
         // Window settings
-         pack();
-         setMinimumSize(getPreferredSize());
-         setBounds(WinLeft, WinTop, WinWidth, WinHeight);
+        //pack();
+        setMinimumSize(getPreferredSize());
+        setBounds(WinLeft, WinTop, WinWidth, WinHeight);
         validate();
         
 
@@ -256,11 +264,6 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
         
         setSize(WinWidth,WinHeight);
         CENTER=(ScreenWidth/2);
-        //BUTTONW=ScreenWidth/11;
-        //BUTTONS=BUTTONW/4;
-        //setBackground(Color.lightGray);
-
-        //ScrollBarW=2*BUTTONW; // scroll bar width
     }
 
 
@@ -569,7 +572,7 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
          int lh = I.top + I.bottom;
  
          if (mr > Screen.x || mb > Screen.y) {
-             setSize(Math.max((mr + EXPAND), Screen.x) + lw, Math.max((mb + EXPAND), Screen.y) + lh + 2 * BUTTONH);
+            setSize(Math.max((mr + EXPAND), Screen.x) + lw, Math.max((mb + EXPAND), Screen.y) + lh + 2 * BUTTONH);
          }
  
          // Force a Frame refresh to the new size
@@ -588,9 +591,11 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
  
          MakeSheet();
          SizeScreen();
+         Ball.reSize(getWidth(), getHeight());  // resize the ball screen
          Ball.repaint(); // repaint
          
      }
+   
      
      public void componentHidden(ComponentEvent e){}
  
@@ -823,7 +828,7 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
  
                  //small delay, outside of decison but in loop
                  try {
-                     thethread.sleep(1);
+                     Thread.sleep(1);
                  } catch (InterruptedException e) {}
  
                  if(!TimerPause)
