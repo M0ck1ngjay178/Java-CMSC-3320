@@ -10,7 +10,7 @@
 /*******************END HEADER***************************/
 
 //---------LIBRARIES--------------
-package BouncingBall;
+//package Bounce;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -40,7 +40,7 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
     private final int SBvisible=10;//visible Scroll bar
     private final int SBunit=1;// unit step size
     private final int SBblock=10;//block step size
-    private final int SCROLLBARH=BUTTONH;//scrollbar height
+    //private final int SCROLLBARH=BUTTONH;//scrollbar height
     private final int SBALL=21;//initial Ballect width
 
     //Program variable declarations
@@ -53,15 +53,15 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
     
     private int WinTop=10;//top of frame
     private int WinLeft=10;//left side of frame
-    private int BUTTONW=50;//initial button width
-    private int CENTER=(WIDTH/2);//initial screen center
-    private int BUTTONS=BUTTONW/4;//initial button spacing
+    //private int BUTTONW=50;//initial button width
+    private int CENTER = (WIDTH/2);//initial screen center
+    //private int BUTTONS=BUTTONW/4;//initial button spacing
 
     private int SBall=SBALL;//initial Ballect width
     private int SpeedSBmin=1;//speed scrollbar min value
     private int SpeedSBmax=100+SBvisible;//speed scrollbar max with visible offset
     private int SpeedSBinit=SPEED;//initial speed scrollbar value
-    private int ScrollBarW;//Scrollbar width
+    //private int ScrollBarW;//Scrollbar width
 
     private Insets I;//insets of frame
 
@@ -103,6 +103,7 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
     private Rectangle db = new Rectangle(); // drag box rectangle
     private static final Rectangle ZERO = new Rectangle(0, 0, 0, 0); // zero rectangle
     Rectangle temp = new Rectangle(); // temporary rectangle
+    
 
     //rectangle vector
    // private Vector<Rectangle> Walls = new Vector<Rectangle>();
@@ -115,7 +116,7 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
         MakeSheet();
         //started = false;
         
-        Ball = new Ballc(SBall, ScreenWidth, ScreenHeight); // create a new Ballc object
+        Ball = new Ballc(SBall, ScreenWidth, ScreenHeight); // create a new Ballc objec
         Ball.setBackground(Color.white); // set the background color of the Ballc
     
     
@@ -159,6 +160,25 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
         Quit = new Button("Quit");
         Start.setEnabled(false);
         Stop.setEnabled(true);
+
+        // initialize scrollbars
+        SpeedScrollBar = new Scrollbar(Scrollbar.HORIZONTAL);
+        SpeedScrollBar.setMaximum(SpeedSBmax);
+        SpeedScrollBar.setMinimum(SpeedSBmin);
+        SpeedScrollBar.setUnitIncrement(SBunit);
+        SpeedScrollBar.setBlockIncrement(SBblock);
+        SpeedScrollBar.setValue(SpeedSBinit);
+        SpeedScrollBar.setVisibleAmount(SBvisible);
+        SpeedScrollBar.setBackground(Color.gray);
+    
+        BallSizeScrollBar = new Scrollbar(Scrollbar.HORIZONTAL);
+        BallSizeScrollBar.setMaximum(MAXBall);
+        BallSizeScrollBar.setMinimum(MINBall);
+        BallSizeScrollBar.setUnitIncrement(SBunit);
+        BallSizeScrollBar.setBlockIncrement(SBblock);
+        BallSizeScrollBar.setValue(SBall);
+        BallSizeScrollBar.setVisibleAmount(SBvisible);
+        BallSizeScrollBar.setBackground(Color.gray);
     
         // initialize points
         m1.setLocation(0, 0);
@@ -216,7 +236,7 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
         gbc.gridy = 1;  // Same row as SizeScrollBar
         control.add(SIZEL, gbc);
     
-        sheet.add("Center", sheet);
+        add("Center", sheet);
         add("South", control);
         control.setVisible(true);
     
@@ -232,24 +252,24 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
         Ball.addMouseMotionListener(this);
         Ball.addMouseListener(this);
     
-        // initialize scrollbars
-        SpeedScrollBar = new Scrollbar(Scrollbar.HORIZONTAL);
-        SpeedScrollBar.setMaximum(SpeedSBmax);
-        SpeedScrollBar.setMinimum(SpeedSBmin);
-        SpeedScrollBar.setUnitIncrement(SBunit);
-        SpeedScrollBar.setBlockIncrement(SBblock);
-        SpeedScrollBar.setValue(SpeedSBinit);
-        SpeedScrollBar.setVisibleAmount(SBvisible);
-        SpeedScrollBar.setBackground(Color.gray);
+        // // initialize scrollbars
+        // SpeedScrollBar = new Scrollbar(Scrollbar.HORIZONTAL);
+        // SpeedScrollBar.setMaximum(SpeedSBmax);
+        // SpeedScrollBar.setMinimum(SpeedSBmin);
+        // SpeedScrollBar.setUnitIncrement(SBunit);
+        // SpeedScrollBar.setBlockIncrement(SBblock);
+        // SpeedScrollBar.setValue(SpeedSBinit);
+        // SpeedScrollBar.setVisibleAmount(SBvisible);
+        // SpeedScrollBar.setBackground(Color.gray);
     
-        BallSizeScrollBar = new Scrollbar(Scrollbar.HORIZONTAL);
-        BallSizeScrollBar.setMaximum(MAXBall);
-        BallSizeScrollBar.setMinimum(MINBall);
-        BallSizeScrollBar.setUnitIncrement(SBunit);
-        BallSizeScrollBar.setBlockIncrement(SBblock);
-        BallSizeScrollBar.setValue(SBall);
-        BallSizeScrollBar.setVisibleAmount(SBvisible);
-        BallSizeScrollBar.setBackground(Color.gray);
+        // BallSizeScrollBar = new Scrollbar(Scrollbar.HORIZONTAL);
+        // BallSizeScrollBar.setMaximum(MAXBall);
+        // BallSizeScrollBar.setMinimum(MINBall);
+        // BallSizeScrollBar.setUnitIncrement(SBunit);
+        // BallSizeScrollBar.setBlockIncrement(SBblock);
+        // BallSizeScrollBar.setValue(SBall);
+        // BallSizeScrollBar.setVisibleAmount(SBvisible);
+        // BallSizeScrollBar.setBackground(Color.gray);
     
         Ball.setBackground(Color.white);
     
