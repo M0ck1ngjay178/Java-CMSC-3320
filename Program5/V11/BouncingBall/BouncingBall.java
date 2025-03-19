@@ -707,6 +707,7 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
              ScreenWidth=w;
              ScreenHeight=h;
              stayInBounds(w, h);
+             repaint();
          }
  
          //clears screen
@@ -725,39 +726,82 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
          //-----------------End Get/Set--------------------
  
          //PAINT
-         public void paint(Graphics cg){
+         //@Override
+        //  public void paint(Graphics cg){
  
-             Rectangle temp;
+        //      Rectangle temp;
  
-             buffer = createImage(ScreenWidth, ScreenHeight); 
-             if(g!=null){
-                 g.dispose();
-             }
-             g = buffer.getGraphics();
+        //      buffer = createImage(ScreenWidth, ScreenHeight); 
+        //      if(g!=null){
+        //          g.dispose();
+        //      }
+        //      g = buffer.getGraphics();
  
-             g.setColor(Color.red);
-             g.fillOval(Ball.getXPos(), Ball.getYPos(), Ball.getSizeBall(), Ball.getSizeBall());
-             //update(g);
-             g.setColor(Color.black);
-             g.drawOval(Ball.getXPos(), Ball.getYPos(), Ball.getSizeBall(), Ball.getSizeBall());
-             g.setColor(Color.blue);
-             g.drawRect(0, 0, ScreenWidth-1, ScreenHeight-1);
+        //      g.setColor(Color.red);
+        //      g.fillOval(Ball.getXPos(), Ball.getYPos(), Ball.getSizeBall(), Ball.getSizeBall());
+        //      //update(g);
+        //      g.setColor(Color.black);
+        //      g.drawOval(Ball.getXPos(), Ball.getYPos(), Ball.getSizeBall(), Ball.getSizeBall());
+             
+        //      g.setColor(Color.blue);
+        //      //g.drawRect(0, 0, ScreenWidth-1, ScreenHeight-1);
+        //      g.drawRect(0, 0, ScreenWidth-1, ScreenHeight-1);
              
              
  
-             for(int i=0; i < Walls.size(); i++){
-                 temp = Walls.elementAt(i);
-                 g.setColor(Color.black);
-                 g.fillRect(temp.x, temp.y, temp.width, temp.height);
-                 System.out.println("drawing");
-             }
+        //      for(int i=0; i < Walls.size(); i++){
+        //          temp = Walls.elementAt(i);
+        //          g.setColor(Color.black);
+        //          g.fillRect(temp.x, temp.y, temp.width, temp.height);
+        //          System.out.println("drawing");
+        //      }
  
-             g.drawRect(dragrec.x, dragrec.y, dragrec.width, dragrec.height);
-            // System.out.println("drawing");
+        //      g.drawRect(dragrec.x, dragrec.y, dragrec.width, dragrec.height);
+        //     // System.out.println("drawing");
  
-             cg.drawImage(buffer,0,0,null);
+        //      cg.drawImage(buffer,0,0,null);
              
-         }
+        //  }
+        @Override
+        public void paint(Graphics cg) {
+            Rectangle temp;
+
+            // Get the current width and height of the component
+            int width = getWidth();
+            int height = getHeight();
+
+            // Create a new buffer image with the updated dimensions
+            buffer = createImage(width, height);  
+            if (g != null) {
+                g.dispose();
+            }
+            g = buffer.getGraphics();
+
+            // Draw the ball
+            g.setColor(Color.red);
+            g.fillOval(Ball.getXPos(), Ball.getYPos(), Ball.getSizeBall(), Ball.getSizeBall());
+            g.setColor(Color.black);
+            g.drawOval(Ball.getXPos(), Ball.getYPos(), Ball.getSizeBall(), Ball.getSizeBall());
+
+            // Draw the boundary rectangle
+            g.setColor(Color.blue);
+            g.drawRect(0, 0, width - 1, height - 1);
+
+            // Draw the walls
+            for (int i = 0; i < Walls.size(); i++) {
+                temp = Walls.elementAt(i);
+                g.setColor(Color.black);
+                g.fillRect(temp.x, temp.y, temp.width, temp.height);
+                System.out.println("drawing");
+            }
+
+            // Draw the draggable rectangle
+            g.drawRect(dragrec.x, dragrec.y, dragrec.width, dragrec.height);
+
+            // Draw the buffered image onto the component
+            cg.drawImage(buffer, 0, 0, null);
+        }
+
  
          //UPDATE graphics for the Ballc
          public void update(Graphics g){
@@ -766,21 +810,63 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
          }
  
          //moves the Ballect within the screens boundaries
-         private void move() {
+        //  private void move() {
+        //     // Update ball position
+        //     x += dx;
+        //     y += dy;
+        
+        //     // Check for collisions with the screen boundaries
+        //     if (y + (SBall - 1) / 2 >= ScreenHeight || y - (SBall - 1) / 2 <= 0) {
+        //         dy = -dy;
+        //     }
+        //     if (x + (SBall - 1) / 2 >= ScreenWidth || x - (SBall - 1) / 2 <= 0) {
+        //         dx = -dx;
+        //     }
+        
+        //     // Create a rectangle representing the ball's current position
+        //     Rectangle b = new Rectangle(x - (SBall - 1) / 2, y - (SBall - 1) / 2, SBall, SBall);
+        //     b.grow(1, 1);
+        
+        //     // Check for collisions with the rectangles
+        //     for (Rectangle rect : Walls) {
+        //         Rectangle leftEdge = new Rectangle(rect.x - 1, rect.y + 1, 1, rect.height - 2);
+        //         Rectangle rightEdge = new Rectangle(rect.x + rect.width, rect.y + 1, 1, rect.height - 2);
+        //         Rectangle topEdge = new Rectangle(rect.x + 1, rect.y - 1, rect.width - 2, 1);
+        //         Rectangle bottomEdge = new Rectangle(rect.x + 1, rect.y + rect.height, rect.width - 2, 1);
+        
+        //         if (b.intersects(leftEdge) || b.intersects(rightEdge)) {
+        //             dx = -dx;
+        //             break;
+        //         }
+        
+        //         if (b.intersects(topEdge) || b.intersects(bottomEdge)) {
+        //             dy = -dy;
+        //             break;
+        //         }
+
+        //     }
+        
+        //     repaint();
+        // }
+        private void move() {
+            // Get the current screen size dynamically
+            int width = getWidth();
+            int height = getHeight();
+        
             // Update ball position
             x += dx;
             y += dy;
         
             // Check for collisions with the screen boundaries
-            if (y + (SBall - 1) / 2 >= ScreenHeight || y - (SBall - 1) / 2 <= 0) {
+            if (y + SBall / 2 >= height || y - SBall / 2 <= 0) {
                 dy = -dy;
             }
-            if (x + (SBall - 1) / 2 >= ScreenWidth || x - (SBall - 1) / 2 <= 0) {
+            if (x + SBall / 2 >= width || x - SBall / 2 <= 0) {
                 dx = -dx;
             }
         
             // Create a rectangle representing the ball's current position
-            Rectangle b = new Rectangle(x - (SBall - 1) / 2, y - (SBall - 1) / 2, SBall, SBall);
+            Rectangle b = new Rectangle(x - SBall / 2, y - SBall / 2, SBall, SBall);
             b.grow(1, 1);
         
             // Check for collisions with the rectangles
@@ -799,11 +885,12 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
                     dy = -dy;
                     break;
                 }
-
             }
         
+            // Repaint the screen
             repaint();
         }
+        
 
          //moves the object within the screens boundaries
  
