@@ -14,8 +14,10 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-//---------END LIBRARIES-----------
+//---------END LIBRARIES----------
 import java.util.Vector;
+
+import javax.swing.SwingUtilities;
 
 //---------------------------------------------CLASS BOUNCE-------------------------------------------------------------------------
 public class BouncingBall extends Frame implements WindowListener, ComponentListener, ActionListener, AdjustmentListener, Runnable, MouseListener,MouseMotionListener {
@@ -103,9 +105,6 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
     
     public BouncingBall() {
         setTitle("Bouncing Ball");
-       // setLayout(new BorderLayout()); // Set the layout for the main frame to BorderLayout
-       //setLayout(null);
-        //setVisible(true);
 
         runBall = true;
         started = false;
@@ -431,6 +430,29 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
  
      public void windowIconified(WindowEvent e){}
      public void windowDeiconified(WindowEvent e){}
+
+     public void updateSize(int NS){
+        SBall=NS;
+    }
+
+
+     private void checkSize() {
+
+        // Get the current object size
+        int currentSize = Ball.getSizeBall();
+    
+        // Check if the current object size is larger than the screen's width or height
+        if (currentSize > ScreenWidth || currentSize > ScreenHeight) {
+            // Adjust the size to fit within the screen
+            currentSize = Math.min(ScreenWidth, ScreenHeight);
+    
+            // Update the object with the new size
+            Ball.updateSize(currentSize);
+    
+            // Update the scrollbar to reflect the new size
+            BallSizeScrollBar.setValue(currentSize);
+        }
+    }
      //========================END WINDOW LISTENER METHODS=================================
  
    //========================MOUSE LISTENER METHODS=================================
@@ -438,13 +460,26 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
      public void mousePressed(MouseEvent e){
          m1.setLocation(e.getPoint());
      }
-     public void mouseDragged(MouseEvent e){
-         db.setBounds(getDragBox(e));
-         if(Perimeter.contains(db)){
-             Ball.setDragBox(db);
-             Ball.repaint();
-         }
-     }
+    //  public void mouseDragged(MouseEvent e){
+    //      db.setBounds(getDragBox(e));
+    //      if(Perimeter.contains(db)){
+    //          Ball.setDragBox(db);
+    //          Ball.repaint();
+    //      }
+    //  }
+
+    public void mouseDragged(MouseEvent e) {
+        Rectangle newDb = getDragBox(e);
+        if (!newDb.equals(db)) {  // Only update if drag box actually changed
+            db.setBounds(newDb);
+            if (Perimeter.contains(db)) {
+                Ball.setDragBox(db);
+                Ball.repaint();
+            }
+        }
+    }
+    
+
      public void mouseReleased(MouseEvent e) {
         Rectangle b = new Rectangle(Ball.getBounds());
         b.grow(1, 1);
@@ -537,87 +572,123 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
          int width = Math.abs(m1.x - m2.x);
          int height = Math.abs(m1.y - m2.y);
      
-         return new Rectangle(x, y, width, height);
-         
-     }
- 
-     
-     //handles the resizing of the component
-     public void componentResized(ComponentEvent e){
- 
-         Rectangle r = new Rectangle();
-         int mr, mb;
-        //----------debugging checks------------------------------------------------------------------
-         if (Ball.getWallSize() == 0) {
-            System.out.println("No rectangles to resize, skipping componentResized.");
-            return; // Do nothing if there are no rectangles
-        }
-
-        Rectangle firstRect = Ball.getOne(0);
-        if (firstRect == null) {
-            return; // Exit if firstRect is null (extra safety check)
-        }
-        //----------end debugging checks--------------------------------------------------------------
-
-        r.setBounds(firstRect);
-
- 
-         //r.setBounds(Ball.getOne(0));
-         mr = r.x + r.width;
-         mb = r.y + r.height;
- 
-         // Use a for loop to process the remaining elements of the Vector
-         for (int i = 1; i < Ball.getWallSize(); i++) {
-            // Rectangle rect = Ball.getOne(i);
-            // if(rect!=null){
-            //     r.setBounds(rect); // get ith rectangle
-            //     mr = Math.max((r.x + r.width), mr); // keep max right
-            //     mb = Math.max((r.y + r.height), mb); // keep max bottom}
-            // }
-             r.setBounds(Ball.getOne(i)); // get ith rectangle
-             mr = Math.max((r.x + r.width), mr); // keep max right
-             mb = Math.max((r.y + r.height), mb); // keep max bottom
-         }
-         
- 
-          // Process the ball
-        // r.setBounds(Ball.getOne(i)); // get ball rectangle
-        // mr = Math.max((r.x + r.width), mr); // keep max right
-        // mb = Math.max((r.y + r.height), mb); // keep max bottom
- 
-         // Define expansion and insets
-         int EXPAND = 10; // small border beyond the rectangles
-         int lw = I.left + I.right;
-         int lh = I.top + I.bottom;
- 
-         if (mr > Screen.x || mb > Screen.y) {
-            setSize(Math.max((mr + EXPAND), Screen.x) + lw, Math.max((mb + EXPAND), Screen.y) + lh + 2 * BUTTONH);
-         }
- 
-         // Force a Frame refresh to the new size
-         setExtendedState(ICONIFIED);
-         setExtendedState(NORMAL);
- 
-         // Update the Screen point
-         Screen.setLocation(sheet.getWidth() - 1, sheet.getHeight() - 1);
- 
-         // Update the Perimeter rectangle
-         Perimeter.setBounds(0, 0, Screen.x, Screen.y);
-         Perimeter.grow(-1, -1); // shrink the rectangle one pixel on all sides
- 
-         // Send the new Screen size to the Ball Ballect
-         Ball.reSize(Screen.x, Screen.y); // resize the ball screen
- 
-         //MakeSheet();
-         //SizeScreen();
-         //Ball.reSize(this.getWidth(), this.getHeight());  // resize the ball screen
-         Ball.repaint(); // repaint
+         return new Rectangle(x, y, width, height);  
     
-     }
-   
-   
+    }
+    
+    // public void componentResized(ComponentEvent e) {
+    //     Rectangle r = new Rectangle();
+    //     int mr, mb;
+    
+    //     // Debugging checks
+    //     if (Ball.getWallSize() == 0) {
+    //         System.out.println("No rectangles to resize, skipping componentResized.");
+    //         return;
+    //     }
+    
+    //     Rectangle firstRect = Ball.getOne(0);
+    //     if (firstRect == null) {
+    //         return;
+    //     }
+    
+    //     r.setBounds(firstRect);
+    //     mr = r.x + r.width;
+    //     mb = r.y + r.height;
+    
+    //     // Find max right and bottom coordinates
+    //     for (int i = 1; i < Ball.getWallSize(); i++) {
+    //         r.setBounds(Ball.getOne(i));
+    //         mr = Math.max((r.x + r.width), mr);
+    //         mb = Math.max((r.y + r.height), mb);
+    //     }
+    
+    //     int EXPAND = 10;
+    //     int lw = I.left + I.right;
+    //     int lh = I.top + I.bottom;
+    
+    //     if (mr > Screen.x || mb > Screen.y) {
+    //         setSize(Math.max((mr + EXPAND), Screen.x) + lw, 
+    //                 Math.max((mb + EXPAND), Screen.y) + lh + 2 * BUTTONH);
+    //     }
+    
+    //     // Force window refresh
+    //     setExtendedState(ICONIFIED);
+    //     setExtendedState(NORMAL);
+    
+    //     // Update screen size and perimeter
+    //     Screen.setLocation(sheet.getWidth() - 1, sheet.getHeight() - 1);
+    //     Perimeter.setBounds(0, 0, Screen.x, Screen.y);
+    //     Perimeter.grow(-1, -1);
+    
+    //     // Resize ball screen
+    //     Ball.reSize(Screen.x, Screen.y);
+    
+    //     // **Fix rectangles before repainting**
+    //     for (int i = 0; i < Ball.getWallSize(); i++) {
+    //         Rectangle rect = Ball.getOne(i);
+    //         if (rect != null) {
+    //             if (rect.width < 0) {
+    //                 rect.x += rect.width;
+    //                 rect.width = -rect.width;
+    //             }
+    //             if (rect.height < 0) {
+    //                 rect.y += rect.height;
+    //                 rect.height = -rect.height;
+    //             }
+    
+    //             rect.x = Math.min(rect.x, getWidth() - rect.width);
+    //             rect.y = Math.min(rect.y, getHeight() - rect.height);
+    //         }
+    //     }
+    
+    //     Ball.repaint();  // Repaint after resizing
+    // }
+    public void componentResized(ComponentEvent e) {
+    // Update the window width and height based on the current size
+    WinWidth = getWidth();
+    WinHeight = getHeight();
 
-     
+    // Ensure that width and height are always positive
+    if (WinWidth <= 0 || WinHeight <= 0) {
+        return; // Prevents resizing issues
+    }
+
+    // Adjust the screen elements properly
+    MakeSheet();
+    Ball.reSize(ScreenWidth, ScreenHeight);
+    checkSize();
+    SizeScreen();
+
+    // Ensure Ball's rectangles are within bounds
+    for (int i = 0; i < Ball.getWallSize(); i++) {
+        Rectangle r = Ball.getOne(i);
+        if (r != null) {
+            if (r.width < 0) {
+                r.x += r.width;
+                r.width = -r.width;
+            }
+            if (r.height < 0) {
+                r.y += r.height;
+                r.height = -r.height;
+            }
+
+            // Make sure rectangles stay within the new window bounds
+            r.width = Math.max(1, r.width);
+            r.height = Math.max(1, r.height);
+            r.x = Math.min(r.x, Math.max(0, getWidth() - r.width));
+            r.y = Math.min(r.y, Math.max(0, getHeight() - r.height));
+        }
+    }
+
+    // Repaint Ball after resizing
+    //SwingUtilities.invokeLater(() -> Ball.repaint());
+    Ball.repaint();  // Repaint after resizing
+
+}
+
+
+    
+   
      public void componentHidden(ComponentEvent e){}
  
      public void componentShown(ComponentEvent e){}
@@ -652,12 +723,9 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
  
          //constructor
          public Ballc(int SB,Point screen){//int w, int h){
-            //  ScreenWidth=w; 
-            //  ScreenHeight=h;
             ScreenWidth = screen.x;  // Use screen.x for width
             ScreenHeight = screen.y; 
-            //  ScreenWidth = screen.getWidth();
-            // ScreenHeight = screen.getHeight();
+          
              SBall=SB;
              rect=true;
              clear=false;
@@ -673,9 +741,22 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
              dragrec.setBounds(r);
          }
  
-         public void addOne(Rectangle r){
-             Walls.addElement(r);
-         }
+        //  public void addOne(Rectangle r){
+        //      Walls.addElement(r);
+        //  }
+        public void addOne(Rectangle r) {
+            if (r.width < 0) {
+                r.x += r.width;  // Shift x to correct position
+                r.width = -r.width;  // Make width positive
+            }
+            if (r.height < 0) {
+                r.y += r.height;  // Shift y to correct position
+                r.height = -r.height;  // Make height positive
+            }
+            Walls.addElement(r);
+            System.out.println("Corrected & added rectangle: " + r);
+        }
+        
  
          public void removeOne(int i){
              Walls.removeElementAt(i);
@@ -687,8 +768,6 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
                 return Walls.elementAt(i);
             }
             return null; // Return null if index is out of bounds
-            //return new Rectangle(0,0,0,0);
-            //return DEFAULT_RECTANGLE;
          }
  
          public int getWallSize(){
@@ -705,7 +784,6 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
  
          public void setTail(boolean mode){
              tailSet=mode;
-             //if (!tailSet) Clear();
          }
  
          public void stayInBounds(int newScreenWidth, int newScreenHeight) {
@@ -729,6 +807,13 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
          public void reSize(int w, int h){
              ScreenWidth=w;
              ScreenHeight=h;
+
+             for (Rectangle r : Walls) {
+                r.x = Math.min(r.x, w - r.width);
+                r.y = Math.min(r.y, h - r.height);
+            }
+
+
              stayInBounds(w, h);
              repaint();
              
