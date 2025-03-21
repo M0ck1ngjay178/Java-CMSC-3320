@@ -17,7 +17,6 @@ import java.io.*;
 //---------END LIBRARIES----------
 import java.util.Vector;
 
-import javax.swing.SwingUtilities;
 
 //---------------------------------------------CLASS BOUNCE-------------------------------------------------------------------------
 public class BouncingBall extends Frame implements WindowListener, ComponentListener, ActionListener, AdjustmentListener, Runnable, MouseListener,MouseMotionListener {
