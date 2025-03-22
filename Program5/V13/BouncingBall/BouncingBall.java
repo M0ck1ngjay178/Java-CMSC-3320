@@ -17,7 +17,7 @@ import java.io.*;
 //---------END LIBRARIES----------
 import java.util.Vector;
 
-
+//TODO: File clean up and Fix bottom Canvas Border!! and make task list
 //---------------------------------------------CLASS BOUNCE-------------------------------------------------------------------------
 public class BouncingBall extends Frame implements WindowListener, ComponentListener, ActionListener, AdjustmentListener, Runnable, MouseListener,MouseMotionListener {
 
@@ -486,17 +486,17 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
        }
         // If not covered, store the rectangle
         if (!covered) {
-            System.out.println("Adding rectangle: " + db);
+            //System.out.println("Adding rectangle: " + db);//debugging
             Ball.addOne(new Rectangle(db));
         } else {
-            System.out.println("Rectangle is covered: " + db);
+            //System.out.println("Rectangle is covered: " + db);//debugging
         }
     
         // Check if the new rectangle covers any rectangle in the Vector and delete the covered rectangle
         for (int i = 0; i < Ball.getWallSize(); i++) {
                 r = Ball.getOne(i);
             if (!r.equals(db) && db.contains(r)) {
-                System.out.println("Removing covered rectangle: " + r);
+                //System.out.println("Removing covered rectangle: " + r);//debugging
                 Ball.removeOne(i);
                 i--; // Adjust index after removal
             }
@@ -703,7 +703,7 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
                 r.height = -r.height;  // Make height positive
             }
             Walls.addElement(r);
-            System.out.println("Corrected & added rectangle: " + r);
+            //System.out.println("Corrected & added rectangle: " + r);//debugging
         }
         
  
