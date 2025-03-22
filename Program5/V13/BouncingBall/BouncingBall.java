@@ -1,6 +1,6 @@
 /*******************HEADER*******************************/
 /*  CMSC-3320 Technical Computing Using Java		    */   
-/* 	Bounce Program					                    */
+/* 	BouncingBall Program					            */
 /*	Group 1												*/
 /*	Group Names: 										*/
 /*     -Margo Bonal,      bon8330@pennwest.edu			*/
@@ -10,7 +10,7 @@
 /*******************END HEADER***************************/
 
 //---------LIBRARIES--------------
-//package BouncingBall;
+package BouncingBall;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -760,11 +760,8 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
          public void reSize(int w, int h){
              ScreenWidth=w;
              ScreenHeight=h;
-            //System.out.println("This is screenwidth sreenhidght: "+ScreenWidth+" "+ScreenHeight);
-            // Screen = w;
-            // Screen= h;
 
-             for (Rectangle r : Walls) {
+            for (Rectangle r : Walls){
                 r.x = Math.min(r.x, w - r.width);
                 r.y = Math.min(r.y, h - r.height);
             }
