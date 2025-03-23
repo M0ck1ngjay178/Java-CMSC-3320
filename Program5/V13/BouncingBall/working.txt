@@ -1,0 +1,62 @@
+ 
+    // public void componentResized(ComponentEvent e) {
+    //     // Update the window width and height based on the current size
+    //     WinWidth = getWidth();
+    //     WinHeight = getHeight();
+
+    //     // Ensure that width and height are always positive
+    //     if (WinWidth <= 0 || WinHeight <= 0) {
+    //         return; // Prevents resizing issues
+    //     }
+
+    //     //setExtendedState(ICONIFIED);
+    //     //setExtendedState(NORMAL);
+    //     // Screen.setLocation(sheet.getWidth()-1, sheet.getHeight()-1);
+
+    //     Perimeter.setBounds(0, 0, WinWidth, WinHeight);
+    //     // Perimeter.setBounds(getX(), getY(), Screen.x, Screen.y);
+    //     Perimeter.grow(-1, -1); // Shrink the rectangle one pixel on all sides
+
+    //     // Adjust the screen elements properly
+    //     MakeSheet();
+    //     Ball.reSize(ScreenWidth, ScreenHeight);
+    //     // Ball.reSize(Screen.x, Screen.y);
+    //     checkSize();
+    //     SizeScreen();
+
+    //     //Perimeter.setBounds(0, 0, Screen.x, Screen.y);
+    //     // Perimeter.setBounds(0, 0, WinWidth, WinHeight);
+    //     // Perimeter.grow(-1, -1); // Shrink the rectangle one pixel on all sides
+
+    //     // Ensure Ball's rectangles are within bounds
+    //     for (int i = 0; i < Ball.getWallSize(); i++) {
+    //         Rectangle r = Ball.getOne(i);
+    //         if (r != null) {
+    //             if (r.width < 0) {
+    //                 r.x += r.width;
+    //                 r.width = -r.width;
+    //             }
+    //             if (r.height < 0) {
+    //                 r.y += r.height;
+    //                 r.height = -r.height;
+    //             }
+
+    //             // Make sure rectangles stay within the new window bounds
+    //             r.width = Math.max(1, r.width);
+    //             r.height = Math.max(1, r.height);
+    //             r.x = Math.min(r.x, Math.max(0, getWidth() - r.width));
+    //             r.y = Math.min(r.y, Math.max(0, getHeight() - r.height));
+    //         }
+    //     }
+
+    //         // Ensure the drag box stays visible
+    //         if (db.width > 0 && db.height > 0) {
+    //             db.setBounds(Perimeter.intersection(db));
+    //         }
+
+
+    //     // repaint the Ball
+    //     Ball.repaint();  // Repaint after resizing
+    //     //repaint();
+
+    // }

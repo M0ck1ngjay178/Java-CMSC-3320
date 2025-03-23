@@ -95,7 +95,8 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
     private Point Screen = new Point(FrameSize.x - 1, FrameSize.y - 1); //drawing screen size
 
     // Rectangles
-    private Rectangle Perimeter = new Rectangle(0, 0, ScreenWidth, ScreenHeight); // bouncing perimeter
+    //private Rectangle Perimeter = new Rectangle(0, 0, ScreenWidth, ScreenHeight); // bouncing perimeter
+    private Rectangle Perimeter = new Rectangle(0, 0, Screen.x, Screen.y); // bouncing perimeter
     private Rectangle db = new Rectangle(); // drag box rectangle
     private static final Rectangle ZERO = new Rectangle(0, 0, 0, 0); // zero rectangle
     Rectangle temp = new Rectangle(); // temporary rectangle
@@ -129,10 +130,10 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
         Quit = new Button("Quit");
 
         Stop.setEnabled(false); // Disable Pause button initially
-    //set delay
+        //set delay
         delay=100-SPEED+1;
 
-         // Initialize Scrollbars (Horizontal)
+        // Initialize Scrollbars (Horizontal)
         SpeedScrollBar = new Scrollbar(Scrollbar.HORIZONTAL);
         SpeedScrollBar.setMaximum(SpeedSBmax);
         SpeedScrollBar.setMinimum(SpeedSBmin);
@@ -158,7 +159,9 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
         m2.setLocation(0, 0);
     
         // Set Perimeter bounds
-        Perimeter.setBounds(0, 0, ScreenWidth, ScreenHeight);
+        //Perimeter.setBounds(0, 0, ScreenWidth, ScreenHeight);
+        Perimeter.setBounds(0, 0, Screen.x, Screen.y);
+        Perimeter.grow(-1, -1); // Shrink the rectangle one pixel on all sides
 
         setLayout(new BorderLayout()); // Set the layout for the main frame to BorderLayout
         setBounds(WinLeft, WinTop, FrameSize.x, FrameSize.y); // Set the frame bounds
@@ -254,7 +257,7 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
     }
 
      //positions and sizes buttons, scrollbars, and labels on the screen
-    private void SizeScreen(){
+    private void SizeScreen(){ 
 
         Ball.setBounds(0,0,ScreenWidth,ScreenHeight);
     }
@@ -533,35 +536,9 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
    //===============================================================================
  
  
-     //====================COMPONENT METHODS============
+    //====================COMPONENT METHODS============
  
-    //  public Rectangle getDragBox(MouseEvent e){
- 
-    //     m2.setLocation(e.getPoint());
- 
-    //     int x = Math.min(m1.x, m2.x);
-    //     int y = Math.min(m1.y, m2.y);
-    //     int width = Math.abs(m1.x - m2.x);
-    //     int height = Math.abs(m1.y - m2.y);
-
-    //     if(width == 0){
-    //         width = 1;
-    //     }
-    //     if(height == 0){
-    //         height = 1;
-    //     }
-
-    //     // Keep the drag box inside the window's resized bounds
-    //     width = Math.min(width, WinWidth - x);
-    //     height = Math.min(height, WinHeight - y);
-
-    //     // Ensure the box is within bounds
-    //     // if (x + width > WinWidth) width = WinWidth - x;
-    //     // if (y + height > WinHeight) height = WinHeight - y;
-     
-    //     return new Rectangle(x, y, width, height);  
     
-    // }
     public Rectangle getDragBox(MouseEvent e){
         m2.setLocation(e.getPoint());
     
@@ -585,34 +562,38 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
         return new Rectangle(x, y, width, height);  
     }
     
-    
+   
     public void componentResized(ComponentEvent e) {
         // Update the window width and height based on the current size
         WinWidth = getWidth();
         WinHeight = getHeight();
-
+    
         // Ensure that width and height are always positive
         if (WinWidth <= 0 || WinHeight <= 0) {
             return; // Prevents resizing issues
         }
-
-        //setExtendedState(ICONIFIED);
-        //setExtendedState(NORMAL);
-
-        // Adjust the screen elements properly
-        MakeSheet();
-        Ball.reSize(ScreenWidth, ScreenHeight);
-        checkSize();
-        SizeScreen();
-
-        //Perimeter.setBounds(0, 0, Screen.x, Screen.y);
+    
+        // Update the Perimeter bounds to match the window size
         Perimeter.setBounds(0, 0, WinWidth, WinHeight);
         Perimeter.grow(-1, -1); // Shrink the rectangle one pixel on all sides
-
-        // Ensure Ball's rectangles are within bounds
+    
+        // Define expansion and insets for screen adjustment
+        int EXPAND = 10; // Small border beyond the rectangles
+        int lw = I.left + I.right;
+        int lh = I.top + I.bottom;
+    
+        // Adjust the screen size if necessary
+        int mr = 0, mb = 0;
+    
+        // Loop through the Ball objects and calculate the max right and bottom values
         for (int i = 0; i < Ball.getWallSize(); i++) {
             Rectangle r = Ball.getOne(i);
+    
             if (r != null) {
+                mr = Math.max((r.x + r.width), mr); // Update max right
+                mb = Math.max((r.y + r.height), mb); // Update max bottom
+    
+                // Ensure rectangles are within the bounds
                 if (r.width < 0) {
                     r.x += r.width;
                     r.width = -r.width;
@@ -621,7 +602,7 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
                     r.y += r.height;
                     r.height = -r.height;
                 }
-
+    
                 // Make sure rectangles stay within the new window bounds
                 r.width = Math.max(1, r.width);
                 r.height = Math.max(1, r.height);
@@ -629,17 +610,30 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
                 r.y = Math.min(r.y, Math.max(0, getHeight() - r.height));
             }
         }
-
-            // Ensure the drag box stays visible
-            if (db.width > 0 && db.height > 0) {
-                db.setBounds(Perimeter.intersection(db));
-            }
-
-
-        // repaint the Ball
-        Ball.repaint();  // Repaint after resizing
-
+    
+        // Resize the window if necessary
+        if (mr > Screen.x || mb > Screen.y) {
+            setSize(Math.max((mr + EXPAND), Screen.x) + lw, Math.max((mb + EXPAND), Screen.y) + lh + 2 * BUTTONH);
+        }
+        
+    
+        // Ensure the drag box stays visible
+        if (db.width > 0 && db.height > 0) {
+            db.setBounds(Perimeter.intersection(db));
+        }
+    
+        // Send the new screen size to the Ball object
+        Ball.reSize(Screen.x, Screen.y);
+    
+        // Rebuild the sheet and update screen size
+        MakeSheet();
+        SizeScreen();
+    
+        // Repaint the Ball object to reflect the new size
+        Ball.repaint();
     }
+    
+    
 
      public void componentHidden(ComponentEvent e){}
  
