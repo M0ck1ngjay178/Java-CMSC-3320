@@ -10,7 +10,7 @@
 /*******************END HEADER***************************/
 
 //---------LIBRARIES--------------
-package BouncingBall;
+//package BouncingBall;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -96,12 +96,12 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
 
     // Rectangles
     //private Rectangle Perimeter = new Rectangle(0, 0, ScreenWidth, ScreenHeight); // bouncing perimeter
-    private Rectangle Perimeter = new Rectangle(0, 0, Screen.x, Screen.y); // bouncing perimeter
+    private Rectangle Perimeter = new Rectangle(0, 0, ScreenWidth, ScreenHeight); // bouncing perimeter
     private Rectangle db = new Rectangle(); // drag box rectangle
     private static final Rectangle ZERO = new Rectangle(0, 0, 0, 0); // zero rectangle
     Rectangle temp = new Rectangle(); // temporary rectangle
 
-    //private Vector<Rectangle> Walls = new Vector<Rectangle>();
+    
     
     public BouncingBall() {
         setTitle("Bouncing Ball");
@@ -250,7 +250,7 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
     private void MakeSheet(){
         I=getInsets();
         ScreenWidth=WinWidth-I.left-I.right;
-        ScreenHeight=WinHeight-I.top-2*(BUTTONH+BUTTONHS)-I.bottom;
+        ScreenHeight = WinHeight - I.top - control.getHeight() - I.bottom;
         
         setSize(WinWidth,WinHeight);
         CENTER=(ScreenWidth/2);
@@ -368,6 +368,7 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
             if (TS <= ScreenWidth && TS <= ScreenHeight) {
                 // Update the Ball size if it fits
                 Ball.updateSize(TS);
+                Ball.stayInBounds(ScreenWidth, ScreenHeight); // Ensure ball remains in bounds
             } else {
                 // Revert the scrollbar value if the size doesn't fit
                 BallSizeScrollBar.setValue(TS); // Set back to previous valid size
@@ -392,6 +393,7 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
                     SBall = TS;
                     Ball.updateSize(SBall);
                     BallSizeScrollBar.setValue(TS);
+                   // Ball.stayInBounds(ScreenWidth, ScreenHeight);
                 }
             } else {
                 // Ball is beyond the perimeter
@@ -567,8 +569,6 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
         // Update the window width and height based on the current size
         WinWidth = getWidth();
         WinHeight = getHeight();
-        checkSize();
-        
     
         // Ensure that width and height are always positive
         if (WinWidth <= 0 || WinHeight <= 0) {
@@ -731,27 +731,32 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
              tailSet=mode;
          }
  
+        
         public void stayInBounds(int newScreenWidth, int newScreenHeight) {
              
             int half = SBall/2;
 
             // Ensure the ball stays inside new screen dimensions (right and bottom edges)
-            if (x + half > newScreenWidth) {
-                x = newScreenWidth - half;  // Position the ball at the right edge
+            if (x + SBall > newScreenWidth) {
+                x = newScreenWidth - SBall;  // Position the ball at the right edge
+                dx = -Math.abs(dx); // Reverse direction
             }
-            if (y + half > newScreenHeight) {
-                y = newScreenHeight - half;  // Position the ball at the bottom edge
+            if (y + SBall > newScreenHeight) {
+                y = newScreenHeight - SBall;  // Position the ball at the bottom edge
+                dy = -Math.abs(dy); // Reverse direction
             }
 
             // Ensure the ball doesn't go beyond the left and top edges
-            if (x - half < 0) {
-                x = half;  // Position the ball at the left edge
+            if (x < 0) {
+                x = 0;  // Position the ball at the left edge
+                dx = -Math.abs(dx); // Reverse direction
             }
-            if (y - half < 0) {
-                y = half;  // Position the ball at the top edge
+            if (y < 0) {
+                y = 0;  // Position the ball at the top edge
+                dy = -Math.abs(dy); // Reverse direction
             }
          }
-         
+          
          //resizes the screen
          public void reSize(int w, int h){
              ScreenWidth=w;
