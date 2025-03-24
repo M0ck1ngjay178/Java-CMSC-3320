@@ -10,14 +10,13 @@
 /*******************END HEADER***************************/
 
 //---------LIBRARIES--------------
-//package BouncingBall;
+package BouncingBall;//put package back in
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 //---------END LIBRARIES----------
 import java.util.Vector;
 
-//TODO: File clean up and Fix bottom Canvas Border!! and make task list
 //---------------------------------------------CLASS BOUNCE-------------------------------------------------------------------------
 public class BouncingBall extends Frame implements WindowListener, ComponentListener, ActionListener, AdjustmentListener, Runnable, MouseListener,MouseMotionListener {
 
@@ -392,8 +391,7 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
                 if (ok) {
                     SBall = TS;
                     Ball.updateSize(SBall);
-                    BallSizeScrollBar.setValue(TS);
-                   // Ball.stayInBounds(ScreenWidth, ScreenHeight);
+                    BallSizeScrollBar.setValue(TS);                               
                 }
             } else {
                 // Ball is beyond the perimeter
