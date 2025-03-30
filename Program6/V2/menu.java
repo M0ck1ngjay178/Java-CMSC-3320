@@ -125,7 +125,6 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
         MakeSheet();
         try {
             initComponents();
-            //initGame(); // Initialize the game with the Ball object
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -224,17 +223,98 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
         FAST.addItemListener(this);
         XF.addItemListener(this);
 
-        //---------------Ball ------------------
+
+
+        // Initialize Scrollbars (Horizontal)
+        SpeedScrollBar = new Scrollbar(Scrollbar.HORIZONTAL);
+        SpeedScrollBar.setMaximum(SpeedSBmax);
+        SpeedScrollBar.setMinimum(SpeedSBmin);
+        SpeedScrollBar.setUnitIncrement(SBunit);
+        SpeedScrollBar.setBlockIncrement(SBblock);
+        SpeedScrollBar.setValue(SpeedSBinit);
+        SpeedScrollBar.setVisibleAmount(SBvisible);
+        SpeedScrollBar.setBackground(Color.gray);
+     
+       
+        BallSizeScrollBar = new Scrollbar(Scrollbar.HORIZONTAL);
+        BallSizeScrollBar.setMaximum(MAXBall);
+        BallSizeScrollBar.setMinimum(MINBall);
+        BallSizeScrollBar.setUnitIncrement(SBunit);
+        BallSizeScrollBar.setBlockIncrement(SBblock);
+        BallSizeScrollBar.setValue(SBall);
+        BallSizeScrollBar.setVisibleAmount(SBvisible);
+        BallSizeScrollBar.setBackground(Color.gray);
+
+        // Initialize the control panel layout (GridBagLayout)
+        control.setLayout(new GridBagLayout());
+        m1.setLocation(0, 0);
+        m2.setLocation(0, 0);
+    
+        // Set Perimeter bounds
+        //Perimeter.setBounds(0, 0, ScreenWidth, ScreenHeight);
+        Perimeter.setBounds(0, 0, Screen.x, Screen.y);
+        Perimeter.grow(-1, -1); // Shrink the rectangle one pixel on all sides
+
+        //setLayout(new BorderLayout()); // Set the layout for the main frame to BorderLayout
+        //setBounds(WinLeft, WinTop, FrameSize.x, FrameSize.y); // Set the frame bounds5
+        //setBackground(Color.lightGray); // Set the background color for the frame
+        //setVisible(true); // Make the frame visible
+        
+        control.setLayout(new GridBagLayout());  // Use GridBagLayout for control panel
+        control.setSize(FrameSize.x, 2*BUTTONH); // Set the size of the control panel
+
+        // Add button panel to the control panel (Buttons will be centered in GridBagLayout)
+        GridBagConstraints buttonPanelConstraints = new GridBagConstraints();
+        buttonPanelConstraints.insets = new Insets(5, 5, 5, 5);
+        buttonPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
+
+	    // Add Scrollbars to the control panel (East and West positions)
+        GridBagConstraints sbConstraints = new GridBagConstraints();
+        sbConstraints.insets = new Insets(5, 5, 5, 5);
+        sbConstraints.fill = GridBagConstraints.HORIZONTAL;
     
 
+        // Left position (SpeedScrollBar) - Place it at the far left side of the row
+        sbConstraints.gridx = 0;  // Far left side of the row
+        sbConstraints.gridy = 0;  // New row for the scrollbars
+        sbConstraints.gridwidth = 1;  // Only one column wide
+        sbConstraints.weightx = 1;  // Let it expand if needed
+        control.add(SpeedScrollBar, sbConstraints);
+
+        sbConstraints.gridy = 1;  // Same row as SpeedScrollBar
+        control.add(SPEEDL, sbConstraints);
+    
+
+        // Right position (BallSizeScrollBar) - Place it at the far right side of the row
+        sbConstraints.gridx = 4;  // Far right side of the row
+        sbConstraints.gridy = 0;  // Same row as SpeedScrollBar
+        sbConstraints.gridwidth = 1;  // Only one column wide
+        sbConstraints.weightx = 1;  // Let it expand if needed
+        control.add(BallSizeScrollBar, sbConstraints);
+        
+        sbConstraints.gridy = 1;  // Same row as SizeScrollBar
+        control.add(SIZEL, sbConstraints);
+
+
+        //---------------Ball ------------------
+        // Ball = new Ballc(SBall, Screen);
+        // Ball.setBackground(Color.white);
+
+        // EditorFrame.add(Ball, BorderLayout.CENTER);
+        // EditorFrame.setVisible(true);
+        sheet.setLayout(new BorderLayout(0,0));
         Ball = new Ballc(SBall, Screen);
         Ball.setBackground(Color.white);
+        sheet.add("Center", Ball);
+        sheet.setVisible(true);
 
-        EditorFrame.add(Ball, BorderLayout.CENTER);
-        EditorFrame.setVisible(true);
+        EditorFrame.add("Center", sheet);
+        EditorFrame.add("South", control);
+        //------------------------------------
 
-        //SpeedScrollBar.addAdjustmentListener(this);
-        //BallSizeScrollBar.addAdjustmentListener(this);
+
+        SpeedScrollBar.addAdjustmentListener(this);
+        BallSizeScrollBar.addAdjustmentListener(this);
         this.addWindowListener(this);
         this.addComponentListener(this);
         Ball.addMouseListener(this);
@@ -288,7 +368,6 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
     }
 
     public void actionPerformed(ActionEvent e) {
-        
         Object source = e.getSource();
         
         if(source == QUIT){
@@ -374,6 +453,10 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
     }
 
     public void stop(){
+
+        //stop the Ballc movement
+        runBall = false; 
+
         QUIT.removeActionListener(this);
         Sxs.removeItemListener(this);
         Ss.removeItemListener(this);       
@@ -387,7 +470,11 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
         //this.removeWindowListener(this);
         this.removeMouseMotionListener(this);
         this.removeMouseListener(this); 
-        
+
+        //removes adjustment listeners from scrollbars
+        SpeedScrollBar.removeAdjustmentListener(this);
+        BallSizeScrollBar.removeAdjustmentListener(this);
+
         EditorFrame.dispose();
         thethread.interrupt();
 
@@ -437,8 +524,8 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
     //========================END WINDOW LISTENER METHODS=================================
     //========================MOUSE LISTENER METHODS=================================
  
-        public void mousePressed(MouseEvent e){
-            m1.setLocation(e.getPoint());
+    public void mousePressed(MouseEvent e){
+        m1.setLocation(e.getPoint());
     }
     public void mouseDragged(MouseEvent e) {
         Rectangle newDb = getDragBox(e);
@@ -502,7 +589,7 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
         Ball.repaint();
     }
 
-        public void mouseClicked(MouseEvent e){
+    public void mouseClicked(MouseEvent e){
             Point p = new Point(e.getX(), e.getY());
             int i = 0;
             Rectangle b;
@@ -518,13 +605,13 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
             }   
 
         Ball.repaint();
-        }
+    }
 
-        public void mouseEntered(MouseEvent e){
+    public void mouseEntered(MouseEvent e){
             Ball.repaint();
-        }
-        public void mouseExited(MouseEvent e){}
-        public void mouseMoved(MouseEvent e){}
+    }
+    public void mouseExited(MouseEvent e){}
+    public void mouseMoved(MouseEvent e){}
   //===============================================================================
    //====================COMPONENT METHODS============
  
@@ -624,7 +711,6 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
     }
 
 
-
     public void componentHidden(ComponentEvent e){}
 
     public void componentShown(ComponentEvent e){}
@@ -636,15 +722,7 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
 
 
 
-
-
-
-
-
-
-
-
-    //========================CLASS CANVAS=================================
+//========================CLASS CANVAS=================================
      //create a class to draw the canvas for the frame
       class Ballc extends Canvas{
  
@@ -728,7 +806,7 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
  
          public void setTail(boolean mode){
              tailSet=mode;
-         }
+        }
  
         
         public void stayInBounds(int newScreenWidth, int newScreenHeight) {
@@ -810,6 +888,7 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
             g.setColor(Color.blue);
             g.drawRect(0, 0, width - 1, height - 1);
 
+            g.setColor(Color.orange);
             // Draw the walls
             for (int i = 0; i < Walls.size(); i++) {
                 temp = Walls.elementAt(i);

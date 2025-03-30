@@ -257,7 +257,6 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
 
      //positions and sizes buttons, scrollbars, and labels on the screen
     private void SizeScreen(){ 
-
         Ball.setBounds(0,0,ScreenWidth,ScreenHeight);
     }
  
