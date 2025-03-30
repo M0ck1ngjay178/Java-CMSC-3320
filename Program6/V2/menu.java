@@ -78,7 +78,7 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
     private int dx, dy;           //Ballect movement direction
     boolean tailSet = true;       //flag that tracks tail visibility
 
-    Button Start,Stop, Quit; //Buttons
+    //Button Start,Stop, Quit; //Buttons
 
     //Ballects
     private Ballc Ball; //Ballect to draw
@@ -373,6 +373,10 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
         if(source == QUIT){
             stop();
         }
+
+        if(source==RUN){
+            TimerPause = false; //set timer to false to start the thread
+        }
     
     }
 
@@ -636,7 +640,7 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
         width = Math.max(1, width);
         height = Math.max(1, height);
 
-        return new Rectangle(x, y, width, height);  
+        return new Rectangle(x, y, width, height); 
     }
 
 
@@ -982,7 +986,6 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
  
      //runs in a seperate thread to control the movement and updating of the Ballect
      public void run() {
- 
              //while the Ballc is active
              while (runBall) {
  
