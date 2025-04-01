@@ -203,6 +203,8 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
 
         //turn on action listeners for menuitems, menushortcuts, and checkbox menuitems
         QUIT.addActionListener(this);
+        RUN.addActionListener(this);
+        RESTART.addActionListener(this);
         Sxs.addItemListener(this);
         Ss.addItemListener(this);
         Sm.addItemListener(this);
@@ -317,6 +319,8 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
         BallSizeScrollBar.addAdjustmentListener(this);
         this.addWindowListener(this);
         this.addComponentListener(this);
+        //EditorFrame.addComponentListener(this);
+        //Ball.addComponentListener(this);
         Ball.addMouseListener(this);
         Ball.addMouseMotionListener(this);
         //-----------------End Ball ------------------
@@ -374,8 +378,15 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
             stop();
         }
 
-        if(source==RUN){
+        if(source== RUN){
             TimerPause = false; //set timer to false to start the thread
+        }
+        if(source== PAUSE){
+            TimerPause = true; //set timer to true to pause the thread
+        }
+        if(source== RESTART){
+            runBall = true; //set timer to false to start the thread
+            Ball.repaint();
         }
     
     }
@@ -646,8 +657,16 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
 
     public void componentResized(ComponentEvent e) {
         // Update the window width and height based on the current size
+        System.out.println("Component Resized: " + e.getComponent().getWidth() + "x" + e.getComponent().getHeight()); // Debugging output
         WinWidth = getWidth();
         WinHeight = getHeight();
+        System.out.println("Window Resized: " + WinWidth + "x" + WinHeight); // Debugging output
+
+        // Component source = e.getComponent();
+        // WinWidth = source.getWidth();
+        // WinHeight = source.getHeight();
+        // System.out.println("this was resized"); // Debugging output
+    
 
         // Ensure that width and height are always positive
         if (WinWidth <= 0 || WinHeight <= 0) {
@@ -669,6 +688,7 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
         // Loop through the Ball objects and calculate the max right and bottom values
         for (int i = 0; i < Ball.getWallSize(); i++) {
             Rectangle r = Ball.getOne(i);
+            System.out.println("Rectangle " + i + ": " + r); // Debugging output
 
             if (r != null) {
                 mr = Math.max((r.x + r.width), mr); // Update max right

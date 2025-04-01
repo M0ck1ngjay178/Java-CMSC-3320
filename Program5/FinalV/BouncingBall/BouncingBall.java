@@ -298,7 +298,7 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
          if(thethread == null){ //create a thread if it doesnt exist
              thethread = new Thread(this);//create a new thread
              thethread.start();//start the thread
-         }
+            }
  
          runBall = true;
          Ball.repaint();
@@ -316,7 +316,6 @@ public class BouncingBall extends Frame implements WindowListener, ComponentList
              Stop.setEnabled(true);
                        
              TimerPause = false; //set timer to false to start the thread
-             
          }
          //--------End Start Button-----------------
  
