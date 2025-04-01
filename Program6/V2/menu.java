@@ -318,7 +318,7 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
         SpeedScrollBar.addAdjustmentListener(this);
         BallSizeScrollBar.addAdjustmentListener(this);
         this.addWindowListener(this);
-        this.addComponentListener(this);
+        //this.addComponentListener(this);
         //EditorFrame.addComponentListener(this);
         //Ball.addComponentListener(this);
         Ball.addMouseListener(this);
@@ -327,9 +327,15 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
 
 
         EditorFrame.setMenuBar(MMB);//add menu bar to frame 
-        EditorFrame.addWindowListener(this);//add window listener to frame          
+        EditorFrame.addWindowListener(this);//add window listener to frame
+        //this.addWindowListener(this);//add window listener to frame   
         EditorFrame.setSize(sw,sh);//set frame size
-        EditorFrame.setResizable(true);//set frame resizable
+        //EditorFrame.setResizable(true);//set frame resizable
+        //this.addComponentListener(this);
+        ComponentEvent resizeEvent = new ComponentEvent(this, ComponentEvent.COMPONENT_RESIZED);
+        componentResized(resizeEvent);
+
+        //this.setResizable(true);//set frame resizable
         EditorFrame.setVisible(true);//set frame visible
         EditorFrame.validate();
 
@@ -655,11 +661,13 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
     }
 
 
+    @Override
     public void componentResized(ComponentEvent e) {
         // Update the window width and height based on the current size
+        System.out.println("this function was called and is working"); // Debugging output
         System.out.println("Component Resized: " + e.getComponent().getWidth() + "x" + e.getComponent().getHeight()); // Debugging output
-        WinWidth = getWidth();
-        WinHeight = getHeight();
+        WinWidth = EditorFrame.getWidth();
+        WinHeight = EditorFrame.getHeight();
         System.out.println("Window Resized: " + WinWidth + "x" + WinHeight); // Debugging output
 
         // Component source = e.getComponent();
@@ -672,6 +680,10 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
         if (WinWidth <= 0 || WinHeight <= 0) {
             return; // Prevents resizing issues
         }
+
+        System.out.println("Window Resized Check again: " + WinWidth + "x" + WinHeight); // Debugging output
+
+
 
         // Update the Perimeter bounds to match the window size
         Perimeter.setBounds(0, 0, WinWidth, WinHeight);
@@ -716,6 +728,7 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
         if (mr > Screen.x || mb > Screen.y) {
             setSize(Math.max((mr + EXPAND), Screen.x) + lw, Math.max((mb + EXPAND), Screen.y) + lh + 2 * BUTTONH);
         }
+        System.out.println("Window Resized Check again after calcs: " + WinWidth + "x" + WinHeight); // Debugging output
         
 
         // Ensure the drag box stays visible
@@ -724,7 +737,7 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
         }
 
         // Send the new screen size to the Ball object
-        Ball.reSize(Screen.x, Screen.y);
+        Ball.reSize(Screen.x + 100, Screen.y+ 100);
 
         // Rebuild the sheet and update screen size
         MakeSheet();
@@ -732,6 +745,7 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
 
         // Repaint the Ball object to reflect the new size
         Ball.repaint();
+        System.out.println("check size at end:" + WinWidth + "x" + WinHeight);
     }
 
 
