@@ -32,10 +32,6 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
     private int fSPEED=70;
     private int xfSPEED=90;
 
-    //Polygon points
-    private int angle;
-    //private Point a= new Point();
-
     private int FontType = Font.PLAIN;
     private String FontStyle = "Times New Roman";
     private int FontSize = 14;
@@ -100,9 +96,9 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
     private Label SPEEDL= new Label("Velocity", Label.CENTER); // label for speed scroll bar
     private Label AngleL=new Label("Angle",Label.CENTER);// label for size scroll bar
     Scrollbar SpeedScrollBar, AngleScrollBar;//scrollbars
-    Label Time=new Label("Time: ");
-    Label ballScore=new Label("Ball: ");
-    Label playerScore=new Label("Player: ");
+    Label Time=new Label("Time: 0");
+    Label ballScore=new Label("Ball: 0");
+    Label playerScore=new Label("Player: 0");
 
     private Thread thethread; //thread for timer delay
     
@@ -343,8 +339,6 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
         EditorFrame.add("Center", sheet);
         EditorFrame.add("South", control);
         //------------------------------------
-
-        Polygon cannon=new Polygon();
 
 
         SpeedScrollBar.addAdjustmentListener(this);
@@ -1009,7 +1003,6 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
  
          Image buffer;
          Graphics g;
-         
  
          private Rectangle dragrec = new Rectangle();
          private Vector<Rectangle> Walls = new Vector<Rectangle>();
@@ -1135,7 +1128,6 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
         @Override
         public void paint(Graphics cg) {
             Rectangle temp;
-            
 
             // Get the current width and height of the component
             int width = getWidth();
@@ -1168,10 +1160,6 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
 
             // Draw the draggable rectangle
             g.drawRect(dragrec.x, dragrec.y, dragrec.width, dragrec.height);
-
-            //draw the cannon wheel
-            g.setColor(Color.BLACK);
-            g.fillOval(width-75, height-75,75, 75);
 
             // Draw the buffered image onto the component
             cg.drawImage(buffer, 0, 0, null);
@@ -1221,8 +1209,6 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
                     break;
                 }
             }
-
-            
             // Repaint the screen
             repaint();
         }

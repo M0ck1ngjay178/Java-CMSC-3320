@@ -125,6 +125,10 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
     private Rectangle db = new Rectangle(); // drag box rectangle
     private static final Rectangle ZERO = new Rectangle(0, 0, 0, 0); // zero rectangle
     Rectangle temp = new Rectangle(); // temporary rectangle
+
+
+    Polygon cannon=new Polygon();
+
     //-----------------------------------RECTANGLE-----------------------------------------------------------------
 
     //----------------------MAIN METHOD-----------------
@@ -344,7 +348,7 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
         EditorFrame.add("South", control);
         //------------------------------------
 
-        Polygon cannon=new Polygon();
+        //Polygon cannon=new Polygon();
 
 
         SpeedScrollBar.addAdjustmentListener(this);
@@ -454,6 +458,17 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
         if (sb == AngleScrollBar) {
             
         }*/
+         // ANGLE Scrollbar
+        if (sb == AngleScrollBar) {
+            // Get the value of the angle from the scrollbar (usually from 0 to 360 degrees)
+            //cannonAngle = AngleScrollBar.getValue(); // Update the cannon angle with the scrollbar value
+            Ball.setAngle(AngleScrollBar.getValue()); // Set the angle of the cannon using the scrollbar value
+            //Repaint the cannon after the angle change
+            repaint();
+
+            
+        }
+
     
         // Repaint the cannon after the angle change
         Ball.repaint();
@@ -894,25 +909,35 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
     @Override
     public void componentResized(ComponentEvent e) {
         // Update the window width and height based on the current size
-        System.out.println("this function was called and is working"); // Debugging output
-        System.out.println("Component Resized: " + e.getComponent().getWidth() + "x" + e.getComponent().getHeight()); // Debugging output
-        WinWidth = EditorFrame.getWidth();
-        WinHeight = EditorFrame.getHeight();
-        System.out.println("Window Resized: " + WinWidth + "x" + WinHeight); // Debugging output
+        // System.out.println("this function was called and is working"); // Debugging output
+        // System.out.println("Component Resized: " + e.getComponent().getWidth() + "x" + e.getComponent().getHeight()); // Debugging output
+        // WinWidth = EditorFrame.getWidth();
+        // WinHeight = EditorFrame.getHeight();
+        // System.out.println("Window Resized: " + WinWidth + "x" + WinHeight); // Debugging output
 
-        // Component source = e.getComponent();
-        // WinWidth = source.getWidth();
-        // WinHeight = source.getHeight();
-        // System.out.println("this was resized"); // Debugging output
+        // // Component source = e.getComponent();
+        // // WinWidth = source.getWidth();
+        // // WinHeight = source.getHeight();
+        // // System.out.println("this was resized"); // Debugging output
     
 
-        // Ensure that width and height are always positive
-        if (WinWidth <= 0 || WinHeight <= 0) {
-            return; // Prevents resizing issues
+        // // Ensure that width and height are always positive
+        // if (WinWidth <= 0 || WinHeight <= 0) {
+        //     return; // Prevents resizing issues
+        // }
+
+        // System.out.println("Window Resized Check again: " + WinWidth + "x" + WinHeight); // Debugging output
+
+        int newWidth = getWidth();
+        int newHeight = getHeight();
+        
+        System.out.println("Resized: " + newWidth + " x " + newHeight); // Debugging
+    
+        // Ensure values are positive
+        if (newWidth > 0 && newHeight > 0) {
+            WinWidth = newWidth;
+            WinHeight = newHeight;
         }
-
-        System.out.println("Window Resized Check again: " + WinWidth + "x" + WinHeight); // Debugging output
-
 
 
         // Update the Perimeter bounds to match the window size
@@ -1013,6 +1038,12 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
  
          private Rectangle dragrec = new Rectangle();
          private Vector<Rectangle> Walls = new Vector<Rectangle>();
+
+         int cannonX, cannonY;
+         int barrelLength = 100;
+         int barrelWidth = 10;
+         int cannonAngle = 90; // Default angle (horizontal)
+
          
  
          //constructor
@@ -1023,6 +1054,12 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
              SBall=SB;
              rect=true;
              clear=false;
+
+            // cannonX = getWidth() - 75 + 37;
+            // cannonY = getHeight() - 75 + 37;
+            cannonX = getWidth() - 37;
+            cannonY = getHeight() - 37;
+
          
              x = (SBall / 2)+1; //calculate offset for x
              y = (SBall / 2)+1; //calculate offset for y
@@ -1170,12 +1207,64 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
             g.drawRect(dragrec.x, dragrec.y, dragrec.width, dragrec.height);
 
             //draw the cannon wheel
-            g.setColor(Color.BLACK);
-            g.fillOval(width-75, height-75,75, 75);
+            //g.setColor(Color.green);
+            
+            //g.fillOval(width-75, height-75,75, 75);
+            
+
+            int cannonCenterX = width - 37;
+            int cannonCenterY = height - 37;
+           
+            
+
+            updateCannon(cannonCenterX, cannonCenterY);
+            g.setColor(Color.DARK_GRAY);
+            g.fillPolygon(cannon);
+
+            g.setColor(new Color(139, 69, 19));//// Brown color for the cannon wheel
+            g.fillOval(cannonCenterX - 37, cannonCenterY - 37, 75, 75);
+
+
 
             // Draw the buffered image onto the component
             cg.drawImage(buffer, 0, 0, null);
         }
+
+        private void updateCannon(int cannonX , int cannonY) {
+            cannon.reset();
+            double rad = Math.toRadians(cannonAngle);
+            
+
+            int x1 = (int) (cannonX + barrelWidth * Math.sin(rad));  // Change here for counterclockwise
+            int y1 = (int) (cannonY - barrelWidth * Math.cos(rad));  // Keep this to preserve upward direction
+
+            int x2 = (int) (x1 + barrelLength * Math.cos(rad));
+            int y2 = (int) (y1 - barrelLength * Math.sin(rad));
+            
+            // Additional points to create the barrel polygon
+            int x3 = (int) (x2 - 2 * barrelWidth * Math.sin(rad));
+            int y3 = (int) (y2 + 2 * barrelWidth * Math.cos(rad));
+            
+            int x4 = (int) (x3 - barrelLength * Math.cos(rad));
+            int y4 = (int) (y3 + barrelLength * Math.sin(rad));
+    
+            cannon.addPoint(x1, y1);
+            cannon.addPoint(x2, y2);
+            cannon.addPoint(x3, y3);
+            cannon.addPoint(x4, y4);
+        }
+        
+        
+        //helper function to set angle
+        public void setAngle(int angle) {
+            // keep the angle stays within the 0-360 range
+            if (angle >= 0 && angle <= 360) {
+                cannonAngle = angle;
+                repaint(); // Repaint the cannon
+            }
+        }
+
+
 
          //UPDATE graphics for the Ballc
          public void update(Graphics g){
