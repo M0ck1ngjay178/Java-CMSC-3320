@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
 
-public class menu extends Frame implements ActionListener, WindowListener, ItemListener, ComponentListener, AdjustmentListener, Runnable, MouseListener,MouseMotionListener {
+public class menu implements ActionListener, WindowListener, ItemListener, ComponentListener, AdjustmentListener, Runnable, MouseListener,MouseMotionListener {
 
     
     //---------------------------------MENU FRAME-------------------------------------------------------------------
@@ -148,10 +148,10 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
         TimerPause = true;
         tailSet = false;
         
-        MakeSheet();
         try {
             initComponents();
-        } catch (Exception e) {
+         MakeSheet();
+       } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -360,22 +360,19 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
         AngleScrollBar.addAdjustmentListener(this);
         //this.addWindowListener(this);
         EditorFrame.addWindowListener(this);
-        //this.addComponentListener(this);
-        //EditorFrame.addComponentListener(this);
-        //Ball.addComponentListener(this);
+        EditorFrame.addComponentListener(this);
         Ball.addMouseListener(this);
         Ball.addMouseMotionListener(this);
         //-----------------End Ball ------------------
 
 
         EditorFrame.setMenuBar(MMB);//add menu bar to frame 
-        EditorFrame.addWindowListener(this);//add window listener to frame
+ //       EditorFrame.addWindowListener(this);//add window listener to frame
         //this.addWindowListener(this);//add window listener to frame   
         EditorFrame.setSize(sw,sh);//set frame size
         //EditorFrame.setResizable(true);//set frame resizable
-        //this.addComponentListener(this);
-        ComponentEvent resizeEvent = new ComponentEvent(this, ComponentEvent.COMPONENT_RESIZED);
-        componentResized(resizeEvent);
+//        ComponentEvent resizeEvent = new ComponentEvent(this, ComponentEvent.COMPONENT_RESIZED);
+//        componentResized(resizeEvent);
 
         //this.setResizable(true);//set frame resizable
         EditorFrame.setVisible(true);//set frame visible
@@ -387,11 +384,11 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
 
     //creates layout and calculates screen size
     private void MakeSheet(){
-        I=getInsets();
+        I=EditorFrame.getInsets();
         ScreenWidth=WinWidth-I.left-I.right;
         ScreenHeight = WinHeight - I.top - control.getHeight() - I.bottom;
         
-        setSize(WinWidth,WinHeight);
+        EditorFrame.setSize(WinWidth,WinHeight);
         CENTER=(ScreenWidth/2);
     }
 
@@ -466,7 +463,7 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
             //cannonAngle = AngleScrollBar.getValue(); // Update the cannon angle with the scrollbar value
             Ball.setAngle(AngleScrollBar.getValue()); // Set the angle of the cannon using the scrollbar value
             //Repaint the cannon after the angle change
-            repaint();
+            Ball.repaint();
 
             
         }
@@ -504,10 +501,10 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
         EditorFrame.removeWindowListener(this);
 
         //removes component and window listeners
-        this.removeComponentListener(this);
+        EditorFrame.removeComponentListener(this);
         //this.removeWindowListener(this);
-        this.removeMouseMotionListener(this);
-        this.removeMouseListener(this); 
+        Ball.removeMouseMotionListener(this);
+        Ball.removeMouseListener(this); 
 
         //removes adjustment listeners from scrollbars
         SpeedScrollBar.removeAdjustmentListener(this);
@@ -916,8 +913,8 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
         m2.setLocation(e.getPoint());
 
         // Ensure that the window size is correctly taken into account during dragging
-        int currentWidth = getWidth();
-        int currentHeight = getHeight();
+        int currentWidth = Ball.getWidth();
+        int currentHeight = Ball.getHeight();
 
         int x = Math.min(m1.x, m2.x);
         int y = Math.min(m1.y, m2.y);
@@ -936,43 +933,46 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
     }
 
 
-    @Override
     public void componentResized(ComponentEvent e) {
         // Update the window width and height based on the current size
-        // System.out.println("this function was called and is working"); // Debugging output
-        // System.out.println("Component Resized: " + e.getComponent().getWidth() + "x" + e.getComponent().getHeight()); // Debugging output
-        // WinWidth = EditorFrame.getWidth();
-        // WinHeight = EditorFrame.getHeight();
-        // System.out.println("Window Resized: " + WinWidth + "x" + WinHeight); // Debugging output
+        //System.out.println("this function was called and is working"); // Debugging output
+        //System.out.println("Component Resized: " + e.getComponent().getWidth() + "x" + e.getComponent().getHeight()); // Debugging output
+        WinWidth = EditorFrame.getWidth();
+        WinHeight = EditorFrame.getHeight();
+        //System.out.println("Window Resized: " + WinWidth + "x" + WinHeight); // Debugging output
 
-        // // Component source = e.getComponent();
-        // // WinWidth = source.getWidth();
-        // // WinHeight = source.getHeight();
-        // // System.out.println("this was resized"); // Debugging output
+        // Component source = e.getComponent();
+        // WinWidth = source.getWidth();
+        // WinHeight = source.getHeight();
+        // System.out.println("this was resized"); // Debugging output
     
 
-        // // Ensure that width and height are always positive
-        // if (WinWidth <= 0 || WinHeight <= 0) {
-        //     return; // Prevents resizing issues
-        // }
+        // Ensure that width and height are always positive
+        if (WinWidth <= 0 || WinHeight <= 0) {
+            return; // Prevents resizing issues
+        }
 
         // System.out.println("Window Resized Check again: " + WinWidth + "x" + WinHeight); // Debugging output
 
-        int newWidth = getWidth();
-        int newHeight = getHeight();
+        // int newWidth = EditorFrame.getWidth();
+        // int newHeight = EditorFrame.getHeight();
         
-        System.out.println("Resized: " + newWidth + " x " + newHeight); // Debugging
+        // //System.out.println("Resized: " + newWidth + " x " + newHeight); // Debugging
     
-        // Ensure values are positive
-        if (newWidth > 0 && newHeight > 0) {
-            WinWidth = newWidth;
-            WinHeight = newHeight;
-        }
+        // // Ensure values are positive
+        // if (newWidth > 0 && newHeight > 0) {
+        //     WinWidth = newWidth;
+        //     WinHeight = newHeight;
+        // }
 
 
         // Update the Perimeter bounds to match the window size
         Perimeter.setBounds(0, 0, WinWidth, WinHeight);
         Perimeter.grow(-1, -1); // Shrink the rectangle one pixel on all sides
+
+        if (I == null) {
+            I = EditorFrame.getInsets(); // Assign insets if null
+        }
 
         // Define expansion and insets for screen adjustment
         int EXPAND = 10; // Small border beyond the rectangles
@@ -1004,16 +1004,16 @@ public class menu extends Frame implements ActionListener, WindowListener, ItemL
                 // Make sure rectangles stay within the new window bounds
                 r.width = Math.max(1, r.width);
                 r.height = Math.max(1, r.height);
-                r.x = Math.min(r.x, Math.max(0, getWidth() - r.width));
-                r.y = Math.min(r.y, Math.max(0, getHeight() - r.height));
+                r.x = Math.min(r.x, Math.max(0, Ball.getWidth() - r.width));
+                r.y = Math.min(r.y, Math.max(0, Ball.getHeight() - r.height));
             }
         }
 
         // Resize the window if necessary
         if (mr > Screen.x || mb > Screen.y) {
-            setSize(Math.max((mr + EXPAND), Screen.x) + lw, Math.max((mb + EXPAND), Screen.y) + lh + 2 * BUTTONH);
+            EditorFrame.setSize(Math.max((mr + EXPAND), Screen.x) + lw, Math.max((mb + EXPAND), Screen.y) + lh + 2 * BUTTONH);
         }
-        System.out.println("Window Resized Check again after calcs: " + WinWidth + "x" + WinHeight); // Debugging output
+        //System.out.println("Window Resized Check again after calcs: " + WinWidth + "x" + WinHeight); // Debugging output
         
 
         // Ensure the drag box stays visible
