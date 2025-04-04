@@ -228,3 +228,41 @@
     
     //     System.out.println("Final window size: " + WinWidth + "x" + WinHeight);
     // }
+
+    // private void launchProjectile(){
+
+    //     int cannonCenterX = Ball.getWidth() - 37;
+    //     int cannonCenterY = Ball.getHeight() - 37;
+    //     int velocity = Ball.getVelocity();
+    //     double angle = Math.toRadians(Ball.getAngle()); // Convert angle to radians
+    //     System.out.println("Angle in radians: " + angle);
+
+    //     Ball.v0x = velocity * Math.cos(angle); // X velocity
+    //     Ball.v0y = velocity * Math.sin(angle); // Y velocity
+
+    //     // Set initial position
+    //     Ball.x0 = cannonCenterX;
+    //     Ball.y0 = cannonCenterY;
+    //     Ball.px = Ball.x0;
+    //     System.out.println("Center of cannon: " + cannonCenterX + " " + cannonCenterY);
+    //     System.out.println("Ball.x0 = " + Ball.x0);
+    //     System.out.println("Ball.y0 = " + Ball.y0);
+    //     Ball.py = Ball.y0;
+
+    //     // Reset time
+    //     Ball.time = 0;
+
+    //     Projectile = new Ballc(SBall, Screen, cannonCenterX, cannonCenterY); // Create a new Projectile object
+
+
+    //     System.out.println("Projectile launched");
+    //     ProjectileActive = true;
+    //     System.out.println("Projectile landed");
+    //    // ProjectileActive = false;
+
+    //     //dont have to call repaint any more the current ball will call paint enough
+    //     //just add the projectile to the paint method so it will be updated as often as the 
+    //     //current ball
+        
+
+    // }

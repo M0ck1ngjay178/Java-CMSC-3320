@@ -937,43 +937,52 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
     public void mouseMoved(MouseEvent e){}
   //===============================================================================
    //====================COMPONENT METHODS============
-    private void launchProjectile(){
-
+    
+    private void launchProjectile() {
+        // Get cannon's center coordinates
         int cannonCenterX = Ball.getWidth() - 37;
         int cannonCenterY = Ball.getHeight() - 37;
+    
+        // Get values from Ball (which should reflect scrollbar)
         int velocity = Ball.getVelocity();
-        int angle = Ball.getAngle(); // Get the angle from the cannon
-        //int angle = Ball.cannonAngle;
-        //double velocity = Ball.getVelocity();
-        //double angle = Math.toRadians(Ball.cannonAngle); // Convert angle to radians
-
-        Ball.v0x = velocity * Math.cos(angle); // X velocity
-        Ball.v0y = velocity * Math.sin(angle); // Y velocity
-
-        // Set initial position
+        int angleDeg = Ball.getAngle(); // should already be synced with scrollbar
+        double angleRad = Math.toRadians(angleDeg);
+    
+        System.out.println("Launching projectile...");
+        System.out.println("Velocity: " + velocity);
+        System.out.println("Angle (degrees): " + angleDeg);
+        System.out.println("Angle (radians): " + angleRad);
+        System.out.println("Cannon center: (" + cannonCenterX + ", " + cannonCenterY + ")");
+    
+        // Calculate initial velocity components
+        double v0x = -velocity * Math.cos(angleRad);
+        double v0y = -velocity * Math.sin(angleRad); 
+    
+        // Set Ball (visual) launch state
+        Ball.v0x = v0x;
+        Ball.v0y = v0y;
         Ball.x0 = cannonCenterX;
         Ball.y0 = cannonCenterY;
         Ball.px = Ball.x0;
-        System.out.println("Center of cannon: " + cannonCenterX + " " + cannonCenterY);
-        System.out.println("Ball.x0 = " + Ball.x0);
-        System.out.println("Ball.y0 = " + Ball.y0);
         Ball.py = Ball.y0;
-
-        // Reset time
         Ball.time = 0;
-
-        Projectile = new Ballc(SBall, Screen, cannonCenterX, cannonCenterY); // Create a new Projectile object
-
-
-        System.out.println("Projectile launched");
+    
+        // Create and initialize new Projectile
+        Projectile = new Ballc(SBall, Screen, cannonCenterX, cannonCenterY);
+        Projectile.setVelocity(velocity);
+        Projectile.setAngle(angleDeg); // sync angle with Ball
+    
+        Projectile.v0x = v0x;
+        Projectile.v0y = v0y;
+        Projectile.x0 = cannonCenterX;
+        Projectile.y0 = cannonCenterY;
+        Projectile.px = cannonCenterX;
+        Projectile.py = cannonCenterY;
+        Projectile.time = 0;
+    
         ProjectileActive = true;
-        System.out.println("Projectile landed");
-       // ProjectileActive = false;
-
-        //dont have to call repaint any more the current ball will call paint enough
-        //just add the projectile to the paint method so it will be updated as often as the 
-        //current ball
     }
+    
     
     public Rectangle getDragBox(MouseEvent e){
         m2.setLocation(e.getPoint());
@@ -1535,10 +1544,10 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
             px = x0 + v0x * time;
         
             // Vertical motion (affected by gravity)
-            py = y0 + v0y * time - 0.5 * gravity * time * time;
+            py = y0 + v0y * time - 0.5 *(-1 *gravity) * time * time;
         
             // Update vertical velocity due to gravity
-            v0y = v0y - gravity * time; 
+            v0y = v0y - (-1 *gravity) * time; 
         
             System.out.println("Projectile Position: (" + px + ", " + py + ")");
         
@@ -1547,7 +1556,12 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
                 ProjectileActive = false;
                 System.err.println("OUT OF BOUNDS");
             }
-        }
+        }//get time from velocity scrollbar, divide by planet gravity
+        //total flight time = 2 * v0y / g
+        //total x direction = v0x * total flight time
+        //total y direction = v0y * total flight time - 0.5 * g * (total flight time)^2     
+        // x = x0 + (0.5 * (V0*cos(theta))) * (2 * ((V0 * cos(theta))/g)
+        //   (original x) + ((velocity in x direction) * (total flight time))
         
         
          //moves the object within the screens boundaries
