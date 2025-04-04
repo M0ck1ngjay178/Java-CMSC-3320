@@ -132,6 +132,7 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
 
     Polygon cannon=new Polygon();
 
+    private double gravity;
     //-----------------------------------RECTANGLE-----------------------------------------------------------------
 
     //----------------------MAIN METHOD-----------------
@@ -230,6 +231,7 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
         //turn on action listeners for menuitems, menushortcuts, and checkbox menuitems
         QUIT.addActionListener(this);
         RUN.addActionListener(this);
+        PAUSE.addActionListener(this);
         RESTART.addActionListener(this);
         Sxs.addItemListener(this);
         Ss.addItemListener(this);
@@ -417,6 +419,20 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
             FAST.setState(false);
             XF.setState(false);
             checkbox.setState(true);
+        }
+        if(checkbox == MERCURY || checkbox == VENUS || checkbox == EARTH || checkbox == MARS || checkbox == JUPITER || checkbox == SATURN || checkbox == URANUS || checkbox == NEPTUNE || checkbox == PLUTO){
+            MERCURY.setState(false);
+            VENUS.setState(false);
+            EARTH.setState(false);
+            MARS.setState(false);
+            JUPITER.setState(false);
+            SATURN.setState(false);
+            URANUS.setState(false);
+            NEPTUNE.setState(false);
+            PLUTO.setState(false);
+            checkbox.setState(true);
+            setGravity(checkbox.getLabel());
+            System.out.println("Gravity set to: " + gravity);
         } 
         setTheSize();
         setTheSpeed();
@@ -436,8 +452,9 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
             TimerPause = true; //set timer to true to pause the thread
         }
         if(source== RESTART){
-            runBall = true; //set timer to false to start the thread
-            Ball.repaint();
+            TimerPause = true; //set timer to false to start the thread
+            //Ball.repaint();
+            Ball.resetBall(0,0);
         }
     
     }
@@ -445,30 +462,26 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
     public void adjustmentValueChanged(AdjustmentEvent e) {
         Scrollbar sb = (Scrollbar) e.getSource(); // Get the scrollbar that triggered the event
     
-        /*  Speed Scrollbar------THIS IS NOW VELOCITY
         if (sb == SpeedScrollBar) {
-            // Recalculate the delay based on the speed value
-            int speedValue = SpeedScrollBar.getValue();
-            delay = 100 - speedValue + 1; // Calculate delay
-    
-            // Interrupt the thread to apply the new delay
-            if (thethread != null) {
-                thethread.interrupt();
-            }
+            // Get the scrollbar value and map it to the velocity range (100 - 1200 ft/sec)
+            int minVel = 100;
+            int maxVel = 1200;
+            
+            int scrollValue = SpeedScrollBar.getValue();  // Get raw scrollbar value
+            int velocity = minVel + (scrollValue * (maxVel - minVel)) / SpeedScrollBar.getMaximum(); 
+            
+            Ball.setVelocity(velocity); // Set the new velocity to the Ball
+            System.out.println("Velocity set to: " + velocity);
         }
-    */
+
        
         if (sb == AngleScrollBar) {
-            // Get the value of the angle from the scrollbar (usually from 0 to 360 degrees)
-            //cannonAngle = AngleScrollBar.getValue(); // Update the cannon angle with the scrollbar value
+            // Get the value of the angle from the scrollbar ( 0 to 360 degrees)
             Ball.setAngle(AngleScrollBar.getValue()); // Set the angle of the cannon using the scrollbar value
             //Repaint the cannon after the angle change
             Ball.repaint();
-
-            
         }
 
-    
         // Repaint the cannon after the angle change
         Ball.repaint();
     }
@@ -569,6 +582,40 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
             }
         }
     }
+    private void setGravity(String planet) {
+        switch (planet) {
+            case "Mercury": 
+                gravity = 3.7; 
+                break;
+            case "Venus": 
+                gravity = 8.87; 
+                break;
+            case "Earth": 
+                gravity = 9.81; 
+                break;
+            case "Mars": 
+                gravity = 3.71; 
+                break;
+            case "Jupiter": 
+                gravity = 24.79; 
+                break;
+            case "Saturn":
+                gravity = 10.44; 
+                break;
+            case "Uranus": 
+                gravity = 8.69; 
+                break;
+            case "Neptune": 
+                gravity = 11.15; 
+                break;
+            case "Pluto": 
+                gravity = 0.62; 
+                break;
+            default: 
+                gravity = 9.81; // Default to Earth
+        }
+    }
+
 
     public void setTheSize(){
         //set the font to the selected font
@@ -894,7 +941,26 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
 
         int cannonCenterX = Ball.getWidth() - 37;
         int cannonCenterY = Ball.getHeight() - 37;
-        int angle = Ball.cannonAngle;
+        int velocity = Ball.getVelocity();
+        int angle = Ball.getAngle(); // Get the angle from the cannon
+        //int angle = Ball.cannonAngle;
+        //double velocity = Ball.getVelocity();
+        //double angle = Math.toRadians(Ball.cannonAngle); // Convert angle to radians
+
+        Ball.v0x = velocity * Math.cos(angle); // X velocity
+        Ball.v0y = velocity * Math.sin(angle); // Y velocity
+
+        // Set initial position
+        Ball.x0 = cannonCenterX;
+        Ball.y0 = cannonCenterY;
+        Ball.px = Ball.x0;
+        System.out.println("Center of cannon: " + cannonCenterX + " " + cannonCenterY);
+        System.out.println("Ball.x0 = " + Ball.x0);
+        System.out.println("Ball.y0 = " + Ball.y0);
+        Ball.py = Ball.y0;
+
+        // Reset time
+        Ball.time = 0;
 
         Projectile = new Ballc(SBall, Screen, cannonCenterX, cannonCenterY); // Create a new Projectile object
 
@@ -933,237 +999,7 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
     }
 
 
-    // public void componentResized(ComponentEvent e) {
-    //     // Update the window width and height based on the current size
-    //     //System.out.println("this function was called and is working"); // Debugging output
-    //     //System.out.println("Component Resized: " + e.getComponent().getWidth() + "x" + e.getComponent().getHeight()); // Debugging output
-    //     WinWidth = EditorFrame.getWidth();
-    //     WinHeight = EditorFrame.getHeight();
-    //     //System.out.println("Window Resized: " + WinWidth + "x" + WinHeight); // Debugging output
 
-    //     // Component source = e.getComponent();
-    //     // WinWidth = source.getWidth();
-    //     // WinHeight = source.getHeight();
-    //     // System.out.println("this was resized"); // Debugging output
-    
-
-    //     // Ensure that width and height are always positive
-    //     if (WinWidth <= 0 || WinHeight <= 0) {
-    //         return; // Prevents resizing issues
-    //     }
-
-    //     // System.out.println("Window Resized Check again: " + WinWidth + "x" + WinHeight); // Debugging output
-
-    //     // int newWidth = EditorFrame.getWidth();
-    //     // int newHeight = EditorFrame.getHeight();
-        
-    //     // //System.out.println("Resized: " + newWidth + " x " + newHeight); // Debugging
-    
-    //     // // Ensure values are positive
-    //     // if (newWidth > 0 && newHeight > 0) {
-    //     //     WinWidth = newWidth;
-    //     //     WinHeight = newHeight;
-    //     // }
-
-
-    //     // Update the Perimeter bounds to match the window size
-    //     Perimeter.setBounds(0, 0, WinWidth, WinHeight);
-    //     Perimeter.grow(-1, -1); // Shrink the rectangle one pixel on all sides
-
-    //     if (I == null) {
-    //         I = EditorFrame.getInsets(); // Assign insets if null
-    //     }
-
-    //     // Define expansion and insets for screen adjustment
-    //     int EXPAND = 10; // Small border beyond the rectangles
-    //     int lw = I.left + I.right;
-    //     int lh = I.top + I.bottom;
-
-    //     // Adjust the screen size if necessary
-    //     int mr = 0, mb = 0;
-
-    //     // Loop through the Ball objects and calculate the max right and bottom values
-    //     for (int i = 0; i < Ball.getWallSize(); i++) {
-    //         Rectangle r = Ball.getOne(i);
-    //         System.out.println("Rectangle " + i + ": " + r); // Debugging output
-
-    //         if (r != null) {
-    //             mr = Math.max((r.x + r.width), mr); // Update max right
-    //             mb = Math.max((r.y + r.height), mb); // Update max bottom
-
-    //             // Ensure rectangles are within the bounds
-    //             if (r.width < 0) {
-    //                 r.x += r.width;
-    //                 r.width = -r.width;
-    //             }
-    //             if (r.height < 0) {
-    //                 r.y += r.height;
-    //                 r.height = -r.height;
-    //             }
-
-    //             // Make sure rectangles stay within the new window bounds
-    //             r.width = Math.max(1, r.width);
-    //             r.height = Math.max(1, r.height);
-    //             r.x = Math.min(r.x, Math.max(0, Ball.getWidth() - r.width));
-    //             r.y = Math.min(r.y, Math.max(0, Ball.getHeight() - r.height));
-    //         }
-    //     }
-
-    //     // Resize the window if necessary
-    //     if (mr > Screen.x || mb > Screen.y) {
-    //         EditorFrame.setSize(Math.max((mr + EXPAND), Screen.x) + lw, Math.max((mb + EXPAND), Screen.y) + lh + 2 * BUTTONH);
-    //     }
-    //     //System.out.println("Window Resized Check again after calcs: " + WinWidth + "x" + WinHeight); // Debugging output
-        
-
-    //     // Ensure the drag box stays visible
-    //     if (db.width > 0 && db.height > 0) {
-    //         db.setBounds(Perimeter.intersection(db));
-    //     }
-
-    //     // Send the new screen size to the Ball object
-    //     Ball.reSize(Screen.x + 100, Screen.y+ 100);
-
-    //     // Rebuild the sheet and update screen size
-    //     MakeSheet();
-    //     SizeScreen();
-
-    //     // Repaint the Ball object to reflect the new size
-    //     Ball.repaint();
-    //     System.out.println("check size at end:" + WinWidth + "x" + WinHeight);
-    // }
-
-    // public void componentResized(ComponentEvent e) {
-    //     // Ensure EditorFrame is not null
-    //     if (EditorFrame == null) {
-    //         System.err.println("Error: EditorFrame is null!");
-    //         return;
-    //     }
-    
-    //     // Get the current window size
-    //     WinWidth = EditorFrame.getWidth();
-    //     WinHeight = EditorFrame.getHeight();
-    
-    //     // Ensure window dimensions are valid
-    //     if (WinWidth <= 0 || WinHeight <= 0) {
-    //         System.err.println("Error: Invalid window size: " + WinWidth + "x" + WinHeight);
-    //         return;
-    //     }
-    
-    //     // Ensure Perimeter is initialized
-    //     if (Perimeter == null) {
-    //         System.err.println("Error: Perimeter is null!");
-    //         return;
-    //     }
-    
-    //     // Update the Perimeter bounds
-    //     Perimeter.setBounds(0, 0, WinWidth, WinHeight);
-    //     Perimeter.grow(-1, -1); // Shrink by 1 pixel
-    
-    //     // Ensure I (Insets) is initialized
-    //     if (I == null) {
-    //         I = EditorFrame.getInsets();
-    //         if (I == null) {
-    //             System.err.println("Error: Insets could not be retrieved!");
-    //             return;
-    //         }
-    //     }
-    
-    //     // Define expansion and insets
-    //     int EXPAND = 10; 
-    //     int lw = I.left + I.right;
-    //     int lh = I.top + I.bottom;
-        
-    //     int mr = 0, mb = 0;
-    
-    //     // Ensure Ball class functions correctly
-    //     if (Ball == null) {
-    //         System.err.println("Error: Ball class reference is null!");
-    //         return;
-    //     }
-    
-    //     int wallSize = Ball.getWallSize();
-    //     if (wallSize <= 0) {
-    //         System.err.println("Warning: No walls exist in Ball.");
-    //     }
-    
-    //     // Loop through all Ball walls
-    //     for (int i = 0; i < wallSize; i++) {
-    //         Rectangle r = Ball.getOne(i);
-    //         if (r == null) {
-    //             System.err.println("Warning: Ball rectangle at index " + i + " is null!");
-    //             continue;
-    //         }
-    
-    //         System.out.println("Rectangle " + i + ": " + r);
-    
-    //         mr = Math.max((r.x + r.width), mr);
-    //         mb = Math.max((r.y + r.height), mb);
-    
-    //         // Ensure rectangle sizes are positive
-    //         if (r.width < 0) {
-    //             r.x += r.width;
-    //             r.width = -r.width;
-    //         }
-    //         if (r.height < 0) {
-    //             r.y += r.height;
-    //             r.height = -r.height;
-    //         }
-    
-    //         // Ensure rectangles stay within bounds
-    //         int ballWidth = Ball.getWidth();
-    //         int ballHeight = Ball.getHeight();
-    
-    //         if (ballWidth > 0 && ballHeight > 0) {
-    //             r.width = Math.max(1, r.width);
-    //             r.height = Math.max(1, r.height);
-    //             r.x = Math.min(r.x, Math.max(0, ballWidth - r.width));
-    //             r.y = Math.min(r.y, Math.max(0, ballHeight - r.height));
-    //         } else {
-    //             System.err.println("Warning: Ball dimensions are invalid!");
-    //         }
-    //     }
-    
-    //     // Ensure Screen dimensions are valid
-    //     if (Screen == null) {
-    //         System.err.println("Error: Screen reference is null!");
-    //         return;
-    //     }
-        
-    //     if (mr > Screen.x || mb > Screen.y) {
-    //         EditorFrame.setSize(
-    //             Math.max((mr + EXPAND), Screen.x) + lw, 
-    //             Math.max((mb + EXPAND), Screen.y) + lh + 2 * BUTTONH
-    //         );
-    //     }
-    
-    //     // Ensure db (Drag Box) is not null before modifying bounds
-    //     if (db != null && db.width > 0 && db.height > 0) {
-    //         db.setBounds(Perimeter.intersection(db));
-    //     } else {
-    //         System.err.println("Warning: Drag Box is invalid or null!");
-    //     }
-    
-    //     // Resize Ball and ensure values are positive
-    //     int newBallWidth = Screen.x + 100;
-    //     int newBallHeight = Screen.y + 100;
-    
-    //     if (newBallWidth > 0 && newBallHeight > 0) {
-    //         Ball.reSize(newBallWidth, newBallHeight);
-    //     } else {
-    //         System.err.println("Warning: Invalid Ball resize dimensions.");
-    //     }
-    
-    //     // Update UI elements
-    //     MakeSheet();
-    //     SizeScreen();
-    
-    //     // Repaint Ball to reflect the new size
-    //     Ball.repaint();
-    
-    //     System.out.println("Final window size: " + WinWidth + "x" + WinHeight);
-    // }
-    
 
     public void componentResized(ComponentEvent e) {
         // Ensure EditorFrame is not null
@@ -1324,7 +1160,7 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
          int prevX, prevY;
  
          private int x, y;
-         private int px, py;
+         private double px, py;
          private int pdx, pdy;
          private boolean rect=true;
          private boolean clear=false;
@@ -1336,11 +1172,19 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
  
          private Rectangle dragrec = new Rectangle();
          private Vector<Rectangle> Walls = new Vector<Rectangle>();
-
+        
          int cannonX, cannonY;
          int barrelLength = 100;
          int barrelWidth = 10;
          int cannonAngle = 90; // Default angle (horizontal)
+
+         private int velocity = 100;
+         private double time = 0;  // Elapsed time since launch
+         private double x0, y0;    // Initial position
+         private double v0x, v0y;  // Initial velocity components
+        //private double ax, ay;    // Current position of the projectile
+         private double gravity = 9.81;  // Default gravity (Earth)
+         
 
          
  
@@ -1349,24 +1193,40 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
             ScreenWidth = screen.x;  // Use screen.x for width
             ScreenHeight = screen.y; 
           
-             SBall=SB;
-             rect=true;
-             clear=false;
+            SBall=SB;
+            rect=true;
+            clear=false;
 
             px = startX;
             py = startY;
+            //----------
+            x0 = startX;
+            y0 = startY;
 
-            // cannonX = getWidth() - 75 + 37;
-            // cannonY = getHeight() - 75 + 37;
+
             cannonX = getWidth() - 37;
             cannonY = getHeight() - 37;
+            this.velocity = velocity; // Default velocity
 
          
-             x = (SBall / 2)+1; //calculate offset for x
-             y = (SBall / 2)+1; //calculate offset for y
-             dx = 1;//set initial x flags to true
-             dy = 1;//set initial y flags to true
+            x = (SBall / 2)+1; //calculate offset for x
+            y = (SBall / 2)+1; //calculate offset for y
+            dx = 1;//set initial x flags to true
+            dy = 1;//set initial y flags to true
          }
+         public void resetBall(int startX, int startY) {
+            x = startX;
+            y = startY;
+            dx = 1; // Reset x direction
+            dy = 1; // Reset y direction
+            //add reset for timer labels
+        }
+        public void setVelocity(int newVel) {
+            this.velocity = newVel;
+        }
+        public int getVelocity() {
+            return velocity;
+        }
          
          //mutators
          public void setDragBox(Rectangle r){
@@ -1517,9 +1377,12 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
             
             if (ProjectileActive && Projectile != null) {
                 g.setColor(Color.blue);
-                g.fillOval(Projectile.px, Projectile.py, Projectile.getSizeBall(), Projectile.getSizeBall());
+                // g.fillOval(Projectile.px, Projectile.py, Projectile.getSizeBall(), Projectile.getSizeBall());
+                // g.setColor(Color.black);
+                // g.drawOval(Projectile.px, Projectile.py, Projectile.getSizeBall(), Projectile.getSizeBall());
+                g.fillOval((int) Projectile.px, (int) Projectile.py, Projectile.getSizeBall(), Projectile.getSizeBall());
                 g.setColor(Color.black);
-                g.drawOval(Projectile.px, Projectile.py, Projectile.getSizeBall(), Projectile.getSizeBall());
+                g.drawOval((int) Projectile.px, (int) Projectile.py, Projectile.getSizeBall(), Projectile.getSizeBall());
             }
 
  
@@ -1540,7 +1403,7 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
         private void updateCannon(int cannonX , int cannonY) {
             cannon.reset();
             double rad = Math.toRadians(cannonAngle); //to rotate the cannon in same direction as scrollbar, multiply by -1 and add 180
-            
+            //double rad = Math.toRadians(Ball.getAngle()); 
             int cannonBx,cannonTx,cannonBy,cannonTy,cx,cy;
 
             cannonBx=cannonX;
@@ -1580,6 +1443,11 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
                 repaint(); // Repaint the cannon
             }
         }
+
+        public int getAngle() {
+            return cannonAngle;
+        }
+
 
 
 
@@ -1633,32 +1501,54 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
             repaint();
         }
 
-        public void moveProjectile() {
-            // Update projectile position
-            px += pdx;
-            py += pdy;
+        // public void moveProjectile() {
+        //     // Update projectile position
+        //     px += pdx;
+        //     py += pdy;
 
-            py += -4+pdy;
+        //     py += -4+pdy;
 
-            px += -4+pdx;
+        //     px += -4+pdx;
 
-            System.out.println("Projectile position: " + px + ", " + py); // Debugging output
+        //     System.out.println("Projectile position: " + px + ", " + py); // Debugging output
             
-            // Check if the projectile is out of bounds // THIS IS NOT CORRECTLY CHECKING FOR BOUNDS
-            if (px < 0-SBall || px > EditorFrame.getWidth()+SBall || py < 0-SBALL || py > EditorFrame.getHeight()+SBall ) {
+        //     // Check if the projectile is out of bounds // THIS IS NOT CORRECTLY CHECKING FOR BOUNDS
+        //     if (px < 0-SBall || px > EditorFrame.getWidth()+SBall || py < 0-SBALL || py > EditorFrame.getHeight()+SBall ) {
                 
-                //Maybe add a timer so the ball can be out of the frame for a certain amount of time before it deactivates
-                //or maybe just dont count out of bouncds if it shoots straight up because it can still fall back down
-                //type shit
+        //         //Maybe add a timer so the ball can be out of the frame for a certain amount of time before it deactivates
+        //         //or maybe just dont count out of bouncds if it shoots straight up because it can still fall back down
+        //         //type shit
+        //         ProjectileActive = false;
+        //         System.err.println("OUT OF BOUNDS which are: " + ScreenWidth + "x" + ScreenHeight); // Debugging output
+        //         sheet.remove(this); // Remove the projectile from the canvas
+        //     }
+
+
+        //     // Repaint the screen
+        //     repaint();
+        // }
+        public void moveProjectile(double deltaTime) {
+            // Update time
+            time += deltaTime;
+        
+            // Horizontal motion (no acceleration in x)
+            px = x0 + v0x * time;
+        
+            // Vertical motion (affected by gravity)
+            py = y0 + v0y * time - 0.5 * gravity * time * time;
+        
+            // Update vertical velocity due to gravity
+            v0y = v0y - gravity * time; 
+        
+            System.out.println("Projectile Position: (" + px + ", " + py + ")");
+        
+            // Check for out-of-bounds
+            if (px < 0 || px > EditorFrame.getWidth() || py < 0 || py > EditorFrame.getHeight()) {
                 ProjectileActive = false;
-                System.err.println("OUT OF BOUNDS which are: " + ScreenWidth + "x" + ScreenHeight); // Debugging output
-                sheet.remove(this); // Remove the projectile from the canvas
+                System.err.println("OUT OF BOUNDS");
             }
-
-
-            // Repaint the screen
-            repaint();
         }
+        
         
          //moves the object within the screens boundaries
          public Rectangle isTouching(){
@@ -1707,11 +1597,12 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
                     } catch (InterruptedException e) {}
 
                     Ball.isTouching(); //check for collisions
-                     Ball.move();    //move the Ballect based on its direction and position
-                     Ball.repaint(); //repaint the Ballect
+                    Ball.move();    //move the Ballect based on its direction and position
+                    Ball.repaint(); //repaint the Ballect
 
                      if (ProjectileActive) {
-                       Projectile.moveProjectile(); // Move the projectile
+                        Projectile.moveProjectile(0.2); // Move the projectile
+                         //Projectile.moveProjectile(); // Move the projectile
                        Projectile.repaint(); // Repaint the projectile
                     }
                  }

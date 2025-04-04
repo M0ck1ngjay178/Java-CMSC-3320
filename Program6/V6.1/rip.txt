@@ -1,0 +1,230 @@
+// public void componentResized(ComponentEvent e) {
+    //     // Update the window width and height based on the current size
+    //     //System.out.println("this function was called and is working"); // Debugging output
+    //     //System.out.println("Component Resized: " + e.getComponent().getWidth() + "x" + e.getComponent().getHeight()); // Debugging output
+    //     WinWidth = EditorFrame.getWidth();
+    //     WinHeight = EditorFrame.getHeight();
+    //     //System.out.println("Window Resized: " + WinWidth + "x" + WinHeight); // Debugging output
+
+    //     // Component source = e.getComponent();
+    //     // WinWidth = source.getWidth();
+    //     // WinHeight = source.getHeight();
+    //     // System.out.println("this was resized"); // Debugging output
+    
+
+    //     // Ensure that width and height are always positive
+    //     if (WinWidth <= 0 || WinHeight <= 0) {
+    //         return; // Prevents resizing issues
+    //     }
+
+    //     // System.out.println("Window Resized Check again: " + WinWidth + "x" + WinHeight); // Debugging output
+
+    //     // int newWidth = EditorFrame.getWidth();
+    //     // int newHeight = EditorFrame.getHeight();
+        
+    //     // //System.out.println("Resized: " + newWidth + " x " + newHeight); // Debugging
+    
+    //     // // Ensure values are positive
+    //     // if (newWidth > 0 && newHeight > 0) {
+    //     //     WinWidth = newWidth;
+    //     //     WinHeight = newHeight;
+    //     // }
+
+
+    //     // Update the Perimeter bounds to match the window size
+    //     Perimeter.setBounds(0, 0, WinWidth, WinHeight);
+    //     Perimeter.grow(-1, -1); // Shrink the rectangle one pixel on all sides
+
+    //     if (I == null) {
+    //         I = EditorFrame.getInsets(); // Assign insets if null
+    //     }
+
+    //     // Define expansion and insets for screen adjustment
+    //     int EXPAND = 10; // Small border beyond the rectangles
+    //     int lw = I.left + I.right;
+    //     int lh = I.top + I.bottom;
+
+    //     // Adjust the screen size if necessary
+    //     int mr = 0, mb = 0;
+
+    //     // Loop through the Ball objects and calculate the max right and bottom values
+    //     for (int i = 0; i < Ball.getWallSize(); i++) {
+    //         Rectangle r = Ball.getOne(i);
+    //         System.out.println("Rectangle " + i + ": " + r); // Debugging output
+
+    //         if (r != null) {
+    //             mr = Math.max((r.x + r.width), mr); // Update max right
+    //             mb = Math.max((r.y + r.height), mb); // Update max bottom
+
+    //             // Ensure rectangles are within the bounds
+    //             if (r.width < 0) {
+    //                 r.x += r.width;
+    //                 r.width = -r.width;
+    //             }
+    //             if (r.height < 0) {
+    //                 r.y += r.height;
+    //                 r.height = -r.height;
+    //             }
+
+    //             // Make sure rectangles stay within the new window bounds
+    //             r.width = Math.max(1, r.width);
+    //             r.height = Math.max(1, r.height);
+    //             r.x = Math.min(r.x, Math.max(0, Ball.getWidth() - r.width));
+    //             r.y = Math.min(r.y, Math.max(0, Ball.getHeight() - r.height));
+    //         }
+    //     }
+
+    //     // Resize the window if necessary
+    //     if (mr > Screen.x || mb > Screen.y) {
+    //         EditorFrame.setSize(Math.max((mr + EXPAND), Screen.x) + lw, Math.max((mb + EXPAND), Screen.y) + lh + 2 * BUTTONH);
+    //     }
+    //     //System.out.println("Window Resized Check again after calcs: " + WinWidth + "x" + WinHeight); // Debugging output
+        
+
+    //     // Ensure the drag box stays visible
+    //     if (db.width > 0 && db.height > 0) {
+    //         db.setBounds(Perimeter.intersection(db));
+    //     }
+
+    //     // Send the new screen size to the Ball object
+    //     Ball.reSize(Screen.x + 100, Screen.y+ 100);
+
+    //     // Rebuild the sheet and update screen size
+    //     MakeSheet();
+    //     SizeScreen();
+
+    //     // Repaint the Ball object to reflect the new size
+    //     Ball.repaint();
+    //     System.out.println("check size at end:" + WinWidth + "x" + WinHeight);
+    // }
+
+    // public void componentResized(ComponentEvent e) {
+    //     // Ensure EditorFrame is not null
+    //     if (EditorFrame == null) {
+    //         System.err.println("Error: EditorFrame is null!");
+    //         return;
+    //     }
+    
+    //     // Get the current window size
+    //     WinWidth = EditorFrame.getWidth();
+    //     WinHeight = EditorFrame.getHeight();
+    
+    //     // Ensure window dimensions are valid
+    //     if (WinWidth <= 0 || WinHeight <= 0) {
+    //         System.err.println("Error: Invalid window size: " + WinWidth + "x" + WinHeight);
+    //         return;
+    //     }
+    
+    //     // Ensure Perimeter is initialized
+    //     if (Perimeter == null) {
+    //         System.err.println("Error: Perimeter is null!");
+    //         return;
+    //     }
+    
+    //     // Update the Perimeter bounds
+    //     Perimeter.setBounds(0, 0, WinWidth, WinHeight);
+    //     Perimeter.grow(-1, -1); // Shrink by 1 pixel
+    
+    //     // Ensure I (Insets) is initialized
+    //     if (I == null) {
+    //         I = EditorFrame.getInsets();
+    //         if (I == null) {
+    //             System.err.println("Error: Insets could not be retrieved!");
+    //             return;
+    //         }
+    //     }
+    
+    //     // Define expansion and insets
+    //     int EXPAND = 10; 
+    //     int lw = I.left + I.right;
+    //     int lh = I.top + I.bottom;
+        
+    //     int mr = 0, mb = 0;
+    
+    //     // Ensure Ball class functions correctly
+    //     if (Ball == null) {
+    //         System.err.println("Error: Ball class reference is null!");
+    //         return;
+    //     }
+    
+    //     int wallSize = Ball.getWallSize();
+    //     if (wallSize <= 0) {
+    //         System.err.println("Warning: No walls exist in Ball.");
+    //     }
+    
+    //     // Loop through all Ball walls
+    //     for (int i = 0; i < wallSize; i++) {
+    //         Rectangle r = Ball.getOne(i);
+    //         if (r == null) {
+    //             System.err.println("Warning: Ball rectangle at index " + i + " is null!");
+    //             continue;
+    //         }
+    
+    //         System.out.println("Rectangle " + i + ": " + r);
+    
+    //         mr = Math.max((r.x + r.width), mr);
+    //         mb = Math.max((r.y + r.height), mb);
+    
+    //         // Ensure rectangle sizes are positive
+    //         if (r.width < 0) {
+    //             r.x += r.width;
+    //             r.width = -r.width;
+    //         }
+    //         if (r.height < 0) {
+    //             r.y += r.height;
+    //             r.height = -r.height;
+    //         }
+    
+    //         // Ensure rectangles stay within bounds
+    //         int ballWidth = Ball.getWidth();
+    //         int ballHeight = Ball.getHeight();
+    
+    //         if (ballWidth > 0 && ballHeight > 0) {
+    //             r.width = Math.max(1, r.width);
+    //             r.height = Math.max(1, r.height);
+    //             r.x = Math.min(r.x, Math.max(0, ballWidth - r.width));
+    //             r.y = Math.min(r.y, Math.max(0, ballHeight - r.height));
+    //         } else {
+    //             System.err.println("Warning: Ball dimensions are invalid!");
+    //         }
+    //     }
+    
+    //     // Ensure Screen dimensions are valid
+    //     if (Screen == null) {
+    //         System.err.println("Error: Screen reference is null!");
+    //         return;
+    //     }
+        
+    //     if (mr > Screen.x || mb > Screen.y) {
+    //         EditorFrame.setSize(
+    //             Math.max((mr + EXPAND), Screen.x) + lw, 
+    //             Math.max((mb + EXPAND), Screen.y) + lh + 2 * BUTTONH
+    //         );
+    //     }
+    
+    //     // Ensure db (Drag Box) is not null before modifying bounds
+    //     if (db != null && db.width > 0 && db.height > 0) {
+    //         db.setBounds(Perimeter.intersection(db));
+    //     } else {
+    //         System.err.println("Warning: Drag Box is invalid or null!");
+    //     }
+    
+    //     // Resize Ball and ensure values are positive
+    //     int newBallWidth = Screen.x + 100;
+    //     int newBallHeight = Screen.y + 100;
+    
+    //     if (newBallWidth > 0 && newBallHeight > 0) {
+    //         Ball.reSize(newBallWidth, newBallHeight);
+    //     } else {
+    //         System.err.println("Warning: Invalid Ball resize dimensions.");
+    //     }
+    
+    //     // Update UI elements
+    //     MakeSheet();
+    //     SizeScreen();
+    
+    //     // Repaint Ball to reflect the new size
+    //     Ball.repaint();
+    
+    //     System.out.println("Final window size: " + WinWidth + "x" + WinHeight);
+    // }
