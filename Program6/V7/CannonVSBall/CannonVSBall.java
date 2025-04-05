@@ -1,6 +1,7 @@
 package CannonVSBall;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Timer;
 import java.util.Vector;
 
 public class CannonVSBall implements ActionListener, WindowListener, ItemListener, ComponentListener, AdjustmentListener, Runnable, MouseListener,MouseMotionListener {
@@ -113,6 +114,8 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
     Label ballScore=new Label("Ball: ");
     Label playerScore=new Label("Player: ");
     //Label Angle=new Label("Angle: ");
+    Timer timer = new Timer(); // Timer for label
+    int seconds = 0; // seconds for label
 
     private Thread thethread; //thread for timer delay
     
@@ -1219,6 +1222,14 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
             dx = 1; // Reset x direction
             dy = 1; // Reset y direction
             //add reset for timer labels
+            Time.setText("Time: 0 sec");
+            SPEEDL.setText("Velocity: 100");
+            AngleL.setText("Angle: 90");
+            playerScore.setText("Player: ");
+
+           // Projectile = new Ballc(SBall, Screen, cannonCenterX, cannonCenterY);
+           //rest cannon and projectile and rectangles
+
         }
         public void setVelocity(int newVel) {
             this.velocity = newVel;
@@ -1512,83 +1523,45 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
             v0y = v0y - (-1 *gravity) * time; 
         
             // System.out.println("Projectile Position: (" + px + ", " + py + ")");
-        
+            
             // Check for out-of-bounds
             if (px < 0 || px > EditorFrame.getWidth() || py < 0 || py > EditorFrame.getHeight()) {
                 ProjectileActive = false;
                 System.err.println("OUT OF BOUNDS");
             }
-                    // Create a rectangle representing the projectile's current position
-            // Rectangle projectileBounds = new Rectangle((int) px, (int) py, SBall, SBall);
-            // projectileBounds.grow(1, 1);  // Slightly grow the rectangle for more forgiving collision detection
-
-            // // Check for collisions with walls (and apply bounce if collided)
-            // for (Rectangle rect : Walls) {
-            //     // Check for intersection between projectile and each wall
-            //     if (projectileBounds.intersects(rect)) {
-            //         // Handle collision (bounce)
-            //         checkCollision(rect);
-            //         break;  // Exit loop after first collision
-            //     }
-            // }
-            // Repaint the projectile
-
-            // Rectangle b = new Rectangle(x, y, SBall, SBall);
-            // b.grow(1, 1);
-
-            // // Check for collisions with the rectangles
-            // for (Rectangle rect : Walls) {
-            //     Rectangle leftEdge = new Rectangle(rect.x - 1, rect.y, 1, rect.height);
-            //     Rectangle rightEdge = new Rectangle(rect.x + rect.width, rect.y, 1, rect.height);
-            //     Rectangle topEdge = new Rectangle(rect.x, rect.y - 1, rect.width, 1);
-            //     Rectangle bottomEdge = new Rectangle(rect.x, rect.y + rect.height, rect.width, 1);
-
-            //     if (b.intersects(leftEdge) || b.intersects(rightEdge)) {
-            //         v0x = -v0x;
-            //         break;
-            //     }
-
-            //     if (b.intersects(topEdge) || b.intersects(bottomEdge)) {
-            //         v0y = -v0y;
-            //         break;
-            //     }
-            // }
-            // Rectangle projectileBounds = new Rectangle((int) px, (int) py, SBall, SBall);
-            // for (Rectangle rect : Walls) {
-            //     if (projectileBounds.intersects(rect)) {
-            //         // Handle collision
-
-            //         v0x = -v0x; // or adjust velocity as needed
-            //         v0y = -v0y;
-            //         break;
-            //     }
-            // }
+            checkProjCollision(); // Check for collisions with walls
 
             repaint();
                 
         }
-        //get time from velocity scrollbar, divide by planet gravity
-        //total flight time = 2 * v0y / g
-        //total x direction = v0x * total flight time
-        //total y direction = v0y * total flight time - 0.5 * g * (total flight time)^2     
-        // x = x0 + (0.5 * (V0*cos(theta))) * (2 * ((V0 * cos(theta))/g)
-        //   (original x) + ((velocity in x direction) * (total flight time))
         
-        // Handle projectile collision logic
-        private void checkCollision(Rectangle rect) {
-            // Depending on where the collision occurs, you can adjust the velocity
-            // Here is a basic bounce implementation for simplicity
-            
-            // Check if projectile collides with the left or right side of the wall
-            if (px < rect.x || px + SBall > rect.x + rect.width) {
-                v0x = -v0x;  // Reverse horizontal velocity (bounce)
-            }
+       
+        private void checkProjCollision() {
+            Rectangle projBounds = new Rectangle((int) px, (int) py, SBall, SBall);
+            projBounds.grow(1, 1);
+            int player_count = 0;
+        
+            for (int i = 0; i < Walls.size(); i++) {
+                Rectangle wall = Walls.get(i);
+        
+                if (projBounds.intersects(wall)) {
+                    Walls.remove(i); // Destroy the rectangle
+                    player_count++; // Increment player score
+                    playerScore.setText("Player: " + player_count); // Update score label
+                    //Time.setText("Time: 0 sec");
 
-            // Check if projectile collides with the top or bottom side of the wall
-            if (py < rect.y || py + SBall > rect.y + rect.height) {
-                v0y = -v0y;  // Reverse vertical velocity (bounce)
+        
+                    // Optional: deactivate the projectile after one hit
+                    //ProjectileActive = false;
+        
+                    //System.out.println("Wall destroyed at: " + wall);
+        
+                    break; // Exit after destroying one wall
+                }
             }
         }
+        
+        
         
          //moves the object within the screens boundaries
          public Rectangle isTouching(Ballc obj){
@@ -1623,6 +1596,8 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
  
      //runs in a seperate thread to control the movement and updating of the Ballect
      public void run() {
+
+        long startTime = System.currentTimeMillis();
              //while the Ballc is active
              while (runBall) {
  
@@ -1647,9 +1622,13 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
                     if(ProjectileActive) {
                         //Projectile.isTouching(); // Check for collisions with walls
                         Projectile.moveProjectile(0.2); // Move the projectile
-                        Projectile.isTouching(Projectile);
+                        //Projectile.isTouching(Projectile);
                        Projectile.repaint(); // Repaint the projectile
                     }
+                    // Simple time update
+                    long currentTime = System.currentTimeMillis();
+                    int secondsElapsed = (int)((currentTime - startTime) / 1000);
+                    Time.setText("Time: " + secondsElapsed + "s");
 
                  }
             }

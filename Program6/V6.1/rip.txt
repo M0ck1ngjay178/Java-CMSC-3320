@@ -266,3 +266,50 @@
         
 
     // }
+
+
+     // private void checkProjCollision() {
+        //     Rectangle projBounds = new Rectangle((int) px, (int) py, SBall, SBall);
+        //     projBounds.grow(1, 1);
+        
+        //     for (Rectangle wall : Walls) {
+        //         if (projBounds.intersects(wall)) {
+        //             Rectangle leftEdge = new Rectangle(wall.x - 1, wall.y, 1, wall.height);
+        //             Rectangle rightEdge = new Rectangle(wall.x + wall.width, wall.y, 1, wall.height);
+        //             Rectangle topEdge = new Rectangle(wall.x, wall.y - 1, wall.width, 1);
+        //             Rectangle bottomEdge = new Rectangle(wall.x, wall.y + wall.height, wall.width, 1);
+        
+        //             boolean bounced = false;
+        
+        //             if (projBounds.intersects(leftEdge)) {
+        //                 v0x = -v0x;
+        //                 px = wall.x - SBall - 1;  // Snap to just left of wall
+        //                 x0 = px;
+        //                 time = 0;
+        //                 bounced = true;
+        //             } else if (projBounds.intersects(rightEdge)) {
+        //                 v0x = -v0x;
+        //                 px = wall.x + wall.width + 1;  // Snap to just right of wall
+        //                 x0 = px;
+        //                 time = 0;
+        //                 bounced = true;
+        //             }
+        
+        //             if (projBounds.intersects(topEdge)) {
+        //                 v0y = -v0y;
+        //                 py = wall.y - SBall - 1;  // Snap above wall
+        //                 y0 = py;
+        //                 time = 0;
+        //                 bounced = true;
+        //             } else if (projBounds.intersects(bottomEdge)) {
+        //                 v0y = -v0y;
+        //                 py = wall.y + wall.height + 1;  // Snap below wall
+        //                 y0 = py;
+        //                 time = 0;
+        //                 bounced = true;
+        //             }
+        
+        //             if (bounced) break;
+        //         }
+        //     }
+        // }
