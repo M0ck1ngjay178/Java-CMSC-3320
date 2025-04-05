@@ -5,7 +5,7 @@ import java.util.Vector;
 
 public class CannonVSBall implements ActionListener, WindowListener, ItemListener, ComponentListener, AdjustmentListener, Runnable, MouseListener,MouseMotionListener {
 
-    //TODO:,projectile collison, fix projectile start position to bottom of barrel, add score system,make it fall back, fix restart
+    //TODO:projectile rectangle collison, fix projectile start position to bottom of barrel, add score system,make it fall back, fix restart
     
     //---------------------------------MENU FRAME-------------------------------------------------------------------
     private int sw = 650, sh=480;//screen witdh and height
