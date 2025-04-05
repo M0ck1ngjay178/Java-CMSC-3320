@@ -1,7 +1,8 @@
+package CannonVSBall;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
-package CannonVSBall;
+
 public class CannonVSBall implements ActionListener, WindowListener, ItemListener, ComponentListener, AdjustmentListener, Runnable, MouseListener,MouseMotionListener {
 
     //TODO:,projectile collison, fix projectile start position to bottom of barrel, add score system,make it fall back, fix restart
