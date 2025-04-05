@@ -7,6 +7,8 @@ import java.util.Vector;
 public class CannonVSBall implements ActionListener, WindowListener, ItemListener, ComponentListener, AdjustmentListener, Runnable, MouseListener,MouseMotionListener {
 
     //TODO:projectile rectangle collison, fix projectile start position to bottom of barrel, add score system,make it fall back, fix restart
+    //dont let draw over projectile or canon
+    //ball score? reset everything
     
     //---------------------------------MENU FRAME-------------------------------------------------------------------
     private int sw = 650, sh=480;//screen witdh and height
@@ -859,10 +861,12 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
         // Check if the new rectangle is covered by any rectangle in the Vector
         boolean covered = false;
         Rectangle r = new Rectangle();
+        // Rectangle p = new Rectangle();
         
         for (int i = 0; i < Ball.getWallSize(); i++) {
             r = Ball.getOne(i);
-            if (r.contains(db)) {
+            // p = Projectile.getOne(i);
+             if (r.contains(db)){ //||p.contains(db)) { //dont let it draw over ball or cannon or projectile
                 covered = true;
                 break;
             }
@@ -1162,7 +1166,7 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
          private int SBall;
         //  private int Screen;
          int prevX, prevY;
- 
+        private boolean hasPrintedOutOfBounds = false;
          private int x, y;
          private double px, py;
          private int pdx, pdy;
@@ -1217,8 +1221,8 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
             dy = 1;//set initial y flags to true
          }
          public void resetBall(int startX, int startY) {
-            x = startX;
-            y = startY;
+            x = startX+1;
+            y = startY+1;
             dx = 1; // Reset x direction
             dy = 1; // Reset y direction
             //add reset for timer labels
@@ -1494,15 +1498,26 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
                 Rectangle topEdge = new Rectangle(rect.x, rect.y - 1, rect.width, 1);
                 Rectangle bottomEdge = new Rectangle(rect.x, rect.y + rect.height, rect.width, 1);
 
+                // boolean collisionDetected = false;
+
                 if (b.intersects(leftEdge) || b.intersects(rightEdge)) {
                     dx = -dx;
+                    // collisionDetected = true;
                     break;
                 }
 
                 if (b.intersects(topEdge) || b.intersects(bottomEdge)) {
                     dy = -dy;
+                    // collisionDetected = true;
                     break;
                 }
+
+                // if(collisionDetected){
+                //     int ball_count = 0; // Increment player score
+                //     ball_count++;
+                //     ballScore.setText("Ball: " + ball_count); // Update score label
+                //     break; // Exit after detecting one collision    
+                // }
             }
             
             // Repaint the screen
@@ -1529,10 +1544,38 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
                 ProjectileActive = false;
                 System.err.println("OUT OF BOUNDS");
             }
+            // Check for out-of-bounds condition (off-screen)
+             // Check for out-of-bounds condition (off-screen)
+            // boolean isOutOfBounds = false;
+
+            // // If projectile goes beyond the top or bottom of the screen
+            // if (px < 0 || px > EditorFrame.getWidth()) {
+            //     // Keep it off-screen, it doesn't reset horizontally
+            //     isOutOfBounds = true;
+            // }
+
+            // if (py > EditorFrame.getHeight()) {
+            //     // Let it fall off the bottom and keep moving
+            //     isOutOfBounds = true;
+            // }
+
+            // if (py < 0) {
+            //     // If projectile goes beyond the top of the screen, let it continue falling down
+            //     isOutOfBounds = true;
+            // }
+
+            // // Update "Out of Bounds" status once
+            // if (isOutOfBounds && !hasPrintedOutOfBounds) {
+            //     System.out.println("Projectile is OUT OF BOUNDS");
+            //     hasPrintedOutOfBounds = true;  // Set the flag to prevent repeated printing
+            // } else if (!isOutOfBounds && hasPrintedOutOfBounds) {
+            //     System.out.println("Projectile is IN BOUNDS");
+            //     hasPrintedOutOfBounds = false; // Reset the flag when it comes back in bounds
+            // }
             checkProjCollision(); // Check for collisions with walls
 
             repaint();
-                
+                        
         }
         
        
