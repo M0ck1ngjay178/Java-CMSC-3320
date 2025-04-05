@@ -4,6 +4,7 @@ import java.util.Vector;
 
 public class menu implements ActionListener, WindowListener, ItemListener, ComponentListener, AdjustmentListener, Runnable, MouseListener,MouseMotionListener {
 
+    //TODO: add package, rename,projectile collison, fix projectile start position to bottom of barrel, add score system,make it fall back, fix restart
     
     //---------------------------------MENU FRAME-------------------------------------------------------------------
     private int sw = 650, sh=480;//screen witdh and height
@@ -76,8 +77,12 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
     private int BUTTONS=BUTTONW/4;//initial button spacing
 
     private int SBall=SBALL;//initial Ballect width
-    private int SpeedSBmin=1;//speed scrollbar min value
-    private int SpeedSBmax=100+SBvisible;//speed scrollbar max with visible offset
+    private int SpeedSBmin=100;//speed scrollbar min value
+    private int SpeedSBmax=1200+SBvisible;//speed scrollbar max value5
+    //private int SpeedSBmax=100+SBvisible;//speed scrollbar max with visible offset
+    //private int SpeedSBmax=100+SBvisible;//speed scrollbar max with visible offset5
+    //private int SpeedSBmax=120;//speed scrollbar max with visible offset
+
     private int SpeedSBinit=SPEEDD;//initial speed scrollbar value
     private int ScrollBarW;//Scrollbar width
 
@@ -100,12 +105,13 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
     private Ballc Projectile; //Projectile to draw
     private boolean ProjectileActive = false; // Flag to track if a Projectile is active
 
-    private Label SPEEDL= new Label("Velocity", Label.CENTER); // label for speed scroll bar
-    private Label AngleL=new Label("Angle",Label.CENTER);// label for size scroll bar
+    private Label SPEEDL= new Label("Velocity: 100", Label.CENTER); // label for speed scroll bar
+    private Label AngleL=new Label("Angle: 90",Label.CENTER);// label for size scroll bar
     Scrollbar SpeedScrollBar, AngleScrollBar;//scrollbars
     Label Time=new Label("Time: ");
     Label ballScore=new Label("Ball: ");
     Label playerScore=new Label("Player: ");
+    //Label Angle=new Label("Angle: ");
 
     private Thread thethread; //thread for timer delay
     
@@ -285,10 +291,6 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
         Perimeter.setBounds(0, 0, Screen.x, Screen.y);
         Perimeter.grow(-1, -1); // Shrink the rectangle one pixel on all sides
 
-        //setLayout(new BorderLayout()); // Set the layout for the main frame to BorderLayout
-        //setBounds(WinLeft, WinTop, FrameSize.x, FrameSize.y); // Set the frame bounds5
-        //setBackground(Color.lightGray); // Set the background color for the frame
-        //setVisible(true); // Make the frame visible
         
         control.setLayout(new GridBagLayout());  // Use GridBagLayout for control panel
         control.setSize(FrameSize.x, 2*BUTTONH); // Set the size of the control panel
@@ -338,11 +340,6 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
 
 
         //---------------Ball ------------------
-        // Ball = new Ballc(SBall, Screen);
-        // Ball.setBackground(Color.white);
-
-        // EditorFrame.add(Ball, BorderLayout.CENTER);
-        // EditorFrame.setVisible(true);
         sheet.setLayout(new BorderLayout(0,0));
         Ball = new Ballc(SBall, Screen, 0, 0); // Initialize Ball with size and screen
         Ball.setBackground(Color.white);
@@ -355,9 +352,6 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
         EditorFrame.add("South", control);
         //------------------------------------
 
-        
-
-
         SpeedScrollBar.addAdjustmentListener(this);
         AngleScrollBar.addAdjustmentListener(this);
         //this.addWindowListener(this);
@@ -369,12 +363,7 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
 
 
         EditorFrame.setMenuBar(MMB);//add menu bar to frame 
- //       EditorFrame.addWindowListener(this);//add window listener to frame
-        //this.addWindowListener(this);//add window listener to frame   
         EditorFrame.setSize(sw,sh);//set frame size
-        //EditorFrame.setResizable(true);//set frame resizable
-//        ComponentEvent resizeEvent = new ComponentEvent(this, ComponentEvent.COMPONENT_RESIZED);
-//        componentResized(resizeEvent);
 
         //this.setResizable(true);//set frame resizable
         EditorFrame.setVisible(true);//set frame visible
@@ -432,7 +421,7 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
             PLUTO.setState(false);
             checkbox.setState(true);
             setGravity(checkbox.getLabel());
-            System.out.println("Gravity set to: " + gravity);
+            // System.out.println("Gravity set to: " + gravity);
         } 
         setTheSize();
         setTheSpeed();
@@ -464,20 +453,23 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
     
         if (sb == SpeedScrollBar) {
             // Get the scrollbar value and map it to the velocity range (100 - 1200 ft/sec)
-            int minVel = 100;
-            int maxVel = 1200;
+            // int minVel = 100;
+            // int maxVel = 1200;
             
             int scrollValue = SpeedScrollBar.getValue();  // Get raw scrollbar value
-            int velocity = minVel + (scrollValue * (maxVel - minVel)) / SpeedScrollBar.getMaximum(); 
+            // int velocity = minVel + (scrollValue * (maxVel - minVel)) / SpeedScrollBar.getMaximum(); 
             
-            Ball.setVelocity(velocity); // Set the new velocity to the Ball
-            System.out.println("Velocity set to: " + velocity);
+            // Ball.setVelocity(velocity); // Set the new velocity to the Ball
+            Ball.setVelocity(scrollValue); // Set the new velocity to the Ball
+            SPEEDL.setText("Velocity: " + scrollValue); // Update the label with the new velocity value5
+            //System.out.println("Velocity set to: " + velocity);
         }
 
        
         if (sb == AngleScrollBar) {
             // Get the value of the angle from the scrollbar ( 0 to 360 degrees)
             Ball.setAngle(AngleScrollBar.getValue()); // Set the angle of the cannon using the scrollbar value
+            AngleL.setText("Angle: " + Ball.getAngle()); // Update the label with the angle value
             //Repaint the cannon after the angle change
             Ball.repaint();
         }
@@ -912,7 +904,7 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
 
              if (p.distance(cannonCenterX, cannonCenterY) <= cannonRadius) {
                 if (!ProjectileActive) { // If no Projectile is active, launch a new one
-                    System.out.println("click in cannon");
+                    // System.out.println("click in cannon");
                     launchProjectile();// launchs the Projectile from cannon
                 }
             }
@@ -948,11 +940,11 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
         int angleDeg = Ball.getAngle(); // should already be synced with scrollbar
         double angleRad = Math.toRadians(angleDeg);
     
-        System.out.println("Launching projectile...");
-        System.out.println("Velocity: " + velocity);
-        System.out.println("Angle (degrees): " + angleDeg);
-        System.out.println("Angle (radians): " + angleRad);
-        System.out.println("Cannon center: (" + cannonCenterX + ", " + cannonCenterY + ")");
+        // System.out.println("Launching projectile...");
+        // System.out.println("Velocity: " + velocity);
+        // System.out.println("Angle (degrees): " + angleDeg);
+        // System.out.println("Angle (radians): " + angleRad);
+        // System.out.println("Cannon center: (" + cannonCenterX + ", " + cannonCenterY + ")");
     
         // Calculate initial velocity components
         double v0x = -velocity * Math.cos(angleRad);
@@ -969,6 +961,8 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
     
         // Create and initialize new Projectile
         Projectile = new Ballc(SBall, Screen, cannonCenterX, cannonCenterY);
+        //Projectile = new Ballc(SBall, Screen, ); // Initialize Projectile with size and screen
+        Projectile.setWalls(Ball.getWalls());
         Projectile.setVelocity(velocity);
         Projectile.setAngle(angleDeg); // sync angle with Ball
     
@@ -1006,8 +1000,6 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
 
         return new Rectangle(x, y, width, height); 
     }
-
-
 
 
     public void componentResized(ComponentEvent e) {
@@ -1139,7 +1131,6 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
         // Repaint Ball to reflect the new size
         Ball.repaint();
     
-       // System.out.println("Final window size: " + WinWidth + "x" + WinHeight);
     }
     
 
@@ -1195,8 +1186,6 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
          private double gravity = 9.81;  // Default gravity (Earth)
          
 
-         
- 
          //constructor
          public Ballc(int SB,Point screen, int startX, int startY){//int w, int h){
             ScreenWidth = screen.x;  // Use screen.x for width
@@ -1240,7 +1229,16 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
          //mutators
          public void setDragBox(Rectangle r){
              dragrec.setBounds(r);
-         }
+        }
+
+        public void setWalls(Vector<Rectangle> walls) {
+            this.Walls = walls;
+        }
+        
+        public Vector<Rectangle> getWalls() {
+            return this.Walls;
+        }
+        
  
         public void addOne(Rectangle r) {
             if (r.width < 0) {
@@ -1376,19 +1374,12 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
             // Draw the draggable rectangle
             g.drawRect(dragrec.x, dragrec.y, dragrec.width, dragrec.height);
 
-            //draw the cannon wheel
-            //g.setColor(Color.green);
-            
-            //g.fillOval(width-75, height-75,75, 75);
             
             int cannonCenterX = width-37;
             int cannonCenterY = height-37;
             
             if (ProjectileActive && Projectile != null) {
                 g.setColor(Color.blue);
-                // g.fillOval(Projectile.px, Projectile.py, Projectile.getSizeBall(), Projectile.getSizeBall());
-                // g.setColor(Color.black);
-                // g.drawOval(Projectile.px, Projectile.py, Projectile.getSizeBall(), Projectile.getSizeBall());
                 g.fillOval((int) Projectile.px, (int) Projectile.py, Projectile.getSizeBall(), Projectile.getSizeBall());
                 g.setColor(Color.black);
                 g.drawOval((int) Projectile.px, (int) Projectile.py, Projectile.getSizeBall(), Projectile.getSizeBall());
@@ -1412,7 +1403,6 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
         private void updateCannon(int cannonX , int cannonY) {
             cannon.reset();
             double rad = Math.toRadians(cannonAngle); //to rotate the cannon in same direction as scrollbar, multiply by -1 and add 180
-            //double rad = Math.toRadians(Ball.getAngle()); 
             int cannonBx,cannonTx,cannonBy,cannonTy,cx,cy;
 
             cannonBx=cannonX;
@@ -1438,6 +1428,7 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
             int y4 = (int) (cannonBy + (barrelWidth * Math.cos(rad)));
     
             cannon.addPoint(x1, y1);
+            //System.out.println("x1: " + x1 + " y1: " + y1);
             cannon.addPoint(x2, y2);
             cannon.addPoint(x3, y3);
             cannon.addPoint(x4, y4);
@@ -1456,9 +1447,6 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
         public int getAngle() {
             return cannonAngle;
         }
-
-
-
 
          //UPDATE graphics for the Ballc
          public void update(Graphics g){
@@ -1504,39 +1492,12 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
                     break;
                 }
             }
-
             
             // Repaint the screen
             repaint();
         }
 
-        // public void moveProjectile() {
-        //     // Update projectile position
-        //     px += pdx;
-        //     py += pdy;
-
-        //     py += -4+pdy;
-
-        //     px += -4+pdx;
-
-        //     System.out.println("Projectile position: " + px + ", " + py); // Debugging output
-            
-        //     // Check if the projectile is out of bounds // THIS IS NOT CORRECTLY CHECKING FOR BOUNDS
-        //     if (px < 0-SBall || px > EditorFrame.getWidth()+SBall || py < 0-SBALL || py > EditorFrame.getHeight()+SBall ) {
-                
-        //         //Maybe add a timer so the ball can be out of the frame for a certain amount of time before it deactivates
-        //         //or maybe just dont count out of bouncds if it shoots straight up because it can still fall back down
-        //         //type shit
-        //         ProjectileActive = false;
-        //         System.err.println("OUT OF BOUNDS which are: " + ScreenWidth + "x" + ScreenHeight); // Debugging output
-        //         sheet.remove(this); // Remove the projectile from the canvas
-        //     }
-
-
-        //     // Repaint the screen
-        //     repaint();
-        // }
-        public void moveProjectile(double deltaTime) {
+        public void moveProjectile(double deltaTime){
             // Update time
             time += deltaTime;
         
@@ -1549,25 +1510,91 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
             // Update vertical velocity due to gravity
             v0y = v0y - (-1 *gravity) * time; 
         
-            System.out.println("Projectile Position: (" + px + ", " + py + ")");
+            // System.out.println("Projectile Position: (" + px + ", " + py + ")");
         
             // Check for out-of-bounds
             if (px < 0 || px > EditorFrame.getWidth() || py < 0 || py > EditorFrame.getHeight()) {
                 ProjectileActive = false;
                 System.err.println("OUT OF BOUNDS");
             }
-        }//get time from velocity scrollbar, divide by planet gravity
+                    // Create a rectangle representing the projectile's current position
+            // Rectangle projectileBounds = new Rectangle((int) px, (int) py, SBall, SBall);
+            // projectileBounds.grow(1, 1);  // Slightly grow the rectangle for more forgiving collision detection
+
+            // // Check for collisions with walls (and apply bounce if collided)
+            // for (Rectangle rect : Walls) {
+            //     // Check for intersection between projectile and each wall
+            //     if (projectileBounds.intersects(rect)) {
+            //         // Handle collision (bounce)
+            //         checkCollision(rect);
+            //         break;  // Exit loop after first collision
+            //     }
+            // }
+            // Repaint the projectile
+
+            // Rectangle b = new Rectangle(x, y, SBall, SBall);
+            // b.grow(1, 1);
+
+            // // Check for collisions with the rectangles
+            // for (Rectangle rect : Walls) {
+            //     Rectangle leftEdge = new Rectangle(rect.x - 1, rect.y, 1, rect.height);
+            //     Rectangle rightEdge = new Rectangle(rect.x + rect.width, rect.y, 1, rect.height);
+            //     Rectangle topEdge = new Rectangle(rect.x, rect.y - 1, rect.width, 1);
+            //     Rectangle bottomEdge = new Rectangle(rect.x, rect.y + rect.height, rect.width, 1);
+
+            //     if (b.intersects(leftEdge) || b.intersects(rightEdge)) {
+            //         v0x = -v0x;
+            //         break;
+            //     }
+
+            //     if (b.intersects(topEdge) || b.intersects(bottomEdge)) {
+            //         v0y = -v0y;
+            //         break;
+            //     }
+            // }
+            // Rectangle projectileBounds = new Rectangle((int) px, (int) py, SBall, SBall);
+            // for (Rectangle rect : Walls) {
+            //     if (projectileBounds.intersects(rect)) {
+            //         // Handle collision
+
+            //         v0x = -v0x; // or adjust velocity as needed
+            //         v0y = -v0y;
+            //         break;
+            //     }
+            // }
+
+            repaint();
+                
+        }
+        //get time from velocity scrollbar, divide by planet gravity
         //total flight time = 2 * v0y / g
         //total x direction = v0x * total flight time
         //total y direction = v0y * total flight time - 0.5 * g * (total flight time)^2     
         // x = x0 + (0.5 * (V0*cos(theta))) * (2 * ((V0 * cos(theta))/g)
         //   (original x) + ((velocity in x direction) * (total flight time))
         
+        // Handle projectile collision logic
+        private void checkCollision(Rectangle rect) {
+            // Depending on where the collision occurs, you can adjust the velocity
+            // Here is a basic bounce implementation for simplicity
+            
+            // Check if projectile collides with the left or right side of the wall
+            if (px < rect.x || px + SBall > rect.x + rect.width) {
+                v0x = -v0x;  // Reverse horizontal velocity (bounce)
+            }
+
+            // Check if projectile collides with the top or bottom side of the wall
+            if (py < rect.y || py + SBall > rect.y + rect.height) {
+                v0y = -v0y;  // Reverse vertical velocity (bounce)
+            }
+        }
         
          //moves the object within the screens boundaries
-         public Rectangle isTouching(){
+         public Rectangle isTouching(Ballc obj){
              Rectangle r = new Rectangle(ZERO); // Initialize a rectangle of zero
-             Rectangle b = new Rectangle(Ball.getBounds()); // Create a rectangle representing the ball
+             //Rectangle b = new Rectangle(Ball.getBounds()); // Create a rectangle representing the ball
+             Rectangle b = new Rectangle(obj.getBounds()); // Create a rectangle representing the ball
+        
              b.grow(1, 1); // Grow the rectangle by one pixel on all sides
      
              boolean ok = true;
@@ -1610,21 +1637,23 @@ public class menu implements ActionListener, WindowListener, ItemListener, Compo
                         Thread.sleep(delay);
                     } catch (InterruptedException e) {}
 
-                    Ball.isTouching(); //check for collisions
+                    Ball.isTouching(Ball); //check for collisions
+                    //Projectile.isTouching(); // Check for collisions with walls!!! NULL here
+
                     Ball.move();    //move the Ballect based on its direction and position
                     Ball.repaint(); //repaint the Ballect
 
-                     if (ProjectileActive) {
+                    if(ProjectileActive) {
+                        //Projectile.isTouching(); // Check for collisions with walls
                         Projectile.moveProjectile(0.2); // Move the projectile
-                         //Projectile.moveProjectile(); // Move the projectile
+                        Projectile.isTouching(Projectile);
                        Projectile.repaint(); // Repaint the projectile
                     }
+
                  }
             }
     }
      //=========================END CLASS CANVAS============================
-
-
 
 
 }
