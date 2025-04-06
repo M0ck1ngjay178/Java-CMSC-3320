@@ -1,3 +1,13 @@
+/*******************HEADER*******************************/
+/*  CMSC-3320 Technical Computing Using Java		    */   
+/* 	CannonVSBall Program					            */
+/*	Group 1												*/
+/*	Group Names: 										*/
+/*     -Margo Bonal,      bon8330@pennwest.edu			*/
+/*     -Luke Ruffing,     ruf96565@pennwest.edu 		*/
+/*     -Ethan Janovich,   jan60248@pennwest.edu			*/
+/*     -Nikolaus Roebuck, roe01807@pennwest.edu  		*/
+/*******************END HEADER***************************/
 package CannonVSBall;
 import java.awt.*;
 import java.awt.event.*;
@@ -6,11 +16,9 @@ import java.util.Vector;
 
 public class CannonVSBall implements ActionListener, WindowListener, ItemListener, ComponentListener, AdjustmentListener, Runnable, MouseListener,MouseMotionListener {
 
-    //TODO:projectile rectangle collision, fix projectile start position to bottom of barrel, add score system, fix restart
-    //dont let draw over projectile or canon
+    //TODO:, fix projectile start position to bottom of barrel, add score system, fix restart
     //ball score? reset everything
-    //add bound label
-    
+   
     //---------------------------------MENU FRAME-------------------------------------------------------------------
     private int sw = 650, sh=480;//screen width and height
     private Frame EditorFrame;//create object frame
@@ -116,6 +124,8 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
     Label Time=new Label("Time: ");
     Label ballScore=new Label("Ball: ");
     Label playerScore=new Label("Player: ");
+    Label boundsLabel=new Label("Bounds: ");
+
     //Label Angle=new Label("Angle: ");
     Timer timer = new Timer(); // Timer for label
     int seconds = 0; // seconds for label
@@ -343,6 +353,11 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
         
         sbConstraints.gridy = 1;  // Same row as SizeScrollBar
         control.add(AngleL, sbConstraints);
+
+        sbConstraints.gridx=1;
+        //sbConstraints.gridwidth = 1;
+        sbConstraints.gridy=1;
+        control.add(boundsLabel,sbConstraints);
 
 
         //---------------Ball ------------------
@@ -865,11 +880,28 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
         
         for (int i = 0; i < Ball.getWallSize(); i++) {
             r = Ball.getOne(i);
-            // p = Projectile.getOne(i);
+            
              if (r.contains(db)){ //||p.contains(db)) { //dont let it draw over ball or cannon or projectile
                 covered = true;
                 break;
             }
+            // p = Projectile.getOne(i);
+            // if(p.contains(db)){
+            //     covered = true;
+            //     break;
+            // }
+
+            int width = Ball.getWidth();
+            int height = Ball.getHeight();
+        
+            int cannonCenterX = width - 37;  // Position of the cannon center (adjust based on your design)
+            int cannonCenterY = height - 37;
+            Rectangle cannonB = new Rectangle(cannonCenterX - 37, cannonCenterY - 37, 75, 75);  // Adjust dimensions if needed
+            if (cannonB.intersects(db)) {
+                covered = true; 
+                break; 
+            }
+            
         }
 
         // create a rectangle for the Ball's position
@@ -968,7 +1000,7 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
         Ball.time = 0;
     
         // Create and initialize new Projectile
-        Projectile = new Ballc(SBall, Screen, cannonCenterX, cannonCenterY);
+        Projectile = new Ballc(SBall, Screen, cannonCenterX, cannonCenterY+1);
         //Projectile = new Ballc(SBall, Screen, ); // Initialize Projectile with size and screen
         Projectile.setWalls(Ball.getWalls());
         Projectile.setVelocity(velocity);
@@ -1167,7 +1199,8 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
          private int SBall;
         //  private int Screen;
          int prevX, prevY;
-        private boolean hasPrintedOutOfBounds = false;
+        // private boolean hasPrintedOutOfBounds = false;
+        private boolean ballHitCannon = false;  // Flag to track if the ball has already hit the cannon
          private int x, y;
          private double px, py;
          private int pdx, pdy;
@@ -1523,37 +1556,6 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
                     // collisionDetected = true;
                     break;
                 }
-
-                // int ball_count = 0;
-        
-                // Rectangle b = new Rectangle(x, y, SBall, SBall);
-
-                // if(projBounds.intersects(b)){
-                //     ball_count++;
-                //     playerScore.setText("Ball: " + ball_count);
-                //     // Ball.resetBall(SBall, SBall);
-                // }
-
-                // if(collisionDetected){
-                //     int ball_count = 0; // Increment player score
-                //     ball_count++;
-                //     ballScore.setText("Ball: " + ball_count); // Update score label
-                //     break; // Exit after detecting one collision    
-                // }
-
-                // int cannonCenterX = Ball.getWidth() - 37;
-                // int cannonCenterY = Ball.getHeight() - 37;
-                
-                // int findcannonX = Ball.getWidth() - 37;
-                // int findcannonY = Ball.getHeight() - 37;
-
-                // Rectangle cannonBounds = new Rectangle(cannonX, cannonY, findcannonX, findcannonY);
-                // //int ball_count = 0; // Initialize player score
-                //  // Check for collision with the cannon
-                // if (b.intersects(cannonBounds)) {
-                //     ball_count++;  // Increment score when the ball hits the cannon
-                //     ballScore.setText("Ball: " + ball_count);  // Update the score label
-                // }
             }
             
             // Repaint the screen
@@ -1585,7 +1587,14 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
             // Only deactivate when truly out of bounds
             if (px < 0 || px > EditorFrame.getWidth() || py > EditorFrame.getHeight()) {
                 ProjectileActive = false;
-                System.err.println("OUT OF BOUNDS");
+                // System.err.println("OUT OF BOUNDS");
+                boundsLabel.setText("Bounds: OUT"); // Update label to indicate out of bounds
+            }
+            else {
+                boundsLabel.setText("Bounds: IN"); // Update label to indicate within bounds
+            }
+            if(py < 0 && v0y < 1){
+                boundsLabel.setText("Bounds: GONE"); // Update label to indicate within bounds
             }
         
            
@@ -1595,82 +1604,53 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
                         
         }
         
-    
-        // private void checkProjCollision() {
-        //     Rectangle projBounds = new Rectangle((int) px, (int) py, SBall, SBall);
-        //     projBounds.grow(1, 1); // Give a little buffer
-        
-        //     // Check collision with Red Game Ball (Ball)
-        //     Rectangle redBallBounds = new Rectangle(Ball.getXPos(), Ball.getYPos(), Ball.SBall, Ball.SBall);
-        //     if (projBounds.intersects(redBallBounds)) {
-        //         if (!hitBall) {
-        //             System.out.println("Red Ball was hit!");
-        //             //Ball.resetBall(SBall, SBall);
-        //             hitBall = true;
-        //         }
-        //     } else {
-        //         hitBall = false;
-        //     }
-        
-        //     // Check collision with walls — this is what scores for the player
-        //     for (int i = 0; i < Walls.size(); i++) {
-        //         Rectangle wall = Walls.get(i);
-        //         if (projBounds.intersects(wall)) {
-        //             if (!hitWall) {
-        //                 playerScoreCount++;
-        //                 playerScore.setText("Player: " + playerScoreCount);
-        //                 System.out.println("Hit wall! Score: " + playerScoreCount);
-        //                 Walls.remove(i);
-        //                 hitWall = true;
-        //                 break;
-        //             }
-        //         } else {
-        //             hitWall = false;
-        //         }
-        //     }
-        
-        //     // Check if cannon got hit (score for Ball)
-        //     if (projBounds.intersects(cannonBounds)) {
-        //         if (!hitCannon) {
-        //             ballScoreCount++;
-        //             ballScore.setText("Ball: " + ballScoreCount);
-        //             System.out.println("Cannon hit! Ball score: " + ballScoreCount);
-        //             hitCannon = true;
-        //         }
-        //     } else {
-        //         hitCannon = false;
-        //     }
-        // }
+
         private void checkProjCollision() {
             Rectangle projBounds = new Rectangle((int) px, (int) py, SBall, SBall);
             projBounds.grow(1, 1);
-        
-            //Collision with Red Ball
+
+            // Collision with Red Ball (check if the red ball is within the cannon area)
             Rectangle redBallBounds = new Rectangle(Ball.getXPos(), Ball.getYPos(), Ball.SBall, Ball.SBall);
             if (projBounds.intersects(redBallBounds)) {
                 System.out.println("Red Ball was hit!");
+                playerScoreCount++; // Increment player score
+                playerScore.setText("Player: " + playerScoreCount);
                 // Maybe trigger something visual or reset?
             }
-        
-            //Collision with Walls — player score
+
+            // Collision with Walls — player score
             for (int i = 0; i < Walls.size(); i++) {
                 Rectangle wall = Walls.get(i);
                 if (projBounds.intersects(wall)) {
-                    Walls.remove(i); // 
-                    playerScoreCount++; //
+                    Walls.remove(i); // Remove wall on collision
+                    playerScoreCount++; // Increment score
                     playerScore.setText("Player: " + playerScoreCount);
                     System.out.println("Wall hit! Score: " + playerScoreCount);
-                    break; // Stop after 1 hit this frame
+                    // break; // Stop after 1 hit this frame
                 }
             }
+
+            int width = Ball.getWidth();
+            int height = Ball.getHeight();
         
-            // collision with Cannon — ball score
-            if (projBounds.intersects(cannonBounds)) {
-                ballScoreCount++;
-                ballScore.setText("Ball: " + ballScoreCount);
-                System.out.println("Cannon hit! Ball score: " + ballScoreCount);
+            int cannonCenterX = width - 37;  // Position of the cannon center (adjust based on your design)
+            int cannonCenterY = height - 37;
+
+            // Collision with Cannon — ball score
+            Rectangle cannonBounds = new Rectangle(cannonCenterX - 37, cannonCenterY - 37, 75, 75);  // Cannon's bounds
+            if (redBallBounds.intersects(cannonBounds)) {
+                if (!ballHitCannon) {  // Only increment score once when the red ball first hits the cannon
+                    ballScoreCount++; // Increase ball score when red ball hits the cannon
+                    ballScore.setText("Ball: " + ballScoreCount);
+                    System.out.println("Cannon hit by Red Ball! Ball score: " + ballScoreCount);
+                    ballHitCannon = true;  // Set flag to true after the first hit
+                }
+            } else {
+                ballHitCannon = false;  // Reset the flag when the red ball is no longer in the cannon's area
             }
+            Ball.repaint();
         }
+
         
        
         
@@ -1741,6 +1721,16 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
                         Projectile.moveProjectile(0.2); // Move the projectile
                         //Projectile.moveProjectile(scaledDeltaTime); // Move the projectile
                         
+                        //dont draw over projectile
+                        for (int i = 0; i < Ball.getWallSize(); i++) {
+                            boolean covered = false;
+                            Rectangle p = new Rectangle();
+                            p = Projectile.getOne(i);
+                            if(p.contains(db)){
+                                covered = true;
+                                break;
+                            }
+                        }
                        Projectile.repaint(); // Repaint the projectile
                     }
                     // Simple time update

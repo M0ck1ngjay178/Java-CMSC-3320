@@ -107,3 +107,79 @@
         //         }
         //     }
         // }
+
+        // private void checkProjCollision() {
+        //     Rectangle projBounds = new Rectangle((int) px, (int) py, SBall, SBall);
+        //     projBounds.grow(1, 1); // Give a little buffer
+        
+        //     // Check collision with Red Game Ball (Ball)
+        //     Rectangle redBallBounds = new Rectangle(Ball.getXPos(), Ball.getYPos(), Ball.SBall, Ball.SBall);
+        //     if (projBounds.intersects(redBallBounds)) {
+        //         if (!hitBall) {
+        //             System.out.println("Red Ball was hit!");
+        //             //Ball.resetBall(SBall, SBall);
+        //             hitBall = true;
+        //         }
+        //     } else {
+        //         hitBall = false;
+        //     }
+        
+        //     // Check collision with walls — this is what scores for the player
+        //     for (int i = 0; i < Walls.size(); i++) {
+        //         Rectangle wall = Walls.get(i);
+        //         if (projBounds.intersects(wall)) {
+        //             if (!hitWall) {
+        //                 playerScoreCount++;
+        //                 playerScore.setText("Player: " + playerScoreCount);
+        //                 System.out.println("Hit wall! Score: " + playerScoreCount);
+        //                 Walls.remove(i);
+        //                 hitWall = true;
+        //                 break;
+        //             }
+        //         } else {
+        //             hitWall = false;
+        //         }
+        //     }
+        
+        //     // Check if cannon got hit (score for Ball)
+        //     if (projBounds.intersects(cannonBounds)) {
+        //         if (!hitCannon) {
+        //             ballScoreCount++;
+        //             ballScore.setText("Ball: " + ballScoreCount);
+        //             System.out.println("Cannon hit! Ball score: " + ballScoreCount);
+        //             hitCannon = true;
+        //         }
+        //     } else {
+        //         hitCannon = false;
+        //     }
+        // }
+        // private void checkProjCollision() {
+        //     Rectangle projBounds = new Rectangle((int) px, (int) py, SBall, SBall);
+        //     projBounds.grow(1, 1);
+        
+        //     //Collision with Red Ball
+        //     Rectangle redBallBounds = new Rectangle(Ball.getXPos(), Ball.getYPos(), Ball.SBall, Ball.SBall);
+        //     if (projBounds.intersects(redBallBounds)) {
+        //         System.out.println("Red Ball was hit!");
+        //         // Maybe trigger something visual or reset?
+        //     }
+        
+        //     //Collision with Walls — player score
+        //     for (int i = 0; i < Walls.size(); i++) {
+        //         Rectangle wall = Walls.get(i);
+        //         if (projBounds.intersects(wall)) {
+        //             Walls.remove(i); // 
+        //             playerScoreCount++; //
+        //             playerScore.setText("Player: " + playerScoreCount);
+        //             System.out.println("Wall hit! Score: " + playerScoreCount);
+        //             break; // Stop after 1 hit this frame
+        //         }
+        //     }
+        
+        //     // collision with Cannon — ball score
+        //     if (redBallBounds.intersects(cannonBounds)) {
+        //         ballScoreCount++;
+        //         ballScore.setText("Ball: " + ballScoreCount);
+        //         System.out.println("Cannon hit! Ball score: " + ballScoreCount);
+        //     }
+        // }
