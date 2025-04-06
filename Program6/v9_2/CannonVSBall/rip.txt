@@ -1,0 +1,109 @@
+
+        // private void checkProjCollision() {
+        //     Rectangle projBounds = new Rectangle((int) px, (int) py, SBall, SBall);
+        //     projBounds.grow(1, 1);
+
+        //     int player_count = 0; // Initialize player score
+        //     int ball_count = 0;
+        //     int total = 0;
+        //     //int ball_count = 0;
+
+        //     //Get the ball's location for the projectile to interact with it
+        //     Rectangle b = new Rectangle(Ball.getXPos(), Ball.getYPos(), Ball.SBall, Ball.SBall);
+
+        //          if(projBounds.intersects(b)){  //if the projectile intersects the ball
+        //              player_count++;        //increment score (not working for some reason)
+        //              playerScore.setText("Player: " + player_count); //Change score value
+        //              //Ball.resetBall(SBall, SBall); //Reset ball to start location, should be random
+        //                 alreadyHit = true; // Set the flag to true after hitting the wall
+        //             }else{
+        //                 alreadyHit = false; // Reset the flag if not hitting the wall
+        //             }
+
+
+        //     // for (int i = 0; i < Walls.size(); i++){
+        //     //     Rectangle wall = Walls.get(i);
+
+        //     //     if (projBounds.intersects(wall)) {
+        //     //         Walls.remove(i); // Destroy the rectangle
+        //     //         //player_count++; // Increment player score
+        //     //         total += 1; // Increment total score
+        //     //         playerScore.setText("Player: " + total); // Update score label
+        //     //         System.out.println("Total: " + total); // Debugging
+        //     //         break; // Exit after destroying one wall
+        //     //     }
+        //     //     // playerScore.setText("Player: " + player_count); // Update score label
+
+        //     // }
+
+        //     // Check if the cannon's projectile intersects the cannon and scores for ball
+        //     //!!! Needs to wait for it to clear the cannon before triggering somehow
+        //     if(projBounds.intersects(cannonBounds)){
+        //         ball_count +=1; //increment ball score
+        //         ballScore.setText("Ball: " +ball_count); //display ball score
+        //         System.out.println("total: " +ball_count); //debugging ball score
+        //     }
+
+
+
+        //     for (int i = 0; i < Walls.size(); i++) {
+        //         Rectangle wall = Walls.get(i);
+
+        //         if (projBounds.intersects(wall)) {
+        //             Walls.remove(i);
+        //             //total += 1;
+        //             //playerScore.setText("Player: " + total);
+        //             //System.out.println("Total: " + total);
+        //            // i--; // Decrement index to re-check the new item at this index
+        //         }
+        //     }
+
+        // }
+
+        // private int playerScoreCount = 0;
+        // private int ballScoreCount = 0;
+
+        // private boolean alreadyHitBall = false;
+        // private boolean alreadyHitCannon = false;
+        
+
+        // private void checkProjCollision() {
+        //     Rectangle projBounds = new Rectangle((int) px, (int) py, SBall, SBall);
+        //     projBounds.grow(1, 1); // Grow hitbox a little
+        
+        //     // Ball collision
+        //     Rectangle ballBounds = new Rectangle(Ball.getXPos(), Ball.getYPos(), Ball.SBall, Ball.SBall);
+        //     if (projBounds.intersects(ballBounds)) {
+        //         if (!alreadyHitBall) {
+        //             playerScoreCount++;
+        //             playerScore.setText("Player: " + playerScoreCount);
+        //             Ball.resetBall(SBall, SBall);
+        //             alreadyHitBall = true;
+        //             System.out.println("Hit ball! Score: " + playerScoreCount);
+        //         }
+        //     } else {
+        //         alreadyHitBall = false; // Reset flag when not intersecting
+        //     }
+        
+        //     // Cannon collision (same logic)
+        //     if (projBounds.intersects(cannonBounds)) {
+        //         if (!alreadyHitCannon) {
+        //             ballScoreCount++;
+        //             ballScore.setText("Ball: " + ballScoreCount);
+        //             alreadyHitCannon = true;
+        //             System.out.println("Hit cannon! Ball score: " + ballScoreCount);
+        //         }
+        //     } else {
+        //         alreadyHitCannon = false;
+        //     }
+        
+        //     // Wall collision — optional scoring here
+        //     for (int i = 0; i < Walls.size(); i++) {
+        //         Rectangle wall = Walls.get(i);
+        //         if (projBounds.intersects(wall)) {
+        //             Walls.remove(i);
+        //             // You can add scoring logic here if needed
+        //             break; // Exit after removing one wall to avoid ConcurrentModificationException
+        //         }
+        //     }
+        // }
