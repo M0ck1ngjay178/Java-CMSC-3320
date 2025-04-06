@@ -115,6 +115,8 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
     Label Time=new Label("Time: ");
     Label ballScore=new Label("Ball: ");
     Label playerScore=new Label("Player: ");
+    Label bounds=new Label("Bounds: ");
+
     //Label Angle=new Label("Angle: ");
     Timer timer = new Timer(); // Timer for label
     int seconds = 0; // seconds for label
@@ -938,10 +940,10 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
   //===============================================================================
    //====================COMPONENT METHODS============
     
-    private void launchProjectile() {
+    private void launchProjectile(){
         // Get cannon's center coordinates
         int cannonCenterX = Ball.getWidth() - 37;
-        int cannonCenterY = Ball.getHeight() - 37;
+        int cannonCenterY = Ball.getHeight()- 37;
     
         // Get values from Ball (which should reflect scrollbar)
         int velocity = Ball.getVelocity();
@@ -1180,6 +1182,7 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
  
          private Rectangle dragrec = new Rectangle();
          private Vector<Rectangle> Walls = new Vector<Rectangle>();
+         private int ball_count = 0; // Initialize player score
         
          int cannonX, cannonY;
          int barrelLength = 100;
@@ -1192,6 +1195,8 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
          private double v0x, v0y;  // Initial velocity components
         //private double ax, ay;    // Current position of the projectile
          private double gravity = 9.81;  // Default gravity (Earth)
+         //private int player_count = 0; // Initialize player score5
+
          
 
          //constructor
@@ -1512,11 +1517,35 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
                     break;
                 }
 
+                // int ball_count = 0;
+        
+                // Rectangle b = new Rectangle(x, y, SBall, SBall);
+
+                // if(projBounds.intersects(b)){
+                //     ball_count++;
+                //     playerScore.setText("Ball: " + ball_count);
+                //     // Ball.resetBall(SBall, SBall);
+                // }
+
                 // if(collisionDetected){
                 //     int ball_count = 0; // Increment player score
                 //     ball_count++;
                 //     ballScore.setText("Ball: " + ball_count); // Update score label
                 //     break; // Exit after detecting one collision    
+                // }
+
+                // int cannonCenterX = Ball.getWidth() - 37;
+                // int cannonCenterY = Ball.getHeight() - 37;
+                
+                // int findcannonX = Ball.getWidth() - 37;
+                // int findcannonY = Ball.getHeight() - 37;
+
+                // Rectangle cannonBounds = new Rectangle(cannonX, cannonY, findcannonX, findcannonY);
+                // //int ball_count = 0; // Initialize player score
+                //  // Check for collision with the cannon
+                // if (b.intersects(cannonBounds)) {
+                //     ball_count++;  // Increment score when the ball hits the cannon
+                //     ballScore.setText("Ball: " + ball_count);  // Update the score label
                 // }
             }
             
@@ -1539,7 +1568,7 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
         
             // System.out.println("Projectile Position: (" + px + ", " + py + ")");
             
-            // Check for out-of-bounds
+            //Check for out-of-bounds
             if (px < 0 || px > EditorFrame.getWidth() || py < 0 || py > EditorFrame.getHeight()) {
                 ProjectileActive = false;
                 System.err.println("OUT OF BOUNDS");
@@ -1552,16 +1581,23 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
             // if (px < 0 || px > EditorFrame.getWidth()) {
             //     // Keep it off-screen, it doesn't reset horizontally
             //     isOutOfBounds = true;
+            //     ProjectileActive = false;
+
             // }
 
             // if (py > EditorFrame.getHeight()) {
             //     // Let it fall off the bottom and keep moving
             //     isOutOfBounds = true;
+            //     ProjectileActive = false;
+
+                
             // }
 
             // if (py < 0) {
             //     // If projectile goes beyond the top of the screen, let it continue falling down
             //     isOutOfBounds = true;
+            //     ProjectileActive = false;
+
             // }
 
             // // Update "Out of Bounds" status once
@@ -1572,45 +1608,95 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
             //     System.out.println("Projectile is IN BOUNDS");
             //     hasPrintedOutOfBounds = false; // Reset the flag when it comes back in bounds
             // }
+             // Check for out-of-bounds condition (off-screen)
+           
             checkProjCollision(); // Check for collisions with walls
 
             repaint();
                         
         }
+        // public void moveProjectile(double deltaTime) {
+        //     // Update time
+        //     time += deltaTime;
+        
+        //     // Horizontal motion (no acceleration in x)
+        //     px = x0 + v0x * time;
+        
+        //     // Vertical motion (affected by gravity)
+        //     py = y0 + v0y * time - 0.5 * gravity * time * time;
+        
+        //     // Update vertical velocity due to gravity
+        //     v0y -= gravity * deltaTime;
+        
+        //     // Allow projectile to move naturally off-screen
+        //     if (py < 0) {
+        //         // Stop printing continuously and allow physics to pull it back down
+        //         System.out.println("Projectile is above the screen; physics will bring it back down.");
+        //     }
+        
+        //     if (py > EditorFrame.getHeight()) {
+        //         System.out.println("Projectile has fallen off the bottom of the screen.");
+        //         ProjectileActive = false; // Deactivate if it falls too far
+        //     }
+        
+        //     // Check if projectile has gone too far horizontally
+        //     if (px < 0 || px > EditorFrame.getWidth()) {
+        //         System.err.println("Projectile OUT OF BOUNDS horizontally.");
+        //         ProjectileActive = false;
+        //     }
+        
+        //     // Collision detection
+        //     checkProjCollision();
+        
+        //     // Repaint the frame
+        //     repaint();
+        // }
         
        
         private void checkProjCollision() {
             Rectangle projBounds = new Rectangle((int) px, (int) py, SBall, SBall);
             projBounds.grow(1, 1);
-            int player_count = 0;
+    
+            int player_count = 0; // Initialize player score
+            int total = 0;
+            //int ball_count = 0;
         
-            Rectangle b = new Rectangle(x, y, SBall, SBall);
+           // Rectangle b = new Rectangle(x, y, SBall, SBall);
 
-                if(projBounds.intersects(b)){
-                    player_count++;
-                    playerScore.setText("Player: " + player_count);
-                    Ball.resetBall(SBall, SBall);
-                }
+                // if(projBounds.intersects(b)){
+                //     ball_count++;
+                //     playerScore.setText("Ball: " + ball_count);
+                //     // Ball.resetBall(SBall, SBall);
+                // }
         
 
+            // for (int i = 0; i < Walls.size(); i++){
+            //     Rectangle wall = Walls.get(i);
+        
+            //     if (projBounds.intersects(wall)) {
+            //         Walls.remove(i); // Destroy the rectangle
+            //         //player_count++; // Increment player score
+            //         total += 1; // Increment total score
+            //         playerScore.setText("Player: " + total); // Update score label
+            //         System.out.println("Total: " + total); // Debugging
+            //         break; // Exit after destroying one wall
+            //     }
+            //     // playerScore.setText("Player: " + player_count); // Update score label
+            
+            // }
             for (int i = 0; i < Walls.size(); i++) {
                 Rectangle wall = Walls.get(i);
-        
+            
                 if (projBounds.intersects(wall)) {
-                    Walls.remove(i); // Destroy the rectangle
-                    player_count++; // Increment player score
-                    playerScore.setText("Player: " + player_count); // Update score label
-                    //Time.setText("Time: 0 sec");
-
-        
-                    // Optional: deactivate the projectile after one hit
-                    //ProjectileActive = false;
-        
-                    //System.out.println("Wall destroyed at: " + wall);
-        
-                    break; // Exit after destroying one wall
+                    Walls.remove(i);
+                    total += 1;
+                    playerScore.setText("Player: " + total);
+                    System.out.println("Total: " + total);
+                    i--; // Decrement index to re-check the new item at this index
                 }
             }
+
+        
         }
         
         
