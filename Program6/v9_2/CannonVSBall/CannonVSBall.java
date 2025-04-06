@@ -6,9 +6,10 @@ import java.util.Vector;
 
 public class CannonVSBall implements ActionListener, WindowListener, ItemListener, ComponentListener, AdjustmentListener, Runnable, MouseListener,MouseMotionListener {
 
-    //TODO:projectile rectangle collision, fix projectile start position to bottom of barrel, add score system,make it fall back, fix restart
+    //TODO:projectile rectangle collision, fix projectile start position to bottom of barrel, add score system, fix restart
     //dont let draw over projectile or canon
     //ball score? reset everything
+    //add bound label
     
     //---------------------------------MENU FRAME-------------------------------------------------------------------
     private int sw = 650, sh=480;//screen width and height
