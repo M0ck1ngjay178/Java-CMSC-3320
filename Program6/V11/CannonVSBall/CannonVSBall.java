@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Timer;
 import java.util.Vector;
+import java.util.Random;
 
 public class CannonVSBall implements ActionListener, WindowListener, ItemListener, ComponentListener, AdjustmentListener, Runnable, MouseListener,MouseMotionListener {
 
@@ -154,7 +155,7 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
 
     Polygon cannon=new Polygon();
 
-    private double gravity;
+    private double gravity = 9.81; // Default gravity value (Earth)
     //-----------------------------------RECTANGLE-----------------------------------------------------------------
 
     //----------------------MAIN METHOD-----------------
@@ -279,7 +280,7 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
 
         // Initialize Scrollbars (Horizontal)
         SpeedScrollBar = new Scrollbar(Scrollbar.HORIZONTAL);
-        SpeedScrollBar.setMaximum(SpeedSBmax);
+        SpeedScrollBar.setMaximum(1210);
         SpeedScrollBar.setMinimum(SpeedSBmin);
         SpeedScrollBar.setUnitIncrement(SBunit);
         SpeedScrollBar.setBlockIncrement(SBblock);
@@ -620,6 +621,7 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
                 break;
             case "Neptune": 
                 gravity = 11.15; 
+                //System.out.println("Neptune gravity: " + gravity); // Debugging
                 break;
             case "Pluto": 
                 gravity = 0.62; 
@@ -985,7 +987,12 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
         // System.out.println("Angle (degrees): " + angleDeg);
         // System.out.println("Angle (radians): " + angleRad);
         // System.out.println("Cannon center: (" + cannonCenterX + ", " + cannonCenterY + ")");
-    
+        
+         // Calculate the tip of the barrel
+        int barrelLength = 100; // Length of the barrel
+        int barrelTipX = (int) (cannonCenterX - barrelLength * Math.cos(angleRad));
+        int barrelTipY = (int) (cannonCenterY - barrelLength * Math.sin(angleRad));
+
         // Calculate initial velocity components
         double v0x = -velocity * Math.cos(angleRad);
         double v0y = -velocity * Math.sin(angleRad); 
@@ -993,14 +1000,15 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
         // Set Ball (visual) launch state
         Ball.v0x = v0x;
         Ball.v0y = v0y;
-        Ball.x0 = cannonCenterX;
-        Ball.y0 = cannonCenterY;
+        Ball.x0 = barrelTipX;
+        Ball.y0 = barrelTipY;
         Ball.px = Ball.x0;
         Ball.py = Ball.y0;
         Ball.time = 0;
+        Ball.v0y=-velocity*(1/2*gravity*Ball.time*Ball.time);
     
         // Create and initialize new Projectile
-        Projectile = new Ballc(SBall, Screen, cannonCenterX, cannonCenterY+1);
+        Projectile = new Ballc(SBall, Screen, barrelTipX, barrelTipY);
         //Projectile = new Ballc(SBall, Screen, ); // Initialize Projectile with size and screen
         Projectile.setWalls(Ball.getWalls());
         Projectile.setVelocity(velocity);
@@ -1008,10 +1016,10 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
     
         Projectile.v0x = v0x;
         Projectile.v0y = v0y;
-        Projectile.x0 = cannonCenterX;
-        Projectile.y0 = cannonCenterY;
-        Projectile.px = cannonCenterX;
-        Projectile.py = cannonCenterY;
+        Projectile.x0 = barrelTipX;
+        Projectile.y0 = barrelTipY;
+        Projectile.px = barrelTipX;
+        Projectile.py = barrelTipY;
         Projectile.time = 0;
     
         ProjectileActive = true;
@@ -1226,7 +1234,7 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
          private double x0, y0;    // Initial position
          private double v0x, v0y;  // Initial velocity components
         //private double ax, ay;    // Current position of the projectile
-         private double gravity = 9.81;  // Default gravity (Earth)
+         //private double gravity = 9.81;  // Default gravity (Earth)
          //private int player_count = 0; // Initialize player score5
 
         private boolean alreadyHit =false; // Flag to check if the ball has already hit the wall
@@ -1277,17 +1285,7 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
 
            // Projectile = new Ballc(SBall, Screen, cannonCenterX, cannonCenterY);
            //rest cannon and projectile and rectangles
-        }
-        public void removeBall(int startX, int startY) {
-            // Remove the ball from the screen
-            //Ball.setVisible(false);
-            // Ball = null
-            x = startX+1;
-            y = startY+1;
-            dx = 1; // Reset x direction
-            dy = 1; // Reset y direction;
-           
-            repaint();
+
         }
         public void setVelocity(int newVel) {
             this.velocity = newVel;
@@ -1424,12 +1422,11 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
             g = buffer.getGraphics();
 
             // Draw the ball
-            // if(Ball!= null){
-                g.setColor(Color.red);
-                g.fillOval(Ball.getXPos(), Ball.getYPos(), Ball.getSizeBall(), Ball.getSizeBall());
-                g.setColor(Color.black);
-                g.drawOval(Ball.getXPos(), Ball.getYPos(), Ball.getSizeBall(), Ball.getSizeBall());
-            // }
+            g.setColor(Color.red);
+            g.fillOval(Ball.getXPos(), Ball.getYPos(), Ball.getSizeBall(), Ball.getSizeBall());
+            g.setColor(Color.black);
+            g.drawOval(Ball.getXPos(), Ball.getYPos(), Ball.getSizeBall(), Ball.getSizeBall());
+
             // Draw the boundary rectangle
             g.setColor(Color.blue);
             g.drawRect(0, 0, width - 1, height - 1);
@@ -1568,7 +1565,17 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
                     break;
                 }
             }
+            Rectangle wheel=new Rectangle(cannonX - 37, cannonY - 37, 75, 75);//for cannon's wheel
             
+            /*  if ball hits cannon (only set for oval) ball resets and gets a point
+            if(b.intersects(wheel)){
+                Ball.setXPos(SBall);
+                Ball.setYPos(SBall);
+                Ball.ballScoreCount++;
+                ballScore.setText("Ball: "+ Ball.ballScoreCount);
+                System.out.println("Ball scores!");
+            }
+                */
             // Repaint the screen
             repaint();
         }
@@ -1617,28 +1624,53 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
         
 
         private void checkProjCollision() {
+
+            
+
             Rectangle projBounds = new Rectangle((int) px, (int) py, SBall, SBall);
             projBounds.grow(1, 1);
 
             // Collision with Red Ball (check if the red ball is within the cannon area)
             Rectangle redBallBounds = new Rectangle(Ball.getXPos(), Ball.getYPos(), Ball.SBall, Ball.SBall);
-            if (projBounds.intersects(redBallBounds)) {
+            if (projBounds.intersects(redBallBounds)) {   
+                if(ProjectileActive){        
                 System.out.println("Red Ball was hit!");
-                removeBall(0,0); // Remove the red ball on collision
-                playerScoreCount++; // Increment player score
-                playerScore.setText("Player: " + playerScoreCount);
-                // Maybe trigger something visual or reset?
+                Ball.playerScoreCount++; // Increment player score
+                playerScore.setText("Player: " +Ball.playerScoreCount);
+
+                Random random=new Random();
+                int randomx= random.nextInt((ScreenWidth-75)-SBall)+SBall;
+                int randomy=random.nextInt((ScreenHeight-75)-SBall)+SBall;
+
+               Ball.setXPos(randomx); //set ball back to starting position
+                Ball.setYPos(randomy);
+
+                ProjectileActive = false;
+                return;
+                }   
             }
+
+            /* 
+            if (projBounds.intersects(cannonBounds)) {   // cannon shoots itself
+                if(ProjectileActive){        
+                System.out.println("Cannon commited suicide!");
+                ballScoreCount++;
+                ballScore.setText("Ball: " + ballScoreCount);
+
+                ProjectileActive = false;
+                return;
+                }   
+            }*/
+
 
             // Collision with Walls — player score
             for (int i = 0; i < Walls.size(); i++) {
                 Rectangle wall = Walls.get(i);
                 if (projBounds.intersects(wall)) {
                     Walls.remove(i); // Remove wall on collision
-                    playerScoreCount++; // Increment score
-                    playerScore.setText("Player: " + playerScoreCount);
-                    System.out.println("Wall hit! Score: " + playerScoreCount);
                     // break; // Stop after 1 hit this frame
+                    ProjectileActive = false;
+                    return;
                 }
             }
 
@@ -1657,10 +1689,18 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
                     System.out.println("Cannon hit by Red Ball! Ball score: " + ballScoreCount);
                     ballHitCannon = true;  // Set flag to true after the first hit
                 }
+                Random random=new Random();
+                int randomx= random.nextInt((ScreenWidth-75)-SBall)+SBall;
+                int randomy=random.nextInt((ScreenHeight-75)-SBall)+SBall;
+
+                Ball.setXPos(randomx);
+                Ball.setYPos(randomy);
+
+                return;
             } else {
                 ballHitCannon = false;  // Reset the flag when the red ball is no longer in the cannon's area
             }
-            Ball.repaint();
+            //Ball.repaint();
         }
 
         
@@ -1720,7 +1760,7 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
                     //Projectile.isTouching(Ball); // Check for collisions with walls!!! NULL here
 
                     Ball.move();    //move the Ballect based on its direction and position
-                    Ball.repaint(); //repaint the Ballect
+                   // Ball.repaint(); //repaint the Ballect
 
                     // Calculate deltaTime as the time elapsed since the last frame
                     long previousTime = startTime; 
@@ -1728,6 +1768,7 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
                     double deltaTime = (nowTime - previousTime) / 1000.0;  // Convert to seconds
                     double scaledDeltaTime = deltaTime * 0.4; 
                     previousTime =nowTime; 
+                    Ball.checkProjCollision();
                     if(ProjectileActive) {
                         //Projectile.isTouching(Walls); // Check for collisions with walls
                         Projectile.moveProjectile(0.2); // Move the projectile
@@ -1743,13 +1784,14 @@ public class CannonVSBall implements ActionListener, WindowListener, ItemListene
                                 break;
                             }
                         }
-                       Projectile.repaint(); // Repaint the projectile
+                      // Projectile.repaint(); // Repaint the projectile
                     }
                     // Simple time update
                     long currentTime = System.currentTimeMillis();
                     int secondsElapsed = (int)((currentTime - startTime) / 1000);
                     Time.setText("Time: " + secondsElapsed + "s");
 
+                    Ball.repaint();
                  }
             }
     }
