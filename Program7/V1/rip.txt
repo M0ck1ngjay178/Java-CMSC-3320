@@ -1,0 +1,273 @@
+//-----------------END CHAT CONSTRUCTOR------------------------
+
+    //----------------INIT COMPONENTS: SET UP FRAMES-----------------
+    // public void initComponents() throws Exception {
+        
+    //     //DispFrame.setTitle("Chat");
+            
+    //     // TopArea = new TextArea("",sw-10,sh-10);
+
+    //     // DispFrame = new Frame("Chat");
+    //     // DispFrame.setLayout(new BorderLayout(0,0));
+    //     // DispFrame.setBackground(Color.lightGray);
+    //     // DispFrame.setForeground(Color.black);
+    //     // DispFrame.add("Center", TopArea);
+
+
+    //     // DispFrame.setLayout(new GridBagLayout());
+    //     // GridBagConstraints c = new GridBagConstraints();
+
+
+    //     // c.fill = GridBagConstraints.BOTH;
+    //     // c.weightx = 1;
+    //     // c.weighty = 1;
+    //     // c.gridwidth = GridBagConstraints.REMAINDER;
+    //     // c.gridx = 0;
+    //     // c.gridy = 0;
+    //     // DispFrame.add(TopArea, c);
+            
+    //     TopArea = new TextArea("",sw-10,sh-10);
+
+    //     DispFrame = new Frame("Chat");
+    //     DispFrame.setLayout(new BorderLayout(0,0));
+    //     DispFrame.setBackground(Color.lightGray);
+    //     DispFrame.setForeground(Color.black);
+
+    //     // sheet.setLayout(new BorderLayout(0,0));
+    //     // sheet.add("Center", TopArea);
+    //     // DispFrame.add("Center", TopArea);
+
+    //     DispFrame.setLayout(new GridBagLayout());
+    //     GridBagConstraints c = new GridBagConstraints();
+
+
+    //     c.fill = GridBagConstraints.BOTH;
+    //     c.weightx = 1;
+    //     c.weighty = 1;
+    //     c.gridwidth = GridBagConstraints.REMAINDER;
+    //     c.gridx = 0;
+    //     c.gridy = 0;
+    //     DispFrame.add(TopArea, c);
+
+    //     // Initialize the control panel layout (GridBagLayout)
+    //     //control.setLayout(new GridBagLayout());
+    //     // -------- MIDDLE: CONTROLS ----------------
+        
+
+        
+
+
+    //     //---------PACK FRAME-------------------------------
+    //     DispFrame.setVisible(true);//set frame visible
+    //     DispFrame.validate();
+    //     //---------END PACK FRAME---------------------------
+
+    // }
+
+
+    // Row 0: Host
+        // m.gridx = 0; m.gridy = 0;
+        // m.anchor = GridBagConstraints.WEST;
+        // middlePanel.add(HostLabel, m);
+
+        // m.gridx = 1;
+        // m.fill = GridBagConstraints.HORIZONTAL;
+        // m.weightx = 1.0;
+        // middlePanel.add(HostText, m);
+
+        // m.gridx = 2;
+        // m.fill = GridBagConstraints.NONE;
+        // m.weightx = 0;
+        // middlePanel.add(ChangeHostButton, m);
+
+        // // Row 1: Port
+        // m.gridx = 0; m.gridy = 1;
+        // m.anchor = GridBagConstraints.WEST;
+        // middlePanel.add(PortLabel, m);
+
+        // m.gridx = 1;
+        // m.fill = GridBagConstraints.HORIZONTAL;
+        // m.weightx = 1.0;
+        // middlePanel.add(PortText, m);
+
+        // m.gridx = 2;
+        // m.fill = GridBagConstraints.NONE;
+        // m.weightx = 0;
+        // middlePanel.add(ChangePortButton, m);
+
+        // // Row 2: Connect buttons
+        // m.gridx = 0; m.gridy = 2;
+        // middlePanel.add(ClientButton, m);
+
+        // m.gridx = 1;
+        // middlePanel.add(ServerButton, m);
+
+        // m.gridx = 2;
+        // middlePanel.add(DisconnectButton, m);
+
+        // // Row 3: Send button centered under column 1
+        // m.gridx = 1; m.gridy = 3;
+        // m.gridwidth = 1;
+        // m.anchor = GridBagConstraints.CENTER;
+        // middlePanel.add(SendButton, m);
+
+        // c.gridy = 1;
+        // c.weighty = 0.4;
+        // c.weightx = 1.0;
+        // c.fill = GridBagConstraints.BOTH;
+        // DispFrame.add(middlePanel, c);
+
+    
+        //m.fill = GridBagConstraints.HORIZONTAL;
+    
+    //     m.gridx = 0; 
+    //     m.gridy = 0;
+    //     m.anchor = GridBagConstraints.WEST;
+    //     m.fill = GridBagConstraints.NONE;
+    //     middlePanel.add(HostLabel, m);
+
+    //     m.gridx = 0;
+    //     m.fill = GridBagConstraints.HORIZONTAL;
+    //     m.weightx = 1.0;
+    //     middlePanel.add(HostText, m);
+
+       
+    
+    //     m.gridx = 0; 
+    //     m.gridy = 1;
+    //     m.fill = GridBagConstraints.NONE;
+    //     middlePanel.add(PortLabel, m);
+
+    //    //m.gridx = 1;
+    //     m.gridx = 0;
+    //     m.fill = GridBagConstraints.HORIZONTAL;
+    //     m.weightx = 1.0;
+    //     middlePanel.add(PortText, m);
+
+    //     // m.gridx = 3;
+    //     // middlePanel.add(ChangePortButton, m);
+
+    //     m.gridx = 3;
+    //     middlePanel.add(ChangeHostButton, m);
+    
+    //     m.gridx = 3; 
+    //     m.gridy = 2;
+    //     middlePanel.add(ClientButton, m);
+
+    //     m.gridx = 3;
+    //     m.gridy = 1;
+    //     middlePanel.add(ServerButton, m);
+
+    //     m.gridx = 3;
+    //     m.gridy = 2;
+    //     middlePanel.add(DisconnectButton, m);
+    
+    //     m.gridx = 1; 
+    //     m.gridy = 3;
+    //     middlePanel.add(SendButton, m);
+    // Row 0
+    // m.gridx = 0; 
+    // m.gridy = 0;
+    // m.anchor = GridBagConstraints.WEST;
+    // m.fill = GridBagConstraints.NONE;
+    // m.weightx = 0;
+    // middlePanel.add(HostLabel, m);
+
+    // m.gridx = 1;
+    // m.fill = GridBagConstraints.HORIZONTAL;
+    // m.weightx = 1.0;
+    // middlePanel.add(HostText, m);
+
+    // m.gridx = 3;  // Button column
+    // m.fill = GridBagConstraints.NONE;
+    // m.weightx = 0;
+    // middlePanel.add(SendButton, m);  // TOP button
+
+    // // Row 1
+    // m.gridx = 0;
+    // m.gridy = 1;
+    // m.anchor = GridBagConstraints.WEST;
+    // m.fill = GridBagConstraints.NONE;
+    // m.weightx = 0;
+    // middlePanel.add(PortLabel, m);
+
+    // m.gridx = 1;
+    // m.fill = GridBagConstraints.HORIZONTAL;
+    // m.weightx = 1.0;
+    // middlePanel.add(PortText, m);
+
+    // // Row 2
+    // m.gridx = 3;
+    // m.gridy = 1;
+    // m.fill = GridBagConstraints.NONE;
+    // m.weightx = 0;
+    // middlePanel.add(ServerButton, m);
+
+    // // Row 3
+    // m.gridx = 3;
+    // m.gridy = 2;
+    // middlePanel.add(ClientButton, m);
+
+    // // Row 4
+    // m.gridx = 3;
+    // m.gridy = 3;
+    // middlePanel.add(DisconnectButton, m);
+
+    // // Row 5 — Optional: ChangeHostButton
+    // m.gridx = 3;
+    // m.gridy = 4;
+    // middlePanel.add(ChangeHostButton, m);
+        // Row 0
+    // m.gridx = 0; m.gridy = 0;
+    // m.anchor = GridBagConstraints.WEST;
+    // m.fill = GridBagConstraints.NONE;
+    // m.weightx = 0;
+    // middlePanel.add(HostLabel, m);
+
+    // m.gridx = 1;
+    // m.fill = GridBagConstraints.HORIZONTAL;
+    // m.weightx = 1.0;
+    // middlePanel.add(HostText, m);
+
+    // m.gridx = 3;
+    // m.fill = GridBagConstraints.NONE;
+    // m.weightx = 0;
+    // middlePanel.add(SendButton, m);
+
+    // // Row 1
+    // m.gridx = 0; m.gridy = 1;
+    // m.anchor = GridBagConstraints.WEST;
+    // m.fill = GridBagConstraints.NONE;
+    // m.weightx = 0;
+    // middlePanel.add(PortLabel, m);
+
+    // m.gridx = 1;
+    // m.fill = GridBagConstraints.HORIZONTAL;
+    // m.weightx = 1.0;
+    // middlePanel.add(PortText, m);
+
+    // // Row 2 — ChangeHost to the left of Start Server
+    // m.gridx = 2;
+    // m.gridy = 1;
+    // m.fill = GridBagConstraints.NONE;
+    // m.weightx = 0;
+    // middlePanel.add(ChangeHostButton, m);
+
+    // // Row 3 — ChangePort to the left of Connect
+    // m.gridx = 2;
+    // m.gridy = 2;
+    // middlePanel.add(ChangePortButton, m);
+
+    // // Row 4 — Buttons column (3)
+    // m.gridx = 3;
+    // m.gridy = 1;
+    // middlePanel.add(ServerButton, m);
+
+    // m.gridx = 3;
+    // m.gridy = 2;
+    // middlePanel.add(ClientButton, m);
+
+    // m.gridx = 3;
+    // m.gridy = 3;
+    // middlePanel.add(DisconnectButton, m);
+    // Row 1: Host Label + Host Text + Change Host
