@@ -1,0 +1,66 @@
+// // Row 0: Chat Text Field and Send Button
+        // m.gridx = 0; 
+        // m.gridy = 0;  // Start at column 0, row 0
+        // m.fill = GridBagConstraints.HORIZONTAL;
+        // m.weightx = 1.0; // Stretch across the width
+        // middlePanel.add(ChatText, m);
+
+        // //m.fill = GridBagConstraints.NONE;
+
+
+        // m.gridx = 0; 
+        // m.gridy = 1;
+        // m.anchor = GridBagConstraints.WEST;
+        // m.fill = GridBagConstraints.NONE;
+        // m.weightx = 0;
+        // middlePanel.add(HostLabel, m);
+
+        // //m.fill = GridBagConstraints.NONE;
+
+        // m.gridx = 0;
+        // m.fill = GridBagConstraints.HORIZONTAL;
+        // m.weightx = 1.0;
+        // middlePanel.add(HostText, m);
+
+        // m.gridx = 2;
+        // m.fill = GridBagConstraints.NONE;
+        // m.weightx = 0;
+        // middlePanel.add(ChangeHostButton, m);
+
+
+        // // Row 2: Port Label + Port Text + Change Port
+        // m.gridx = 0; 
+        // m.gridy = 2;
+        // m.anchor = GridBagConstraints.WEST;
+        // m.fill = GridBagConstraints.NONE;
+        // middlePanel.add(PortLabel, m);
+
+        // m.gridx = 0;
+        // m.fill = GridBagConstraints.HORIZONTAL;
+        // m.weightx = 1.0;
+        // middlePanel.add(PortText, m);
+
+        // m.gridx = 2;
+        // m.fill = GridBagConstraints.NONE;
+        // m.weightx = 0;
+        // middlePanel.add(ChangePortButton, m);
+
+
+        // // Row 0: Send Button
+        // m.gridx = 3; 
+        // m.gridy = 0;
+        // // m.fill = GridBagConstraints.NONE;
+        // middlePanel.add(SendButton, m);
+
+        // // Row 1–3: Server, Client, Disconnect buttons
+        // m.gridx = 3; 
+        // m.gridy = 1;
+        // middlePanel.add(ServerButton, m);
+
+        // m.gridx = 3; 
+        // m.gridy = 2;
+        // middlePanel.add(ClientButton, m);
+
+        // m.gridx = 3; 
+        // m.gridy = 3;
+        // middlePanel.add(DisconnectButton, m);

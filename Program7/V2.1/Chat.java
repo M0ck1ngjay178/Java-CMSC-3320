@@ -125,17 +125,23 @@ public class Chat implements Runnable, ActionListener, WindowListener {
 
         m.insets = new Insets(5, 5, 5, 5);
 
-
-        // Row 0: Chat Text Field and Send Button
+       // Row 0: Chat Text Field
         m.gridx = 0; 
         m.gridy = 0;  // Start at column 0, row 0
+        m.gridwidth = 3;
         m.fill = GridBagConstraints.HORIZONTAL;
-        m.weightx = 1.0; // Stretch across the width
+        m.weightx = 1.0;
         middlePanel.add(ChatText, m);
 
-        //m.fill = GridBagConstraints.NONE;
+        // Row 0: Send Button (you had this separately and it stays)
+        m.gridx = 3; 
+        m.gridy = 0;
+        m.gridwidth = 1;
+        m.fill = GridBagConstraints.NONE;
+        m.weightx = 0;
+        middlePanel.add(SendButton, m);
 
-
+        // Row 1: Host Label
         m.gridx = 0; 
         m.gridy = 1;
         m.anchor = GridBagConstraints.WEST;
@@ -143,44 +149,45 @@ public class Chat implements Runnable, ActionListener, WindowListener {
         m.weightx = 0;
         middlePanel.add(HostLabel, m);
 
-        //m.fill = GridBagConstraints.NONE;
-
-        m.gridx = 0;
+        // Row 1: Host Text
+        m.gridx = 1;
+        m.gridy = 1;
+        m.gridwidth = 1;
         m.fill = GridBagConstraints.HORIZONTAL;
         m.weightx = 1.0;
         middlePanel.add(HostText, m);
 
+        // Row 1: Change Host Button
         m.gridx = 2;
+        m.gridy = 1;
+        m.gridwidth = 1;
         m.fill = GridBagConstraints.NONE;
         m.weightx = 0;
         middlePanel.add(ChangeHostButton, m);
 
-
-        // Row 2: Port Label + Port Text + Change Port
+        // Row 2: Port Label
         m.gridx = 0; 
         m.gridy = 2;
         m.anchor = GridBagConstraints.WEST;
         m.fill = GridBagConstraints.NONE;
         middlePanel.add(PortLabel, m);
 
-        m.gridx = 0;
+        // Row 2: Port Text
+        m.gridx = 1;
+        m.gridy = 2;
+        m.gridwidth = 1;
         m.fill = GridBagConstraints.HORIZONTAL;
         m.weightx = 1.0;
         middlePanel.add(PortText, m);
 
+        // Row 2: Change Port Button
         m.gridx = 2;
+        m.gridy = 2;
         m.fill = GridBagConstraints.NONE;
         m.weightx = 0;
         middlePanel.add(ChangePortButton, m);
 
-
-        // Row 0: Send Button
-        m.gridx = 3; 
-        m.gridy = 0;
-        // m.fill = GridBagConstraints.NONE;
-        middlePanel.add(SendButton, m);
-
-        // Row 1–3: Server, Client, Disconnect buttons
+        // Row 1–3: Server, Client, Disconnect buttons — same as before
         m.gridx = 3; 
         m.gridy = 1;
         middlePanel.add(ServerButton, m);
@@ -192,6 +199,9 @@ public class Chat implements Runnable, ActionListener, WindowListener {
         m.gridx = 3; 
         m.gridy = 3;
         middlePanel.add(DisconnectButton, m);
+
+
+
 
 
         //------------
@@ -219,8 +229,18 @@ public class Chat implements Runnable, ActionListener, WindowListener {
         //BottomArea.addActionListener(this);
         PortText.addActionListener(this);
         HostText.addActionListener(this);
-
         //-------END LISTENERS-------------
+
+        //----------DISABLE/ENABLE BUTTONS------------------
+        SendButton.setEnabled(true); //disable send button
+        ChangeHostButton.setEnabled(true); //disable change host button
+        ChangePortButton.setEnabled(true); //disable change port button
+        ServerButton.setEnabled(true); //disable server button
+        ClientButton.setEnabled(false); //disable client button
+        DisconnectButton.setEnabled(true); //disable disconnect button
+
+
+        //----------END DISABLE/ENABLE BUTTONS---------------
 
         // ----------- Final Setup -------------
         DispFrame.setVisible(true);
@@ -247,7 +267,9 @@ public class Chat implements Runnable, ActionListener, WindowListener {
                 break;
         }
         // Append the role and message to the status area
-        TopArea.append(type + msg + "\n");
+        //TopArea.append(type + msg + "\n");
+        BottomArea.append(type + msg + "\n");
+
 
         // Return focus to the ChatText field
         ChatText.requestFocus();   
@@ -264,13 +286,15 @@ public class Chat implements Runnable, ActionListener, WindowListener {
         
             if (!msg.isEmpty()) {
                 // Append to the dialog screen
-                DialogScreen.append("out: " + msg + "\n");
+                //DialogScreen.append("out: " + msg + "\n");
+                TopArea.append("out: " + msg + "\n");
     
                 // Send through the socket
                 if (pw != null) {
                     pw.println(msg);
                 } else {
-                    DialogScreen.append("Error: Not connected to any output stream.\n");
+                    //DialogScreen.append("Error: Not connected to any output stream.\n");
+                    TopArea.append("Error: Not connected to any output stream.\n");
                 }
                 // Clear the chat input
                 ChatText.setText("");
@@ -385,16 +409,59 @@ public class Chat implements Runnable, ActionListener, WindowListener {
                 messageDisplay("Error!!");
                 close();
             }
-
+        }
             //-------------------DISCONECT BUTTON----------------------
-            
+            if (source == DisconnectButton){
+                messageDisplay("Attempting to disconnect...");
+                //server = null; //null the socket
+                //TheThread.interrupt(); //interrupt the thread
+                if (TheThread != null) {
+                    TheThread.interrupt(); // Only interrupt if the thread exists
+                    TheThread = null;
+                }
+                //close socket
+                ChatText.setText("");
+                close(); //close the socket
+                messageDisplay("Disconnected from server");
+            }            
             //-----------------END DISCONNECT BUTTON-------------------
 
+            //-----------------CHANGE HOST BUTTON OR HOST TEXT FIELD---------------------
+            if(source == ChangeHostButton || source == HostText){
+                String hostString = HostText.getText(); //get text from text field
+                if (!hostString.isEmpty()) {
+                    host = hostString; //set the host name
+                    messageDisplay("Host changed to: " + host);
+                    ClientButton.setEnabled(true); //enable the connect button
+                } else {
+                    messageDisplay("Host field is empty. Please enter a host name.");
+                }
+            }
+            //-----------------CHANGE HOST BUTTON OR HOST TEXT FIELD---------------------
 
 
-        }
-        
 
+            //-----------------PORT TEXTFIELD OR CHANGE PORT BUTTON---------------------
+            
+            if(source == ChangePortButton || source == PortText){
+                String portString = PortText.getText(); //get text from text field
+                int newPort = DEFAULT_PORT;
+                if (!portString.isEmpty()) {
+                    try {
+                        port = Integer.parseInt(portString); //parse the port number
+                        //port = newPort; //set the port number
+                        newPort = port; //set the new port number
+                        messageDisplay("Port changed to: " + port);
+                        ClientButton.setEnabled(true); //enable the connect button
+                    } catch (NumberFormatException ex) {
+                        messageDisplay("Invalid port number. Please enter a valid number.");
+                    }
+                } else {
+                    messageDisplay("Port field is empty. Please enter a port number.");
+                }
+            }
+            //-----------------ENDPORT TEXTFIELD OR CHANGE PORT BUTTON------------------
+            ChatText.requestFocus(); // Set focus back to PortText field
     }
     //----------------END ACTION HANDLER--------------------------
 
@@ -404,15 +471,15 @@ public class Chat implements Runnable, ActionListener, WindowListener {
     public void windowClosing(WindowEvent e) {
         stop();
     }
-    public void windowClosed(WindowEvent e) {}
-    public void windowOpened(WindowEvent e) {}
+    public void windowClosed(WindowEvent e) {ChatText.requestFocus();}
+    public void windowOpened(WindowEvent e) {ChatText.requestFocus();}
 
-    public void windowActivated(WindowEvent e) {}
+    public void windowActivated(WindowEvent e) {ChatText.requestFocus();}
                 
-    public void windowDeactivated(WindowEvent e) {}
+    public void windowDeactivated(WindowEvent e) {ChatText.requestFocus();}
 
-    public void windowIconified(WindowEvent e) {}
-    public void windowDeiconified(WindowEvent e) {}
+    public void windowIconified(WindowEvent e) {ChatText.requestFocus();}
+    public void windowDeiconified(WindowEvent e) {ChatText.requestFocus();}
     //========================END WINDOW LISTENER METHODS=================================
 
     //-------------THREAD STOP METHOD--------------------------------------
@@ -491,13 +558,18 @@ public class Chat implements Runnable, ActionListener, WindowListener {
 
     //-------------THREAD RUNNABLE METHOD--------------------------------------
     public void run() {
+        // The thread will run this method
+        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+        messageDisplay("Thread started");
+
         System.out.println("Thread is running");
         
         while (more){
             try{
                 String line= br.readLine();  //read line
                 if(line!=null){
-                    DialogScreen.append("in: "+ line+"\n"); //place line on dialogScreen
+                    // DialogScreen.append("in: "+ line+"\n"); //place line on dialogScreen
+                    TopArea.append("in: "+ line+"\n"); //place line on dialogScreen
                 }else{
                     more=false;
                 }
@@ -508,7 +580,8 @@ public class Chat implements Runnable, ActionListener, WindowListener {
             System.out.println("All text has been read\n");
             System.out.println("resetting...\n");
             
-            stop();
+            //stop();
+            close();
             
         }
     }
