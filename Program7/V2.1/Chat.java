@@ -304,6 +304,7 @@ public class Chat implements Runnable, ActionListener, WindowListener {
         }
 
         if (source == ServerButton){
+            service = 1; //set service to server
             try {
                 ServerButton.setEnabled(false);
                 ClientButton.setEnabled(false);
@@ -367,7 +368,7 @@ public class Chat implements Runnable, ActionListener, WindowListener {
         
         //-------------------CLIENT BUTTON------------------------
         if(source == ClientButton){
-            //service = 2;
+            service = 2;
             messageDisplay("Now in Client Mode");
 
             try{
@@ -419,6 +420,8 @@ public class Chat implements Runnable, ActionListener, WindowListener {
                     TheThread.interrupt(); // Only interrupt if the thread exists
                     TheThread = null;
                 }
+                ServerButton.setEnabled(true); //enable the server button
+                
                 //close socket
                 ChatText.setText("");
                 close(); //close the socket
@@ -484,9 +487,14 @@ public class Chat implements Runnable, ActionListener, WindowListener {
 
     //-------------THREAD STOP METHOD--------------------------------------
     public void stop() {
+
+        close();
+
+        if(TheThread != null) {
+            TheThread.setPriority(Thread.MIN_PRIORITY);
+        }
         // Remove window listener
         DispFrame.removeWindowListener(this);
-    
         // Remove action listeners
         ChangePortButton.removeActionListener(this);
         SendButton.removeActionListener(this);
@@ -498,16 +506,15 @@ public class Chat implements Runnable, ActionListener, WindowListener {
         PortText.removeActionListener(this);
         HostText.removeActionListener(this);
 
-        close();
-    
         // Dispose the window
         DispFrame.dispose();
     
         // Stop the thread if it's running
-        if (TheThread != null && TheThread.isAlive()) {
-            TheThread.interrupt();
+        // if (TheThread != null && TheThread.isAlive()) {
+        //     TheThread.interrupt();
             
-        }
+        // }
+        System.exit(0);
     }
     //-------------END THREAD STOP METHOD----------------------------------
 
@@ -524,8 +531,38 @@ public class Chat implements Runnable, ActionListener, WindowListener {
                 
             }
         }catch(IOException e){
-
+            System.out.println("Exception In Close: " + e);
+            messageDisplay("Error In Close!!");
         }
+
+        try{
+            if(client!=null){    // does client socket exist?
+                if(pw!=null){    // does printwriter exist?
+                    pw.print("");   //send null to other device
+                }  
+             client.close();      //close the socket
+             client=null;       //null the socket
+                
+            }
+        }catch(IOException e){
+            System.out.println("Exception In Close: " + e);
+            messageDisplay("Error In Close!!");
+        }
+
+        try{
+            if(listen_socket!=null){   // does server socket exist?
+                if(pw!=null){    // does printwriter exist?
+                    pw.print("");   //send null to other device
+                }  
+                listen_socket.close();      //close the socket
+                listen_socket=null;       //null the socket
+                
+            }
+        }catch(IOException e){
+            System.out.println("Exception In Close: " + e);
+            messageDisplay("Error In Close!!");
+        }
+
         //RESET BUTTONS AND HOST TEXTFIELD??
         ChangePortButton.addActionListener(this);
         SendButton.addActionListener(this);
@@ -536,9 +573,8 @@ public class Chat implements Runnable, ActionListener, WindowListener {
         HostText.addActionListener(this);
 
         service=0; //reset service to initial state
-
+        HostText.setText(""); //clear host text field
         TheThread=null;
-
     }
 
     //------------END THREAD CLOSE METHOD--------------------------------
@@ -549,7 +585,7 @@ public class Chat implements Runnable, ActionListener, WindowListener {
             TheThread = new Thread(this);
             TheThread.start();
             
-            run();
+            //run();
         } else {
             System.out.println("Thread already started.");
         }
@@ -559,7 +595,9 @@ public class Chat implements Runnable, ActionListener, WindowListener {
     //-------------THREAD RUNNABLE METHOD--------------------------------------
     public void run() {
         // The thread will run this method
-        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+        //Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+        TheThread.setPriority(Thread.MAX_PRIORITY);
+
         messageDisplay("Thread started");
 
         System.out.println("Thread is running");
