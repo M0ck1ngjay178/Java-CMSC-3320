@@ -86,6 +86,7 @@ public class Chat implements Runnable, ActionListener, WindowListener {
            initComponents();
            service = 0;
            more = true;
+           //auto_flush = true;
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -593,36 +594,69 @@ public class Chat implements Runnable, ActionListener, WindowListener {
 
 
     //-------------THREAD RUNNABLE METHOD--------------------------------------
-    public void run() {
-        // The thread will run this method
-        //Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-        TheThread.setPriority(Thread.MAX_PRIORITY);
+    // public void run() {
+    //     // The thread will run this method
+    //     //Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+    //     TheThread.setPriority(Thread.MAX_PRIORITY);
 
-        messageDisplay("Thread started");
+    //     messageDisplay("Thread started");
 
-        System.out.println("Thread is running");
+    //     System.out.println("Thread is running");
         
-        while (more){
-            try{
-                String line= br.readLine();  //read line
-                if(line!=null){
-                    // DialogScreen.append("in: "+ line+"\n"); //place line on dialogScreen
-                    TopArea.append("in: "+ line+"\n"); //place line on dialogScreen
-                }else{
-                    more=false;
-                }
+    //     while (more){
+    //         try{
+    //             String line= br.readLine();  //read line
+    //             if(line!=null){
+    //                 // DialogScreen.append("in: "+ line+"\n"); //place line on dialogScreen
+    //                 TopArea.append("in: "+ line+"\n"); //place line on dialogScreen
+    //             }else{
+    //                 more=false;
+    //             }
 
-            }catch(IOException e){
-                more=false;
-            }   
-            System.out.println("All text has been read\n");
-            System.out.println("resetting...\n");
+    //         }catch(IOException e){
+    //             more=false;
+    //         }   
+    //         System.out.println("All text has been read\n");
+    //         System.out.println("resetting...\n");
             
-            //stop();
-            close();
+    //         //stop();
+    //         close();
             
+    //     }
+    // }
+        public void run() {
+            TheThread.setPriority(Thread.MAX_PRIORITY);
+            messageDisplay("Thread started");
+        
+            try {
+                while (more) {
+                    try {
+                        String line = br.readLine();
+                        if (line != null) {
+                            TopArea.append("in: " + line + "\n"); // ← this is what displays incoming messages
+                            System.out.println("Received: " + line); // Optional debug
+                        }
+                    } catch (SocketTimeoutException ste) {
+                        continue; // Don't close the socket, just keep waiting
+                    } catch (IOException e) {
+                        System.out.println("Error reading from stream: " + e);
+                        break;
+                    }
+                }
+            } finally {
+                messageDisplay("Connection closed.");
+                close();
+            }
         }
-    }
+    
+
+
+
+    
+
+   
+    
+    
     //-------------END THREAD RUNNABLE METHOD----------------------------------
 
     //-----------------MAIN---------------------------------------
