@@ -17,7 +17,8 @@ import java.net.*;
 import java.awt.event.*;
 //-------END LIBRARIES------
 
-
+//set port deffualt to 44004
+//fix disconnecting issue
 //================================BEGIN CLASS CHAT==================================================================
 public class Chat implements Runnable, ActionListener, WindowListener {
     
@@ -48,8 +49,8 @@ public class Chat implements Runnable, ActionListener, WindowListener {
     private TextArea TopArea;//create area for typing
     private int sw = 650, sh=480;//screen width and height
      // New panels for layout
-     private Panel sheet = new Panel();
-     private Panel control = new Panel();
+    // private Panel sheet = new Panel();
+    // private Panel control = new Panel();
 
 
     TextArea DialogScreen = new TextArea("", 10,80);
@@ -85,9 +86,7 @@ public class Chat implements Runnable, ActionListener, WindowListener {
        try {
            initComponents();
            service = 0;
-           more = true;
-           //auto_flush = true;
-            
+           more = true; 
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -412,11 +411,13 @@ public class Chat implements Runnable, ActionListener, WindowListener {
                 close();
             }
         }
+           
+    
             //-------------------DISCONECT BUTTON----------------------
             if (source == DisconnectButton){
                 messageDisplay("Attempting to disconnect...");
-                //server = null; //null the socket
-                //TheThread.interrupt(); //interrupt the thread
+                //server = null; //null the socket5
+                //TheThread.interrupt(); //interrupt the thread5
                 if (TheThread != null) {
                     TheThread.interrupt(); // Only interrupt if the thread exists
                     TheThread = null;
@@ -522,6 +523,7 @@ public class Chat implements Runnable, ActionListener, WindowListener {
     //---------------THREAD CLOSE METHOD-----------------------------
 
     public void close(){
+        more=false; //set more to false
         try{
             if(server!=null){    // does server socket exist?
                 if(pw!=null){    // does printwriter exist?
@@ -585,8 +587,6 @@ public class Chat implements Runnable, ActionListener, WindowListener {
         if(TheThread == null) {
             TheThread = new Thread(this);
             TheThread.start();
-            
-            //run();
         } else {
             System.out.println("Thread already started.");
         }
@@ -594,36 +594,7 @@ public class Chat implements Runnable, ActionListener, WindowListener {
 
 
     //-------------THREAD RUNNABLE METHOD--------------------------------------
-    // public void run() {
-    //     // The thread will run this method
-    //     //Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-    //     TheThread.setPriority(Thread.MAX_PRIORITY);
-
-    //     messageDisplay("Thread started");
-
-    //     System.out.println("Thread is running");
-        
-    //     while (more){
-    //         try{
-    //             String line= br.readLine();  //read line
-    //             if(line!=null){
-    //                 // DialogScreen.append("in: "+ line+"\n"); //place line on dialogScreen
-    //                 TopArea.append("in: "+ line+"\n"); //place line on dialogScreen
-    //             }else{
-    //                 more=false;
-    //             }
-
-    //         }catch(IOException e){
-    //             more=false;
-    //         }   
-    //         System.out.println("All text has been read\n");
-    //         System.out.println("resetting...\n");
-            
-    //         //stop();
-    //         close();
-            
-    //     }
-    // }
+    
         public void run() {
             TheThread.setPriority(Thread.MAX_PRIORITY);
             messageDisplay("Thread started");
@@ -652,7 +623,7 @@ public class Chat implements Runnable, ActionListener, WindowListener {
 
 
 
-    
+    //40000 ms works
 
    
     

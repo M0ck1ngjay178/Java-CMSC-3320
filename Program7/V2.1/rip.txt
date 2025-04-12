@@ -64,3 +64,82 @@
         // m.gridx = 3; 
         // m.gridy = 3;
         // middlePanel.add(DisconnectButton, m);
+
+
+
+// public void run() {
+    //     // The thread will run this method
+    //     //Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+    //     TheThread.setPriority(Thread.MAX_PRIORITY);
+
+    //     messageDisplay("Thread started");
+
+    //     System.out.println("Thread is running");
+        
+    //     while (more){
+    //         try{
+    //             String line= br.readLine();  //read line
+    //             if(line!=null){
+    //                 // DialogScreen.append("in: "+ line+"\n"); //place line on dialogScreen
+    //                 TopArea.append("in: "+ line+"\n"); //place line on dialogScreen
+    //             }else{
+    //                 more=false;
+    //             }
+
+    //         }catch(IOException e){
+    //             more=false;
+    //         }   
+    //         System.out.println("All text has been read\n");
+    //         System.out.println("resetting...\n");
+            
+    //         //stop();
+    //         close();
+            
+    //     }
+    // }
+
+     // if (source == ClientButton) {
+            //     service = 2;
+            //     messageDisplay("Now in Client Mode");
+            
+            //     try {
+            //         ServerButton.setEnabled(false);
+            //         ClientButton.setEnabled(false);
+            
+            //         if (server != null) {
+            //             try {
+            //                 server.close();
+            //             } catch (IOException e1) {
+            //                 messageDisplay("Error closing previous socket: " + e);
+            //             }
+            //             server = null;
+            //         }
+            
+            //         server = new Socket(); // ✅ Create new socket first
+            //         messageDisplay("New Socket Created");
+            
+            //         messageDisplay("Attempting Connection...");
+            //         server.connect(new InetSocketAddress(host, port)); // ✅ Connect
+            //         server.setSoTimeout(timeout); // ✅ Only after connection
+            //         messageDisplay("Connected to server: " + host + " " + port);
+            //         DispFrame.setTitle("Client");
+            //     } catch (IOException e2) {
+            //         System.out.println("Exception: " + e);
+            //         messageDisplay("Error!!");
+            //         close();
+            //         return;
+            //     }
+            
+            //     try {
+            //         br = new BufferedReader(new InputStreamReader(server.getInputStream()));
+            //         pw = new PrintWriter(server.getOutputStream(), auto_flush);
+            //         ChatText.setEnabled(true);
+            //         more = true;
+            //         start();
+            //     } catch (IOException e3) {
+            //         System.out.println("Exception: " + e);
+            //         messageDisplay("Error!!");
+            //         close();
+            //     }
+            // }
+        
