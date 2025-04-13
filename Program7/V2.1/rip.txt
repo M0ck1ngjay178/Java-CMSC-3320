@@ -143,3 +143,78 @@
             //     }
             // }
         
+
+
+        
+
+        if (source == ServerButton) {
+            service = 1; // Set service to server
+            try {
+                ServerButton.setEnabled(false);
+                ClientButton.setEnabled(false);
+        
+                // Clean up old listen socket if needed
+                if (listen_socket != null && !listen_socket.isClosed()) {
+                    listen_socket.close();
+                    listen_socket = null;
+                }
+        
+                messageDisplay("Setting up server socket...");
+                listen_socket = new ServerSocket(port);
+                listen_socket.setSoTimeout(10 * timeout); // Set timeout for accept()
+                messageDisplay("Server socket created on port " + port);
+        
+                // Clean up old client socket if needed
+                if (client != null && !client.isClosed()) {
+                    client.close();
+                    client = null;
+                }
+        
+            } catch (IOException ex) {
+                System.out.println("Server setup exception: " + ex);
+                messageDisplay("Server setup failed.");
+                close();
+                return; // Exit early
+            }
+        
+            try {
+                messageDisplay("Waiting for client to connect...");
+                client = listen_socket.accept(); // This can time out
+                messageDisplay("Client connected: " + client.getInetAddress());
+                DispFrame.setTitle("Server");
+        
+            } catch (SocketTimeoutException eTimeout) {
+                System.err.println("Server accept timed out.");
+                messageDisplay("No client connected. Try again.");
+                ServerButton.setEnabled(true);
+                ClientButton.setEnabled(true);
+                return;
+            } catch (IOException eAccept) {
+                System.err.println("Server accept failed: " + eAccept);
+                messageDisplay("Error accepting connection.");
+                close();
+                return;
+            }
+        
+            try {
+                // SAFETY CHECK: Make sure client is valid
+                if (client == null || client.isClosed()) {
+                    messageDisplay("Client socket is invalid. Try again.");
+                    close();
+                    return;
+                }
+        
+                br = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                pw = new PrintWriter(client.getOutputStream(), auto_flush);
+        
+                ChatText.setEnabled(true); // Enable text input
+                more = true;
+                start(); // Start communication thread
+        
+            } catch (IOException er) {
+                System.out.println("Stream setup exception: " + er);
+                messageDisplay("Error setting up streams.");
+                close();
+            }
+        }
+        

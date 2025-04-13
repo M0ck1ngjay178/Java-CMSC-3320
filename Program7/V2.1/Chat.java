@@ -19,6 +19,7 @@ import java.awt.event.*;
 
 //set port deffualt to 44004
 //fix disconnecting issue
+//disconnect button has to disconnect both server and client
 //================================BEGIN CLASS CHAT==================================================================
 public class Chat implements Runnable, ActionListener, WindowListener {
     
@@ -302,7 +303,7 @@ public class Chat implements Runnable, ActionListener, WindowListener {
             // Set focus back to chat field
             ChatText.requestFocus();
         }
-
+        //og server
         if (source == ServerButton){
             service = 1; //set service to server
             try {
@@ -359,77 +360,216 @@ public class Chat implements Runnable, ActionListener, WindowListener {
                 close();
             }
         }
-        // }catch(SocketTimeoutException s){
-        //     System.out.println("Exception: " + s);
-        //     close();
+
+        // if (source == ServerButton) {
+        //     service = 1; // Set service to server
+        
+        //     try {
+        //         ServerButton.setEnabled(false);
+        //         ClientButton.setEnabled(false);
+        
+        //         // Close old server socket
+        //         if (listen_socket != null && !listen_socket.isClosed()) {
+        //             listen_socket.close();
+        //         }
+        //         listen_socket = null;
+        
+        //         // Close old client socket
+        //         if (client != null && !client.isClosed()) {
+        //             client.close();
+        //         }
+        //         client = null;
+        
+        //         // Close old thread
+        //         if (TheThread != null && TheThread.isAlive()) {
+        //             TheThread.interrupt();
+        //         }
+        //         TheThread = null;
+        
+        //         messageDisplay("Setting up server...");
+        //         listen_socket = new ServerSocket(port);
+        //         listen_socket.setSoTimeout(10 * timeout);
+        //         messageDisplay("Waiting for client...");
+        
+        //         client = listen_socket.accept(); // Will timeout if no connection
+        //         messageDisplay("Connected to client: " + client.getInetAddress());
+        //         DispFrame.setTitle("Server");
+        
+        //         // Set up input/output
+        //         br = new BufferedReader(new InputStreamReader(client.getInputStream()));
+        //         pw = new PrintWriter(client.getOutputStream(), auto_flush);
+        
+        //         service = 1;
+        //         ChatText.setEnabled(true);
+        //         more = true;
+        
+        //         start(); // Start communication thread
+        
+        //     } catch (SocketTimeoutException ep) {
+        //         messageDisplay("No client connected (timeout).");
+        //         ServerButton.setEnabled(true);
+        //         ClientButton.setEnabled(true);
+        //     } catch (IOException ex) {
+        //         System.out.println("Server Exception: " + ex);
+        //         messageDisplay("Server setup error!");
+        //         close();
+        //     }
         // }
+        
+
+
+
+    
         //-----------------END CHAT TEXT AND SEND BUTTON---------------
 
         
         //-------------------CLIENT BUTTON------------------------
-        if(source == ClientButton){
+        // if(source == ClientButton){
+        //     service = 2;
+        //     messageDisplay("Now in Client Mode");
+
+        //     try{
+        //         ServerButton.setEnabled(false);
+        //         ClientButton.setEnabled(false);
+        //         if(server != null){
+        //             server.close(); //close the socket
+        //             server = null; //null the socket
+        //         }
+        //         server = new Socket(); //create a new socket
+        //         messageDisplay("New Socket Created");
+        //         server.setSoTimeout(timeout); // Set timeout for client socket
+        //     }catch(IOException e1){
+        //         System.out.println("Exception: " + e1);
+        //         messageDisplay("Error!!");
+        //         close();
+        //     }
+
+        //     try {
+        //         messageDisplay("Attempting Connection...");
+        //         server.connect(new InetSocketAddress(host, port)); //connect to the server
+        //         DispFrame.setTitle("Client");
+        //         messageDisplay("Connected to server: " + host + " " + port);
+        //     } catch(IOException e2){
+        //         System.out.println("Exception: " + e2);
+        //         messageDisplay("Error!!");
+        //         close();
+        //     }
+
+        //     try{
+        //         br = new BufferedReader(new InputStreamReader(server.getInputStream()));
+        //         pw = new PrintWriter(server.getOutputStream(), auto_flush); //auto flush for print writer
+        //         service = 2; //set service to client
+        //         ChatText.setEnabled(true); //enable chat text field
+        //         more = true;
+        //         start(); //start the thread
+        //     }catch(IOException e3){
+        //         System.out.println("Exception: " + e3);
+        //         messageDisplay("Error!!");
+        //         close();
+        //     }
+        // }
+           
+    
+        //     //-------------------DISCONECT BUTTON----------------------
+        //     if (source == DisconnectButton){
+        //         messageDisplay("Attempting to disconnect...");
+        //         //server = null; //null the socket5
+        //         //TheThread.interrupt(); //interrupt the thread5
+        //         if (TheThread != null) {
+        //             TheThread.interrupt(); // Only interrupt if the thread exists
+        //             //TheThread = null;
+        //         }
+        //         ServerButton.setEnabled(true); //enable the server button
+                
+        //         //close socket
+        //         ChatText.setText("");
+        //         close(); //close the socket
+        //         messageDisplay("Disconnected from server");
+        //     }            
+        //   
+        //-----------------END DISCONNECT BUTTON-------------------
+
+        if (source == ClientButton) {
             service = 2;
             messageDisplay("Now in Client Mode");
-
-            try{
+        
+            try {
+                // Disable server/client buttons during connection setup
                 ServerButton.setEnabled(false);
                 ClientButton.setEnabled(false);
-                if(server != null){
-                    server.close(); //close the socket
-                    server = null; //null the socket
+        
+                // Close existing socket if open
+                if (server != null && !server.isClosed()) {
+                    server.close();
+                    messageDisplay("Previous socket closed.");
                 }
-                server = new Socket(); //create a new socket
+        
+                server = new Socket(); // Create a new socket
                 messageDisplay("New Socket Created");
+        
                 server.setSoTimeout(timeout); // Set timeout for client socket
-            }catch(IOException e1){
-                System.out.println("Exception: " + e1);
-                messageDisplay("Error!!");
+            } catch (IOException e1) {
+                System.out.println("Exception during socket creation: " + e1);
+                messageDisplay("Error creating socket!");
                 close();
+                return;
             }
-
+        
             try {
                 messageDisplay("Attempting Connection...");
-                server.connect(new InetSocketAddress(host, port)); //connect to the server
+                server.connect(new InetSocketAddress(host, port)); // Connect to the server
                 DispFrame.setTitle("Client");
                 messageDisplay("Connected to server: " + host + " " + port);
-            } catch(IOException e2){
-                System.out.println("Exception: " + e2);
-                messageDisplay("Error!!");
+            } catch (IOException e2) {
+                System.out.println("Exception during connection: " + e2);
+                messageDisplay("Connection Failed!");
                 close();
+                return;
             }
-
-            try{
+        
+            try {
                 br = new BufferedReader(new InputStreamReader(server.getInputStream()));
-                pw = new PrintWriter(server.getOutputStream(), auto_flush); //auto flush for print writer
-                service = 2; //set service to client
-                ChatText.setEnabled(true); //enable chat text field
+                pw = new PrintWriter(server.getOutputStream(), auto_flush); // auto-flush enabled
+        
+                ChatText.setEnabled(true); // Enable chat input
+                service = 2;
                 more = true;
-                start(); //start the thread
-            }catch(IOException e3){
-                System.out.println("Exception: " + e3);
-                messageDisplay("Error!!");
+        
+                // Stop old thread if it exists
+                if (TheThread != null && TheThread.isAlive()) {
+                    TheThread.interrupt();
+                }
+        
+                // Start a new client thread 
+                start();
+        
+            } catch (IOException e3) {
+                System.out.println("Exception during stream setup: " + e3);
+                messageDisplay("Error setting up I/O!");
                 close();
             }
         }
-           
-    
-            //-------------------DISCONECT BUTTON----------------------
-            if (source == DisconnectButton){
-                messageDisplay("Attempting to disconnect...");
-                //server = null; //null the socket5
-                //TheThread.interrupt(); //interrupt the thread5
-                if (TheThread != null) {
-                    TheThread.interrupt(); // Only interrupt if the thread exists
-                    TheThread = null;
-                }
-                ServerButton.setEnabled(true); //enable the server button
-                
-                //close socket
-                ChatText.setText("");
-                close(); //close the socket
-                messageDisplay("Disconnected from server");
-            }            
-            //-----------------END DISCONNECT BUTTON-------------------
+        
+        // -------------------DISCONNECT BUTTON----------------------
+        if (source == DisconnectButton) {
+            messageDisplay("Attempting to disconnect...");
+        
+            // Safely interrupt running thread
+            if (TheThread != null && TheThread.isAlive()) {
+                TheThread.interrupt();
+                //TheThread = null; 
+            }
+            TheThread = null; // Set to null after interrupting
+        
+            ChatText.setText("");
+            //ChatText.setEnabled(false);
+        
+            close(); // Close streams and socket
+            ServerButton.setEnabled(true);
+            ClientButton.setEnabled(true);
+            messageDisplay("Disconnected from server");
+        }
+        
 
             //-----------------CHANGE HOST BUTTON OR HOST TEXT FIELD---------------------
             if(source == ChangeHostButton || source == HostText){
@@ -528,7 +668,7 @@ public class Chat implements Runnable, ActionListener, WindowListener {
             if(server!=null){    // does server socket exist?
                 if(pw!=null){    // does printwriter exist?
                     pw.print("");   //send null to other device
-                  }  
+                }  
              server.close();      //close the socket
              server=null;       //null the socket
                 
@@ -577,20 +717,37 @@ public class Chat implements Runnable, ActionListener, WindowListener {
 
         service=0; //reset service to initial state
         HostText.setText(""); //clear host text field
+        DispFrame.setTitle("Chat"); //reset title to chat
         TheThread=null;
     }
 
     //------------END THREAD CLOSE METHOD--------------------------------
 
     //-------------THREAD START METHOD-------------------------------------
-    public void start(){
-        if(TheThread == null) {
-            TheThread = new Thread(this);
-            TheThread.start();
-        } else {
-            System.out.println("Thread already started.");
+    // public void start(){
+    //     if(TheThread == null) {
+    //         TheThread = new Thread(this);
+    //         TheThread.start();
+    //     } else {
+    //         System.out.println("Thread already started.");
+    //     }
+    // }
+
+    public void start() {
+        if (TheThread != null && TheThread.isAlive()) {
+            TheThread.interrupt(); // stop it
+            try {
+                TheThread.join();  // wait for it to finish
+            } catch (InterruptedException e) {
+                System.out.println("Thread interruption error: " + e);
+            }
         }
+        
+        TheThread = new Thread(this);
+        TheThread.start();
     }
+    
+    
 
 
     //-------------THREAD RUNNABLE METHOD--------------------------------------
