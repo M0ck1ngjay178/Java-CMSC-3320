@@ -1,4 +1,3 @@
-
 /*******************HEADER*******************************/
 /*  CMSC-3320 Technical Computing Using Java		    */   
 /* 	Chat Program					                    */
