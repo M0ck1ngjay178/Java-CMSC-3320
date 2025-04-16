@@ -315,6 +315,7 @@ public class Chat implements Runnable, ActionListener, WindowListener {
                 messageDisplay("Connected");
 
                 listen_socket.setSoTimeout(10*timeout); // Set timeout for server socket
+                messageDisplay("Timeout set to: " + timeout + " ms");
 
                 if(client != null){
                     client.close(); //close the socket
@@ -323,7 +324,7 @@ public class Chat implements Runnable, ActionListener, WindowListener {
             } catch (IOException ex) {
                 // TODO: handle exception
                 System.out.println("Exception:   " + ex);
-                messageDisplay("Error!!");
+                messageDisplay("Error in try 1!!");
                 close();
             }
 
@@ -341,8 +342,11 @@ public class Chat implements Runnable, ActionListener, WindowListener {
             } catch (Exception ep) {
                 // TODO: handle exception
                 System.err.println("Server: accept failed: " + ep);
-                messageDisplay("Error!!");
+                messageDisplay("Error!! Server Timeout!!");
                 close();
+                // ServerButton.setEnabled(true);
+                // ClientButton.setEnabled(true);
+                // return;
             }
             try{
                 br = new BufferedReader(new InputStreamReader(client.getInputStream()));
@@ -353,7 +357,7 @@ public class Chat implements Runnable, ActionListener, WindowListener {
                 start(); //start the thread
             }catch(IOException er){
                 System.out.println("Exception: " + er);
-                messageDisplay("Error!!");
+                messageDisplay("Error in try 3!!");
                 close();
             }
         }
@@ -379,6 +383,8 @@ public class Chat implements Runnable, ActionListener, WindowListener {
                 server = new Socket(); //create a new socket
                 messageDisplay("New Socket Created");
                 server.setSoTimeout(timeout); // Set timeout for client socket
+                messageDisplay("Timeout set to: " + timeout + " ms");
+
             }catch(IOException e1){
                 System.out.println("Exception: " + e1);
                 messageDisplay("Error!!");
