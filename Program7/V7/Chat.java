@@ -1,4 +1,4 @@
-//package Java-CMSC-3320.Program7;
+
 /*******************HEADER*******************************/
 /*  CMSC-3320 Technical Computing Using Java		    */   
 /* 	Chat Program					                    */
@@ -9,7 +9,7 @@
 /*     -Ethan Janovich,   jan60248@pennwest.edu			*/
 /*     -Nikolaus Roebuck, roe01807@pennwest.edu  		*/
 /*******************END HEADER***************************/
-
+//package Chat;
 //-------LIBRARIES---------
 import java.io.*;
 import java.awt.*;
@@ -17,9 +17,6 @@ import java.net.*;
 import java.awt.event.*;
 //-------END LIBRARIES------
 
-//set port deffualt to 44004
-//fix disconnecting issue
-//
 //================================BEGIN CLASS CHAT==================================================================
 public class Chat implements Runnable, ActionListener, WindowListener {
     
@@ -83,13 +80,13 @@ public class Chat implements Runnable, ActionListener, WindowListener {
 
 
     //-----------------CHAT CONSTRUCTOR----------------------------
-    Chat(int timeout_num){
+    Chat(int timeout_num){//pass in timeout value
        try {
-           initComponents();
-           service = 0;
-           more = true; 
-        } catch (Exception e) {
-            e.printStackTrace();
+           initComponents();//call initComponents method to set up window
+           service = 0;//set service to initial state
+           more = true; //set more to true
+        } catch (Exception e) {//catch any exceptions
+            e.printStackTrace();//print out the stack trace
         }
     }
     
@@ -205,9 +202,6 @@ public class Chat implements Runnable, ActionListener, WindowListener {
         middlePanel.add(DisconnectButton, m);
 
 
-
-
-
         //------------
         c.gridy = 1;
         c.weighty = 0.4;
@@ -243,7 +237,6 @@ public class Chat implements Runnable, ActionListener, WindowListener {
         ClientButton.setEnabled(false); //disable client button
         DisconnectButton.setEnabled(true); //disable disconnect button
 
-
         //----------END DISABLE/ENABLE BUTTONS---------------
 
         // ----------- Final Setup -------------
@@ -255,18 +248,18 @@ public class Chat implements Runnable, ActionListener, WindowListener {
 
         switch(service){
             case 1:
-                type = "Server";
-                BottomArea.append("Server: " + msg + "\n");
+                type = "Server: ";
+//                BottomArea.append("Server: " + msg + "\n");
                 ChatText.requestFocus(); // Set focus to ChatText field
                 break;
             case 2:
-                type = "Client";
-                BottomArea.append("Client: " + msg + "\n");
+                type = "Client: ";
+//                BottomArea.append("Client: " + msg + "\n");
                 ChatText.requestFocus(); // Set focus to ChatText field
                 break;
             default:
-                type = "Unknown";
-                BottomArea.append("Unknown: " + msg + "\n");
+                type = "Unknown: ";
+//                BottomArea.append("Unknown: " + msg + "\n");
                 ChatText.requestFocus(); // Set focus to ChatText field
                 break;
         }
@@ -282,7 +275,7 @@ public class Chat implements Runnable, ActionListener, WindowListener {
 
     //----------------ACTION HANDLER------------------------------
     public void actionPerformed(ActionEvent e) {
-        Object source = e.getSource();
+        Object source = e.getSource();//get the source of the event
 
         //-----------------CHAT TEXT AND SEND BUTTON------------------
         if(source == ChatText || source == SendButton){
@@ -310,8 +303,8 @@ public class Chat implements Runnable, ActionListener, WindowListener {
         if (source == ServerButton){
             service = 1; //set service to server
             try {
-                ServerButton.setEnabled(false);
-                ClientButton.setEnabled(false);
+                ServerButton.setEnabled(false);//disable server button
+                ClientButton.setEnabled(false);// disable client button
 
                 if(listen_socket != null){
                     listen_socket.close(); //close the socket
@@ -336,7 +329,6 @@ public class Chat implements Runnable, ActionListener, WindowListener {
             }
 
             try {
-
                 messageDisplay("Client");
                 client = listen_socket.accept(); //accept the connection
                 messageDisplay("Connected to client");
@@ -353,7 +345,6 @@ public class Chat implements Runnable, ActionListener, WindowListener {
                 messageDisplay("Error!!");
                 close();
             }
-
             try{
                 br = new BufferedReader(new InputStreamReader(client.getInputStream()));
                 pw = new PrintWriter(client.getOutputStream(), auto_flush); //auto flush for print writer
@@ -426,12 +417,7 @@ public class Chat implements Runnable, ActionListener, WindowListener {
             //-------------------DISCONECT BUTTON----------------------
             if (source == DisconnectButton){
                 messageDisplay("Attempting to disconnect...");
-                //server = null; //null the socket5
-                //TheThread.interrupt(); //interrupt the thread5
-                //if(pw != null){ //does printwriter exist?
-                //    pw.print(""); //send null to other device
-                //    pw.flush();
-                //}
+    
                 if (TheThread != null) {
                     TheThread.interrupt(); // Only interrupt if the thread exists
                     TheThread = null;
@@ -440,6 +426,7 @@ public class Chat implements Runnable, ActionListener, WindowListener {
                 
                 //close socket
                 ChatText.setText("");
+                //System.out.println("Disconnect about to call close");
                 close(); //close the socket
                 messageDisplay("Disconnected from server");
             }            
@@ -503,7 +490,7 @@ public class Chat implements Runnable, ActionListener, WindowListener {
 
     //-------------THREAD STOP METHOD--------------------------------------
     public void stop() {
-
+    //System.out.println("Stop calling close");
         close();
 
         if(TheThread != null) {
@@ -511,7 +498,7 @@ public class Chat implements Runnable, ActionListener, WindowListener {
         }
         // Remove window listener
         DispFrame.removeWindowListener(this);
-        // Remove action listeners
+        //---------------REMOVE ACTION LISTENERS-----------------
         ChangePortButton.removeActionListener(this);
         SendButton.removeActionListener(this);
         ServerButton.removeActionListener(this);
@@ -521,15 +508,11 @@ public class Chat implements Runnable, ActionListener, WindowListener {
         ChatText.removeActionListener(this);
         PortText.removeActionListener(this);
         HostText.removeActionListener(this);
+        //----------------END REMOVE ACTION LISTENERS------------------
 
         // Dispose the window
         DispFrame.dispose();
-    
-        // Stop the thread if it's running
-        // if (TheThread != null && TheThread.isAlive()) {
-        //     TheThread.interrupt();
-            
-        // }
+        //exit the program
         System.exit(0);
     }
     //-------------END THREAD STOP METHOD----------------------------------
@@ -543,12 +526,13 @@ public class Chat implements Runnable, ActionListener, WindowListener {
                 if(pw!=null){    // does printwriter exist?
                     pw.print("");   //send null to other device
                   }  
+        // System.out.println("Server close");
              server.close();      //close the socket
              server=null;       //null the socket
                 
             }
         }catch(IOException e){
-            System.out.println("Exception In Close: " + e);
+            //System.out.println("Exception In Close: " + e);
             messageDisplay("Error In Close!!");
         }
 
@@ -557,6 +541,7 @@ public class Chat implements Runnable, ActionListener, WindowListener {
                 if(pw!=null){    // does printwriter exist?
                     pw.print("");   //send null to other device
                 }  
+         //System.out.println("Client close");
              client.close();      //close the socket
              client=null;       //null the socket
                 
@@ -571,6 +556,7 @@ public class Chat implements Runnable, ActionListener, WindowListener {
                 if(pw!=null){    // does printwriter exist?
                     pw.print("");   //send null to other device
                 }  
+         //System.out.println("listen close");
                 listen_socket.close();      //close the socket
                 listen_socket=null;       //null the socket
                 
@@ -582,23 +568,19 @@ public class Chat implements Runnable, ActionListener, WindowListener {
 
         try{
             if(br!=null){    // does buffered reader exist?
-                br.close();      //close the socket
+          //System.out.println("br close");
+            //error because data still in buffer when closed
+               br.close();      //close the socket
+              // System.out.println("br closed");
                 br=null;       //null the socket
                 
             }
         }catch(IOException e){
-            System.out.println("Exception In Close: " + e);
+            System.out.println("Socket Exception: " + e);
             messageDisplay("Error In Close!!");
         }
-  
-       // ChangePortButton.addActionListener(this);
-        //SendButton.addActionListener(this);
-       // ServerButton.addActionListener(this);
-       // ClientButton.addActionListener(this);
-       // DisconnectButton.addActionListener(this);
-       // ChangeHostButton.addActionListener(this);
-       // HostText.addActionListener(this);
 
+        //reset all variables to initial state
         service=0; //reset service to initial state
         ChatText.setEnabled(false); //disable chat text field
         HostText.setText(""); //clear host text field
@@ -612,35 +594,33 @@ public class Chat implements Runnable, ActionListener, WindowListener {
         ChangePortButton.setEnabled(true);
         ChatText.setEnabled(false);
 
-       
     }
 
     //------------END THREAD CLOSE METHOD--------------------------------
 
     //-------------THREAD START METHOD-------------------------------------
     public void start(){
-        if(TheThread == null) {
-            TheThread = new Thread(this);
-            TheThread.start();
+        if(TheThread == null) {//check if thread is null
+            TheThread = new Thread(this);//create a new thread
+            TheThread.start();//start the thread
         } else {
-            System.out.println("Thread already started.");
+            System.out.println("Thread already started.");//if thread is already started,error
         }
     }
 
 
     //-------------THREAD RUNNABLE METHOD--------------------------------------
-    
         public void run() {
-            TheThread.setPriority(Thread.MAX_PRIORITY);
-            messageDisplay("Thread started");
+            TheThread.setPriority(Thread.MAX_PRIORITY);//set thread priority to max
+            messageDisplay("Thread started");//display message
         
             try {
-                while (more) {
+                while (more) {//check if more is true
                     try {
-                        String line = br.readLine();
+                        String line = br.readLine();//read line from buffered reader
                         if (line != null) {
                             TopArea.append("in: " + line + "\n"); //this is what displays incoming messages
-                            System.out.println("Received: " + line); // Optional debug
+                            System.out.println("Received: " + line);//debugging message
                         }else{
                             messageDisplay("Connection closed by the other side.");
                             break;
@@ -648,37 +628,33 @@ public class Chat implements Runnable, ActionListener, WindowListener {
                     } catch (SocketTimeoutException ste) {
                         continue; // Don't close the socket, just keep waiting
                     } catch (IOException e) {
-                        System.out.println("Error reading from stream: " + e);//error here?!?!
-                        //591
+                        //System.out.println("Error reading from stream: " + e);//error here?!?!
                         break;
                     }
                 }
             } finally {
                 messageDisplay("Connection closed.");
-                //close();??
+                //System.out.println("run calling close");
+                close(); 
             }
         }
     
 
-
-
     //40000 ms works
 
    
-    
-    
     //-------------END THREAD RUNNABLE METHOD----------------------------------
 
     //-----------------MAIN---------------------------------------
     public static void main(String[] args) {
        
-            BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
+            BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));//create a new buffered reader
         
-            try {
+            try {//try to read input from keyboard
                 System.out.print("Enter timeout in milliseconds (or press Enter to use default): ");
                 String input = keyboard.readLine();
         
-                if (input != null && !input.trim().isEmpty()) {
+                if (input != null && !input.trim().isEmpty()) {//check if input is not null or empty
                     try {
                         timeout = Integer.parseInt(input.trim());
                         System.out.println("Using timeout: " + timeout + " ms");
@@ -692,7 +668,7 @@ public class Chat implements Runnable, ActionListener, WindowListener {
                 System.out.println("Error Reading!! Default timeout: " + timeout + " ms");
             }
         
-            Chat chat = new Chat(timeout); 
+            Chat chat = new Chat(timeout); //create a new chat object
         }
         
     }

@@ -255,18 +255,18 @@ public class Chat implements Runnable, ActionListener, WindowListener {
 
         switch(service){
             case 1:
-                type = "Server";
-                BottomArea.append("Server: " + msg + "\n");
+                type = "Server: ";
+//                BottomArea.append("Server: " + msg + "\n");
                 ChatText.requestFocus(); // Set focus to ChatText field
                 break;
             case 2:
-                type = "Client";
-                BottomArea.append("Client: " + msg + "\n");
+                type = "Client: ";
+//                BottomArea.append("Client: " + msg + "\n");
                 ChatText.requestFocus(); // Set focus to ChatText field
                 break;
             default:
-                type = "Unknown";
-                BottomArea.append("Unknown: " + msg + "\n");
+                type = "Unknown: ";
+//                BottomArea.append("Unknown: " + msg + "\n");
                 ChatText.requestFocus(); // Set focus to ChatText field
                 break;
         }
@@ -440,6 +440,7 @@ public class Chat implements Runnable, ActionListener, WindowListener {
                 
                 //close socket
                 ChatText.setText("");
+                //System.out.println("Disconnect about to call close");
                 close(); //close the socket
                 messageDisplay("Disconnected from server");
             }            
@@ -503,7 +504,7 @@ public class Chat implements Runnable, ActionListener, WindowListener {
 
     //-------------THREAD STOP METHOD--------------------------------------
     public void stop() {
-
+    //System.out.println("Stop calling close");
         close();
 
         if(TheThread != null) {
@@ -543,12 +544,13 @@ public class Chat implements Runnable, ActionListener, WindowListener {
                 if(pw!=null){    // does printwriter exist?
                     pw.print("");   //send null to other device
                   }  
+        // System.out.println("Server close");
              server.close();      //close the socket
              server=null;       //null the socket
                 
             }
         }catch(IOException e){
-            System.out.println("Exception In Close: " + e);
+            //System.out.println("Exception In Close: " + e);
             messageDisplay("Error In Close!!");
         }
 
@@ -557,6 +559,7 @@ public class Chat implements Runnable, ActionListener, WindowListener {
                 if(pw!=null){    // does printwriter exist?
                     pw.print("");   //send null to other device
                 }  
+         //System.out.println("Client close");
              client.close();      //close the socket
              client=null;       //null the socket
                 
@@ -571,6 +574,7 @@ public class Chat implements Runnable, ActionListener, WindowListener {
                 if(pw!=null){    // does printwriter exist?
                     pw.print("");   //send null to other device
                 }  
+         //System.out.println("listen close");
                 listen_socket.close();      //close the socket
                 listen_socket=null;       //null the socket
                 
@@ -582,14 +586,22 @@ public class Chat implements Runnable, ActionListener, WindowListener {
 
         try{
             if(br!=null){    // does buffered reader exist?
-                br.close();      //close the socket
+          //System.out.println("br close");
+            //error because data still in buffer when closed
+               br.close();      //close the socket
+              // System.out.println("br closed");
                 br=null;       //null the socket
                 
             }
         }catch(IOException e){
-            System.out.println("Exception In Close: " + e);
+            System.out.println("Socket Exception: " + e);
             messageDisplay("Error In Close!!");
         }
+
+         // }catch(IOException e){
+        //     System.out.println("Exception In Close: " + e);
+        //     messageDisplay("Error In Close!!");
+        // }
   
        // ChangePortButton.addActionListener(this);
         //SendButton.addActionListener(this);
@@ -629,7 +641,6 @@ public class Chat implements Runnable, ActionListener, WindowListener {
 
 
     //-------------THREAD RUNNABLE METHOD--------------------------------------
-    
         public void run() {
             TheThread.setPriority(Thread.MAX_PRIORITY);
             messageDisplay("Thread started");
@@ -648,25 +659,21 @@ public class Chat implements Runnable, ActionListener, WindowListener {
                     } catch (SocketTimeoutException ste) {
                         continue; // Don't close the socket, just keep waiting
                     } catch (IOException e) {
-                        System.out.println("Error reading from stream: " + e);//error here?!?!
-                        //591
+                        //System.out.println("Error reading from stream: " + e);//error here?!?!
                         break;
                     }
                 }
             } finally {
                 messageDisplay("Connection closed.");
-                //close();??
+                //System.out.println("run calling close");
+                close(); 
             }
         }
     
 
-
-
     //40000 ms works
 
    
-    
-    
     //-------------END THREAD RUNNABLE METHOD----------------------------------
 
     //-----------------MAIN---------------------------------------
