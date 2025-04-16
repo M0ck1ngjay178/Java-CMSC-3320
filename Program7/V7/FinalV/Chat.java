@@ -49,7 +49,6 @@ public class Chat implements Runnable, ActionListener, WindowListener {
     // private Panel sheet = new Panel();
     // private Panel control = new Panel();
 
-
     TextArea DialogScreen = new TextArea("", 10,80);
     
     TextArea BottomArea = new TextArea("", 3,80);
@@ -77,7 +76,6 @@ public class Chat implements Runnable, ActionListener, WindowListener {
     boolean running=false;
     //-----------------------END GLOBAL VARS---------------------------------------------
 
-
     //-----------------CHAT CONSTRUCTOR----------------------------
     Chat(int timeout_num){//pass in timeout value
        try {
@@ -88,8 +86,9 @@ public class Chat implements Runnable, ActionListener, WindowListener {
             e.printStackTrace();//print out the stack trace
         }
     }
-    
+    //-----------------END CHAT CONSTRUCTOR------------------------
 
+    //-----------------INIT COMPONENTS: SET UP FRAMES------------------
     public void initComponents() throws Exception {
 
         DispFrame = new Frame("Chat");
@@ -242,6 +241,8 @@ public class Chat implements Runnable, ActionListener, WindowListener {
         DispFrame.setVisible(true);
     }
     //----------------END INIT COMPONENTS: SET UP FRAMES-------------
+
+    //-----------------MESSAGE DISPLAY METHOD---------------------
     void messageDisplay(String msg) {
         String type ="";
 
@@ -270,8 +271,8 @@ public class Chat implements Runnable, ActionListener, WindowListener {
         // Return focus to the ChatText field
         ChatText.requestFocus();   
     }
+    //-----------------END MESSAGE DISPLAY METHOD------------------
    
-
     //----------------ACTION HANDLER------------------------------
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();//get the source of the event
@@ -418,7 +419,6 @@ public class Chat implements Runnable, ActionListener, WindowListener {
             }
         }
            
-    
             //-------------------DISCONECT BUTTON----------------------
             if (source == DisconnectButton){
                 messageDisplay("Attempting to disconnect...");
@@ -449,7 +449,6 @@ public class Chat implements Runnable, ActionListener, WindowListener {
                 }
             }
             //-----------------CHANGE HOST BUTTON OR HOST TEXT FIELD---------------------
-
 
 
             //-----------------PORT TEXTFIELD OR CHANGE PORT BUTTON---------------------
@@ -613,7 +612,6 @@ public class Chat implements Runnable, ActionListener, WindowListener {
         }
     }
 
-
     //-------------THREAD RUNNABLE METHOD--------------------------------------
         public void run() {
             TheThread.setPriority(Thread.MAX_PRIORITY);//set thread priority to max
@@ -647,7 +645,6 @@ public class Chat implements Runnable, ActionListener, WindowListener {
 
     //40000 ms works
 
-   
     //-------------END THREAD RUNNABLE METHOD----------------------------------
 
     //-----------------MAIN---------------------------------------
