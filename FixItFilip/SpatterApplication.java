@@ -1,4 +1,4 @@
-package spatter;
+package FixItFilip;
 
 import java.awt.*;
 import java.awt.event.*;
