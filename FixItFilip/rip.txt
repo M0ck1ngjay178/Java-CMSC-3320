@@ -1,0 +1,72 @@
+//   public void actionPerformed(ActionEvent e)
+// {
+//     Point2D p = bloodPath.getPoint(t);
+//     graph.plotPoint(p.getX(), p.getY());
+//     t += 0.02;
+//     graph.updateGraph();
+
+//     // Compute initial values for display
+//     double dx = x2 - x1;
+//     double dy = y2 - y1;
+//     double angleRad = angle(t);
+
+//     // Fix velocity calculation: vx / cos(angle)
+//     double vx = dx / t;
+//     double v0 = vx / Math.cos(angleRad);
+
+//     // Set initial values in text fields
+//     initL.setMathValue(places1(y1 * 1000)); // Initial height in mm
+//     initV.setMathValue(places1(v0));        // Initial velocity in m/s
+//     initA.setMathValue(places1(angleRad * 180 / Math.PI)); // Initial angle in degrees
+
+//     if (t > wallDistance / dx)
+//     {
+//         animationTimer.stop();
+//         floorOrWallLabel.setText("Wall spatter shape");
+//         lengthLabel.setText("Height (in mm):");
+
+//         spatterEllipse.setXRadius((1 + Math.random()) / 2);
+//         spatterEllipse.setYRadius(spatterEllipse.getXRadius() / Math.cos(angleRad));
+//         dropShapeGraph.addGraph(spatterEllipse, Color.RED);
+
+//         widthMathTextField.setMathValue(places1(10 * spatterEllipse.getXRadius()));
+//         lengthMathTextField.setMathValue(places1(10 * spatterEllipse.getYRadius()));
+//         angleMathTextField.setMathValue(places1(90 - angleRad * 180 / Math.PI));
+//     }
+
+//     // Floor hit calculation
+//     double t_floor = (((y2 - y1) + Math.sqrt((y1 - y2) * (y1 - y2) + 4 * gravity * y1)) / (2 * gravity));
+//     if (t > t_floor)
+//     {
+//         animationTimer.stop();
+//         floorOrWallLabel.setText("Floor spatter shape");
+//         lengthLabel.setText("Length (in mm):");
+
+//         spatterEllipse.setXRadius((1 + Math.random()) / 2);
+//         spatterEllipse.setYRadius(spatterEllipse.getXRadius() / Math.sin(angleRad));
+//         dropShapeGraph.addGraph(spatterEllipse, Color.RED);
+
+//         widthMathTextField.setMathValue(places1(10 * spatterEllipse.getXRadius()));
+//         lengthMathTextField.setMathValue(places1(10 * spatterEllipse.getYRadius()));
+//         angleMathTextField.setMathValue(places1(angleRad * 180 / Math.PI));
+//     }
+// }
+
+// void graph_mouseDragged(MouseEvent e)
+  // {
+  //   if (dragging1)
+  //   {
+  //       oldy1=y1;
+  //       oldy2=y2;
+  //       y1=graph.yPixelToMath(e.getY());
+  //       y2=oldy2-oldy1+y1;
+  //       repaint();
+  //   }
+  //   if (dragging2)
+  //   {
+  //       oldx2=x2;
+  //       oldy2=y2;
+  //       x2=graph.xPixelToMath(e.getX());
+  //       y2=graph.yPixelToMath(e.getY());
+  //       repaint();}
+  // }

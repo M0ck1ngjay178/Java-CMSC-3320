@@ -1,16 +1,19 @@
 package FixItFilip;
-
+//----------LIBRARIES-----------------
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import EDU.emporia.mathbeans.*;
 import EDU.emporia.mathtools.*;
 import java.util.*;
+//-----------END LIBRARIES-----------
 
+//-------------------------------CLASS SPATTERAPPLICATION------------------------------------
 public class SpatterApplication extends JFrame implements WindowListener, ActionListener 
 {
-final double gravity=4;
-final double wallDistance=6;
+//-----------------------------GLOBAL VARIABLES--------------------------------
+  final double gravity=4;
+  final double wallDistance=6;
   double t=0;
   double x1=0, y1=4;
   double oldx1=x1, oldy1=y1;
@@ -39,8 +42,18 @@ final double wallDistance=6;
   MathTextField angleMathTextField = new MathTextField();
   JLabel jLabel2 = new JLabel();
   JButton resetButton = new JButton();
-  //Get a parameter value
 
+  //-------ADDITIONS: TEXTFIELDS----------------
+  MathTextField initA = new MathTextField();
+  MathTextField initL= new MathTextField();
+  JLabel WLabel = new JLabel();
+  JLabel LLabel = new JLabel();
+  MathTextField initV= new MathTextField();
+  JLabel VLabel = new JLabel();
+//-----------------------------END GLOBAL VARIABLES-----------------------------
+
+//----------------GET PROPERTIES-------------------------------------------------
+  //Get a parameter value
 private String getProperty(Properties property, String key, String def)
 {
 	String temp;
@@ -55,7 +68,10 @@ private String getProperty(Properties property, String key, String def)
 	}
 	return temp;
 }
+//----------------END GET PROPERTIES-------------------------------------------------
 
+  //Get a parameter value
+//-----------------------------MAIN---------------------------------------------------
   public static void main(String[] args)
   {
 	try {
@@ -65,12 +81,14 @@ private String getProperty(Properties property, String key, String def)
       e.printStackTrace();
     }
  }
+//-----------------------------END MAIN------------------------------------------------
 
- 
+//------------------------------------FRAME INITIALIZATION----------------------------------
   //Component initialization
   public SpatterApplication() throws Exception {
-	animationTimer = new javax.swing.Timer(1, this);
-    this.setSize(new Dimension(660,440));
+	  animationTimer = new javax.swing.Timer(1, this);
+    // this.setSize(new Dimension(660,440));
+    this.setSize(new Dimension(680,440));
     jPanel1.setLayout(null);
     graph.setTraceEnabled(false);
     graph.setF(bloodPath);
@@ -78,11 +96,14 @@ private String getProperty(Properties property, String key, String def)
     graph.setGridLines(EDU.emporia.mathbeans.MathGrapher.GRIDOFF);
     graph.setToolTipText("Drag left hand point to adjust height, right hand point to adjust " +
     "direction and velocity");
-    graph.setXMax(6.0);
+    // graph.setXMax(6.0);
+    graph.setXMax(7.0);
     graph.setXMin(0.0);
-    graph.setYMax(6.0);
+    graph.setYMax(9.0);
     graph.setYMin(0.0);
     graph.setBounds(new Rectangle(140, 5, 364, 390));
+    // graph.setBounds(new Rectangle(140, 5, 400, 390));
+
     graph.addMouseMotionListener(new SpatterApplication_graph_mouseMotionAdapter(this));
     graph.addMouseListener(new SpatterApplication_graph_mouseAdapter(this));
     dropShapeGraph.setTraceEnabled(false);
@@ -95,7 +116,9 @@ private String getProperty(Properties property, String key, String def)
     dropShapeGraph.setYLabel("");
     dropShapeGraph.setYMax(5.0);
     dropShapeGraph.setYMin(-5.0);
-    dropShapeGraph.setBounds(new Rectangle(507, 7, 131, 124));
+    //dropShapeGraph.setBounds(new Rectangle(507, 7, 131, 124));
+    dropShapeGraph.setBounds(new Rectangle(507, 7, 140, 124));
+
 
     bloodPath.setYFormula("1");
     directionVector.setXFormula("0");
@@ -107,15 +130,19 @@ private String getProperty(Properties property, String key, String def)
     wall.setXFormula(""+wallDistance);
     wall.setYFormula("t");
     wall.setTMin(0.0);
+
     jLabel1.setFont(new java.awt.Font("Dialog", 1, 16));
     jLabel1.setText("Blood Spatter");
     jLabel1.setBounds(new Rectangle(7, 17, 133, 38));
+    
     trackButton.setBounds(new Rectangle(23, 81, 101, 39));
     trackButton.setText("Trace path");
     trackButton.addActionListener(new SpatterApplication_trackButton_actionAdapter(this));
+
     floorOrWallLabel.setHorizontalAlignment(SwingConstants.CENTER);
     floorOrWallLabel.setText("Press Trace path ");
     floorOrWallLabel.setBounds(new Rectangle(517, 135, 114, 28));
+    
     widthMathTextField.setMaxNumberOfCharacters(8);
     widthMathTextField.setEditable(false);
     widthMathTextField.setFont(new java.awt.Font("Dialog", 0, 14));
@@ -124,16 +151,19 @@ private String getProperty(Properties property, String key, String def)
     widthMathTextField.setRequestFocusEnabled(true);
     widthMathTextField.setText("");
     widthMathTextField.setBounds(new Rectangle(520, 207, 110, 30));
+
     lengthMathTextField.setBounds(new Rectangle(521, 271, 110, 30));
     lengthMathTextField.setMaxNumberOfCharacters(8);
     lengthMathTextField.setEditable(false);
     lengthMathTextField.setFont(new java.awt.Font("Dialog", 0, 14));
     lengthMathTextField.setHorizontalAlignment(SwingConstants.CENTER);
     lengthMathTextField.setText("");
+
     widthLabel.setText("width (in mm):");
     widthLabel.setBounds(new Rectangle(521, 184, 111, 25));
     lengthLabel.setBounds(new Rectangle(520, 248, 112, 25));
     lengthLabel.setText("height (in mm):");
+
     angleMathTextField.setBounds(new Rectangle(521, 355, 110, 30));
     angleMathTextField.setText("");
     angleMathTextField.setRequestFocusEnabled(true);
@@ -142,18 +172,78 @@ private String getProperty(Properties property, String key, String def)
     angleMathTextField.setFont(new java.awt.Font("Dialog", 0, 14));
     angleMathTextField.setEditable(false);
     angleMathTextField.setMaxNumberOfCharacters(10);
+
     jLabel2.setText("Angle of impact:");
     jLabel2.setBounds(new Rectangle(520, 328, 111, 24));
+
+  
+    // LEFT SIDE TEXTFIELDS
+    // MathTextField initA = new MathTextField();
+    initA.setBounds(new Rectangle(23, 207, 110, 30));
+    initA.setText("");
+    initA.setRequestFocusEnabled(true);
+    initA.setMargin(new Insets(1, 1, 1, 1));
+    initA.setHorizontalAlignment(SwingConstants.CENTER);
+    initA.setFont(new java.awt.Font("Dialog", 0, 14));
+    initA.setEditable(false);
+    initA.setMaxNumberOfCharacters(10);
+
+    JLabel WLabel = new JLabel();
+    WLabel.setText("Initial Height (m):");
+    WLabel.setBounds(new Rectangle(23, 184, 130, 20));
+
+    // --------------------------
+
+    // MathTextField initL = new MathTextField();
+    initL.setBounds(new Rectangle(23, 271, 110, 30));
+    initL.setText("");
+    initL.setRequestFocusEnabled(true);
+    initL.setMargin(new Insets(1, 1, 1, 1));
+    initL.setHorizontalAlignment(SwingConstants.CENTER);
+    initL.setFont(new java.awt.Font("Dialog", 0, 14));
+    initL.setEditable(false);
+    initL.setMaxNumberOfCharacters(10);
+
+    JLabel LLabel = new JLabel();
+    LLabel.setText("Initial Angle:");
+    LLabel.setBounds(new Rectangle(23, 248, 130, 20));
+    // --------------------------
+
+    // MathTextField initV = new MathTextField();
+    initV.setBounds(new Rectangle(23, 355, 110, 30));
+    initV.setText("");
+    initV.setRequestFocusEnabled(true);
+    initV.setMargin(new Insets(1, 1, 1, 1));
+    initV.setHorizontalAlignment(SwingConstants.CENTER);
+    initV.setFont(new java.awt.Font("Dialog", 0, 14));
+    initV.setEditable(false);
+    initV.setMaxNumberOfCharacters(10);
+
+    JLabel VLabel = new JLabel();
+    VLabel.setText("Initial velocity: (m/s)");
+    VLabel.setBounds(new Rectangle(23, 332, 130, 20));
+
+    this.add(WLabel);
+    this.add(initA);
+
+    this.add(LLabel);
+    this.add(initL);
+
+    this.add(VLabel);
+    this.add(initV);
+
+
     resetButton.addActionListener(new SpatterApplication_resetButton_actionAdapter(this));
     resetButton.setText("reset");
     resetButton.addActionListener(new SpatterApplication_resetButton_actionAdapter(this));
     resetButton.setBounds(new Rectangle(23, 142, 101, 39));
+
     this.getContentPane().add(jPanel1, BorderLayout.CENTER);
     this.setResizable(false);
-	setVisible(true);			//make it visible
-	validate();				//validate the layout
-	addWindowListener(this);
-	setTitle("Spatter Application");
+    setVisible(true);			//make it visible
+    validate();				//validate the layout
+    addWindowListener(this);
+    setTitle("Spatter Application");
 
     jPanel1.add(graph, null);
     jPanel1.add(jLabel1, null);
@@ -170,8 +260,18 @@ private String getProperty(Properties property, String key, String def)
     graph.setPointRadius(4);
     graph.updateGraph();
    	dropShapeGraph.removeAll();
-     repaint();
+
+    // Set initial values on launch
+    initV.setMathValue(places1(Math.sqrt((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1)))); // velocity
+    //initL.setMathValue(places1(angle(0) * 180 / Math.PI)); // angle in degrees
+    initA.setMathValue(places1(y1)); // height in meters
+    //initL.setMathValue(places1(10*spatterEllipse.getYRadius()));
+    initL.setMathValue(places1(90-angle(t)*180/Math.PI));
+
+
+    repaint();
   }
+//------------------------------------END FRAME INITIALIZATION-------------------------------
   //Get Application information
   public String getApplicationInfo()
   {
@@ -194,24 +294,16 @@ public void windowClosing(WindowEvent e)
 	dispose();
 	System.exit(0);
 }
-public void windowClosed(WindowEvent e)
-{
-}
-public void windowOpened(WindowEvent e)
-{
-}
-public void windowActivated(WindowEvent e)
-{
-}
-public void windowDeactivated(WindowEvent e)
-{
-}
-public void windowIconified(WindowEvent e)
-{
-}
-public void windowDeiconified(WindowEvent e)
-{
-}
+//-------------------------------WINDOW METHODS---------------------------------------------------
+public void windowClosed(WindowEvent e){}
+public void windowOpened(WindowEvent e){}
+public void windowActivated(WindowEvent e){}
+public void windowDeactivated(WindowEvent e){}
+public void windowIconified(WindowEvent e){}
+public void windowDeiconified(WindowEvent e){}
+//-------------------------------END WINDOW METHODS-------------------------------------------------
+
+//-------------------------------ACTION PERFORMED---------------------------------------------------
     public void actionPerformed( ActionEvent e)
      {
       Point2D p = bloodPath.getPoint(t);
@@ -230,6 +322,7 @@ public void windowDeiconified(WindowEvent e)
          lengthMathTextField.setMathValue(places1(10*spatterEllipse.getYRadius()));
          angleMathTextField.setMathValue(places1(90-angle(t)*180/Math.PI));
        }
+       
        if(t>(((y2-y1)+Math.sqrt((y1-y2)*(y1-y2)+4*gravity*y1)))/(2*gravity))
        {
          animationTimer.stop();
@@ -241,9 +334,11 @@ public void windowDeiconified(WindowEvent e)
          widthMathTextField.setMathValue(places1(10*spatterEllipse.getXRadius()));
          lengthMathTextField.setMathValue(places1(10*spatterEllipse.getYRadius()));
          angleMathTextField.setMathValue(places1(angle(t)*180/Math.PI));
+
        }
   }
-
+//-------------------------------END ACTION PERFORMED-------------------------------------------------
+//-------------------------------GRAPH MOUSE PRESSED-------------------------------------------------
   void graph_mousePressed(MouseEvent e) {
     int xMouse=e.getX();
     int yMouse=e.getY();
@@ -256,13 +351,15 @@ public void windowDeiconified(WindowEvent e)
     (yMouse-graph.yMathToPixel(y2));
     if (distance2Squared < 9 && distance1Squared >=9) dragging2 = true;
   }
-
+//-------------------------------END GRAPH MOUSE PRESSED---------------------------------------------
+//-------------------------------GRAPH MOUSE RELEASED------------------------------------------------
   void graph_mouseReleased(MouseEvent e)
   {
     dragging1 = false;
     dragging2 = false;
   }
-
+//-------------------------------END GRAPH MOUSE RELEASED-------------------------------------------
+//-------------------------------ROUNDING----------------------------------------------------------
   public double places1(double x)
 {
     x=10*x;
@@ -278,23 +375,16 @@ public double places2(double x)
     x=(double) x/100;
     return x;
 }
+//-------------------------------END ROUNDING------------------------------------------------------
+//-------------------------------GETTERS-----------------------------------------------------------
+public double x(double t){return ((x2-x1)*t);}
 
-public double x(double t)
-{
-    return ((x2-x1)*t);
-}
+public double y(double t){return (y1+(y2-y1)*t-gravity*t*t);}
 
-public double y(double t)
-  {
-      return (y1+(y2-y1)*t-gravity*t*t);
-  }
+public double angle(double t){return -Math.atan((y(t)-y(t-0.04))/(x(t)-x(t-0.04)));}
+//-------------------------------END GETTERS-------------------------------------------------------
 
-public double angle(double t)
-  {
-//    return -Math.atan((y(t)-y(t-0.02))/(x(t)-x(t-0.02)));
-    return -Math.atan((y(t)-y(t-0.04))/(x(t)-x(t-0.04)));
-  }
-
+//-------------------------------REPAINT----------------------------------------------------------
   public void repaint()
   {
     graph.removeAllPoints();
@@ -321,35 +411,69 @@ public double angle(double t)
           graph.addGraph(wall, Color.BLUE);
           graph.updateGraph();
   }
+//-------------------------------END REPAINT------------------------------------------------------
 
+//-------------------------------GRAPH MOUSE DRAGGED-------------------------------------------------
   void graph_mouseDragged(MouseEvent e)
-  {
+{
+    double xmin = graph.getXMin();
+    double xmax = graph.getXMax();
+    double ymin = graph.getYMin();
+    double ymax = graph.getYMax();
+
     if (dragging1)
     {
-        oldy1=y1;
-        oldy2=y2;
-        y1=graph.yPixelToMath(e.getY());
-        y2=oldy2-oldy1+y1;
+        oldy1 = y1;
+        oldy2 = y2;
+        double newY1 = graph.yPixelToMath(e.getY());
+
+        newY1 = Math.max(ymin, Math.min(ymax, newY1));
+
+        y1 = newY1;
+        y2 = oldy2 - oldy1 + y1;
+        
+        y2 = Math.max(ymin, Math.min(ymax, y2));
+
         repaint();
     }
+
     if (dragging2)
     {
-        oldx2=x2;
-        oldy2=y2;
-        x2=graph.xPixelToMath(e.getX());
-        y2=graph.yPixelToMath(e.getY());
-        repaint();}
-  }
+        oldx2 = x2;
+        oldy2 = y2;
+        double newX2 = graph.xPixelToMath(e.getX());
+        double newY2 = graph.yPixelToMath(e.getY());
 
+        newX2 = Math.max(xmin, Math.min(xmax, newX2));
+        newY2 = Math.max(ymin, Math.min(ymax, newY2));
+
+        x2 = newX2;
+        y2 = newY2;
+
+        repaint();
+    }
+
+    // Set initial values on launch
+    initV.setMathValue(places1(Math.sqrt((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1)))); // velocity
+    //initL.setMathValue(places1(angle(0) * 180 / Math.PI)); // angle in degrees
+    initA.setMathValue(places1(y1)); // height in meters
+    //initL.setMathValue(places1(10*spatterEllipse.getYRadius()));
+    initL.setMathValue(places1(90-angle(t)*180/Math.PI));
+}
+//-------------------------------END GRAPH MOUSE DRAGGED---------------------------------------------
+
+//-------------------------------TRACK BUTTON-ACTION PERFORMED--------------------------------------
   void trackButton_actionPerformed(ActionEvent e) {
     dropShapeGraph.removeGraph(spatterEllipse);
     t=0;
     animationTimer.start();
   }
+//-------------------------------END TRACK BUTTON-ACTION PERFORMED-----------------------------------
 
+//-------------------------------RESET BUTTON-ACTION PERFORMED---------------------------------------------------------
   void resetButton_actionPerformed(ActionEvent e) {
   	animationTimer = null;
-	animationTimer = new javax.swing.Timer(1, this);
+	  animationTimer = new javax.swing.Timer(1, this);
   	t=0;
   	x1=0;
   	y1=4;
@@ -377,6 +501,10 @@ public double angle(double t)
     widthMathTextField.setText("");
     lengthMathTextField.setText("");
     angleMathTextField.setText("");
+    //reset the inital text fields
+    initA.setText("");
+    initL.setText("");
+    initV.setText("");
 
     graph.setPointRadius(4);
     graph.updateGraph();
@@ -385,10 +513,13 @@ public double angle(double t)
 
 
   }
-
+  //-------------------------------END RESET BUTTON-ACTION PERFORMED---------------------------------------------------------
 
 }
+//-------------------------------END CLASS SPATTERAPPLICATION------------------------------------
 
+
+//-------------------------------GRAPH MOUSE ADAPTER-----------------------------------------------
 class SpatterApplication_graph_mouseAdapter extends java.awt.event.MouseAdapter
 {
   SpatterApplication adaptee;
@@ -406,7 +537,8 @@ class SpatterApplication_graph_mouseAdapter extends java.awt.event.MouseAdapter
     adaptee.graph_mouseReleased(e);
   }
 }
-
+//-------------------------------END GRAPH MOUSE ADAPTER---------------------------------------------
+//-------------------------------GRAPH MOUSE ADAPTER-----------------------------------------------
 class SpatterApplication_graph_mouseMotionAdapter extends java.awt.event.MouseMotionAdapter
 {
   SpatterApplication adaptee;
@@ -418,11 +550,10 @@ class SpatterApplication_graph_mouseMotionAdapter extends java.awt.event.MouseMo
   public void mouseDragged(MouseEvent e) {
     adaptee.graph_mouseDragged(e);
   }
-
-
-
 }
+//-------------------------------END GRAPH MOUSE MOTION ADAPTER-------------------------------------
 
+//-------------------------------TRACK BUTTON-------------------------------------------------------
 class SpatterApplication_trackButton_actionAdapter implements java.awt.event.ActionListener {
   SpatterApplication adaptee;
 
@@ -433,7 +564,9 @@ class SpatterApplication_trackButton_actionAdapter implements java.awt.event.Act
     adaptee.trackButton_actionPerformed(e);
   }
 }
+//--------------------------------END TRACK BUTTON----------------------------------------------------
 
+//-------------------------------RESET BUTTON---------------------------------------------------------
 class SpatterApplication_resetButton_actionAdapter implements java.awt.event.ActionListener {
   SpatterApplication adaptee;
 
@@ -444,3 +577,4 @@ class SpatterApplication_resetButton_actionAdapter implements java.awt.event.Act
     adaptee.resetButton_actionPerformed(e);
   }
 }
+//-------------------------------END RESET BUTTON-------------------------------------------------------
