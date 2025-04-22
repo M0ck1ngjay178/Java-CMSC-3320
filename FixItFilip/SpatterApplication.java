@@ -1,10 +1,13 @@
-package FixItFilip;
+//package SpatterApplication;
 //----------LIBRARIES-----------------
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import EDU.emporia.mathbeans.*;
 import EDU.emporia.mathtools.*;
+//import javafx.geometry.Point2D;
+//import javafx.scene.shape.Ellipse;
+
 import java.util.*;
 //-----------END LIBRARIES-----------
 
@@ -12,7 +15,7 @@ import java.util.*;
 public class SpatterApplication extends JFrame implements WindowListener, ActionListener 
 {
 //-----------------------------GLOBAL VARIABLES--------------------------------
-  final double gravity=4;
+  final double gravity=4.9;
   final double wallDistance=6;
   double t=0;
   double x1=0, y1=4;
@@ -266,7 +269,7 @@ private String getProperty(Properties property, String key, String def)
     //initL.setMathValue(places1(angle(0) * 180 / Math.PI)); // angle in degrees
     initA.setMathValue(places1(y1)); // height in meters
     //initL.setMathValue(places1(10*spatterEllipse.getYRadius()));
-    initL.setMathValue(places1(90-angle(t)*180/Math.PI));
+    initL.setMathValue(places1(Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI));// angle in degrees
 
 
     repaint();
@@ -458,7 +461,8 @@ public double angle(double t){return -Math.atan((y(t)-y(t-0.04))/(x(t)-x(t-0.04)
     //initL.setMathValue(places1(angle(0) * 180 / Math.PI)); // angle in degrees
     initA.setMathValue(places1(y1)); // height in meters
     //initL.setMathValue(places1(10*spatterEllipse.getYRadius()));
-    initL.setMathValue(places1(90-angle(t)*180/Math.PI));
+    //initL.setMathValue(places1(-angle(t)*180/Math.PI));
+    initL.setMathValue(places1(Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI));// angle in degrees
 }
 //-------------------------------END GRAPH MOUSE DRAGGED---------------------------------------------
 
@@ -501,10 +505,19 @@ public double angle(double t){return -Math.atan((y(t)-y(t-0.04))/(x(t)-x(t-0.04)
     widthMathTextField.setText("");
     lengthMathTextField.setText("");
     angleMathTextField.setText("");
+
     //reset the inital text fields
-    initA.setText("");
-    initL.setText("");
-    initV.setText("");
+    //initA.setText("");
+    //initL.setText("");
+    //initV.setText("");
+
+    // reset initial values on launch
+    initV.setMathValue(places1(Math.sqrt((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1)))); // velocity
+    //initL.setMathValue(places1(angle(0) * 180 / Math.PI)); // angle in degrees
+    initA.setMathValue(places1(y1)); // height in meters
+    //initL.setMathValue(places1(10*spatterEllipse.getYRadius()));
+    //initL.setMathValue(places1(-angle(t)*180/Math.PI));
+    initL.setMathValue(places1(Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI));
 
     graph.setPointRadius(4);
     graph.updateGraph();
