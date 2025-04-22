@@ -1,4 +1,4 @@
-package FixItFilip;
+package spatter;
 //----------LIBRARIES-----------------
 import java.awt.*;
 import java.awt.event.*;
@@ -263,12 +263,11 @@ private String getProperty(Properties property, String key, String def)
 
     // Set initial values on launch
     initV.setMathValue(places1(Math.sqrt((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1)))); // velocity
-    //initL.setMathValue(places1(angle(0) * 180 / Math.PI)); // angle in degrees
+    
     initA.setMathValue(places1(y1)); // height in meters
-    //initL.setMathValue(places1(10*spatterEllipse.getYRadius()));
-    initL.setMathValue(places1(90-angle(t)*180/Math.PI));
-
-
+   
+    initL.setMathValue(places1(-angle(t)*180/Math.PI));
+    
     repaint();
   }
 //------------------------------------END FRAME INITIALIZATION-------------------------------
@@ -458,7 +457,7 @@ public double angle(double t){return -Math.atan((y(t)-y(t-0.04))/(x(t)-x(t-0.04)
     //initL.setMathValue(places1(angle(0) * 180 / Math.PI)); // angle in degrees
     initA.setMathValue(places1(y1)); // height in meters
     //initL.setMathValue(places1(10*spatterEllipse.getYRadius()));
-    initL.setMathValue(places1(90-angle(t)*180/Math.PI));
+    initL.setMathValue(places1(-angle(t)*180/Math.PI));
 }
 //-------------------------------END GRAPH MOUSE DRAGGED---------------------------------------------
 
