@@ -1,3 +1,12 @@
+//------------------------------------------------
+//CMSC-3320 Technical Computing Using Java		     
+//Fix It Filip Program 8					                             
+//Group 1												                      
+//Group Names: 										                    
+//-Margo Bonal,      bon8330@pennwest.edu			
+//-Luke Ruffing,     ruf96565@pennwest.edu 		
+//-Ethan Janovich,   jan60248@pennwest.edu			
+//-----------------------------------------------
 //package SpatterApplication;
 //----------LIBRARIES-----------------
 import java.awt.*;
@@ -7,7 +16,6 @@ import EDU.emporia.mathbeans.*;
 import EDU.emporia.mathtools.*;
 //import javafx.geometry.Point2D;
 //import javafx.scene.shape.Ellipse;
-
 import java.util.*;
 //-----------END LIBRARIES-----------
 
